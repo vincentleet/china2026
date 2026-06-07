@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>China trip — personalised activities</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f7f4; color: #1a1a1a; padding: 24px 16px; }
+  .container { max-width: 820px; margin: 0 auto; }
+  h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #666; margin-bottom: 20px; }
+  .filter-section { margin-bottom: 8px; }
+  .filter-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .city-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .ctab { padding: 8px 18px; border-radius: 8px; border: 1px solid #ddd; background: #fff; font-size: 13px; font-weight: 500; cursor: pointer; color: #666; }
+  .ctab.on-beijing { background: #E6F1FB; color: #0C447C; border-color: #378ADD; }
+  .ctab.on-xian { background: #FAEEDA; color: #633806; border-color: #EF9F27; }
+  .ctab.on-shanghai { background: #E1F5EE; color: #085041; border-color: #1D9E75; }
+  .person-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .ptab { padding: 5px 13px; border-radius: 99px; border: 1px solid #ddd; background: #fff; font-size: 12px; cursor: pointer; color: #666; }
+  .ptab.on { background: #1a1a1a; color: #fff; border-color: #1a1a1a; font-weight: 500; }
+  .type-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .ttab { padding: 5px 13px; border-radius: 99px; border: 1px solid #ddd; background: #fff; font-size: 12px; cursor: pointer; color: #666; }
+  .ttab.on { background: #1a1a1a; color: #fff; border-color: #1a1a1a; font-weight: 500; }
+  .lang-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .ltab { padding: 5px 13px; border-radius: 99px; border: 1px solid #ddd; background: #fff; font-size: 12px; cursor: pointer; color: #666; }
+  .ltab.on-all { background: #1a1a1a; color: #fff; border-color: #1a1a1a; font-weight: 500; }
+  .ltab.on-easy { background: #EAF3DE; color: #27500A; border-color: #639922; font-weight: 500; }
+  .ltab.on-operator { background: #FFF8E6; color: #854F0B; border-color: #EF9F27; font-weight: 500; }
+  .lang-legend { display: flex; gap: 16px; flex-wrap: wrap; background: #f0efe9; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #555; align-items: center; }
+  .lang-legend strong { color: #1a1a1a; }
+  .results-count { font-size: 12px; color: #999; margin-bottom: 12px; height: 16px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .cat-divider { display: flex; align-items: center; gap: 10px; margin: 18px 0 12px; }
+  .cat-line { flex: 1; height: 1px; background: #eee; }
+  .cat-label { font-size: 11px; font-weight: 700; color: #bbb; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
+  .act-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; }
+  .act-card.hidden { display: none; }
+  .act-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+  .act-icon { font-size: 22px; flex-shrink: 0; line-height: 1.3; }
+  .act-name { font-size: 15px; font-weight: 600; color: #1a1a1a; line-height: 1.3; }
+  .act-desc { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 10px; }
+  .tag-row { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+  .pill { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; }
+  .p-vincent { background: #EEEDFE; color: #3C3489; }
+  .p-jeremy { background: #E6F1FB; color: #0C447C; }
+  .p-sharon { background: #FBEAF0; color: #72243E; }
+  .p-tom { background: #FAEEDA; color: #633806; }
+  .p-dad { background: #EAF3DE; color: #27500A; }
+  .p-mum { background: #FAECE7; color: #993C1D; }
+  .p-group { background: #F1EFE8; color: #444441; }
+  .lang-easy { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: #EAF3DE; color: #27500A; }
+  .lang-operator { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: #FFF8E6; color: #854F0B; border: 1px solid #EF9F27; }
+  .tip { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
+  .badge-disney { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px; background: #E6F1FB; color: #0C447C; border: 1px solid #85B7EB; }
+  .badge-shopping { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px; background: #FAECE7; color: #993C1D; border: 1px solid #F0997B; }
+  .no-results { font-size: 13px; color: #888; padding: 30px 0; text-align: center; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>China trip — personalised activities</h1>
+  <p class="subtitle">Off the tourist trail, matched to what everyone enjoys. Filter by city, person, type, and language ease.</p>
+
+  <div class="filter-section">
+    <div class="filter-label">City</div>
+    <div class="city-tabs">
+      <div class="ctab on-beijing" id="ctab-beijing" onclick="showCity('beijing')">🏯 Beijing</div>
+      <div class="ctab" id="ctab-xian" onclick="showCity('xian')">🐉 Xi'an</div>
+      <div class="ctab" id="ctab-shanghai" onclick="showCity('shanghai')">🏙️ Shanghai</div>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-label">Person</div>
+    <div class="person-tabs">
+      <div class="ptab on" data-person="all" onclick="filterPerson('all')">Everyone</div>
+      <div class="ptab" data-person="vincent" onclick="filterPerson('vincent')">Vincent</div>
+      <div class="ptab" data-person="jeremy" onclick="filterPerson('jeremy')">Jeremy</div>
+      <div class="ptab" data-person="sharon" onclick="filterPerson('sharon')">Sharon</div>
+      <div class="ptab" data-person="tom" onclick="filterPerson('tom')">Tom</div>
+      <div class="ptab" data-person="dad" onclick="filterPerson('dad')">Dad</div>
+      <div class="ptab" data-person="mum" onclick="filterPerson('mum')">Mum</div>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-label">Type</div>
+    <div class="type-filter">
+      <div class="ttab on" data-type="all" onclick="filterType('all')">All types</div>
+      <div class="ttab" data-type="experience" onclick="filterType('experience')">🧩 Experiences</div>
+      <div class="ttab" data-type="food" onclick="filterType('food')">🍜 Food & drink</div>
+      <div class="ttab" data-type="craft" onclick="filterType('craft')">✂️ Crafts & making</div>
+      <div class="ttab" data-type="gaming" onclick="filterType('gaming')">🎮 Gaming</div>
+      <div class="ttab" data-type="shopping" onclick="filterType('shopping')">🛍️ Shopping</div>
+      <div class="ttab" data-type="culture" onclick="filterType('culture')">🏛️ Culture</div>
+      <div class="ttab" data-type="photo" onclick="filterType('photo')">📷 Photography</div>
+      <div class="ttab" data-type="authentic" onclick="filterType('authentic')">🏘️ Authentic local</div>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-label">Language requirement</div>
+    <div class="lang-filter">
+      <div class="ltab on-all" data-lang="all" onclick="filterLang('all')">All</div>
+      <div class="ltab" data-lang="easy" onclick="filterLang('easy')">✅ No language needed</div>
+      <div class="ltab" data-lang="operator" onclick="filterLang('operator')">⚠️ Needs English operator</div>
+    </div>
+  </div>
+
+  <div class="lang-legend">
+    <span>✅ <strong>No language needed</strong> — walk-in, visual, or calculator-haggling</span>
+    <span>⚠️ <strong>Needs English operator</strong> — book through an English-language service in advance</span>
+  </div>
+
+  <div class="results-count" id="results-count"></div>
+
+  <!-- ===================== BEIJING ===================== -->
+  <div class="panel active" id="panel-beijing">
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Experiences & evenings</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="vincent jeremy tom group" data-lang="operator" data-type="experience gaming">
+      <div class="act-head"><div class="act-icon">🧩</div><div class="act-name">High-end escape room</div></div>
+      <p class="act-desc">Beijing's escape room scene is a step above most Western equivalents — theatrical sets, live actors, hydraulic puzzles, and tech-driven mechanics. Sanlitun and Wudaokou districts have the best venues. Operators like Hint specifically cater to English speakers and have English game masters. Book ahead and request an English-compatible room. A must for the group.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-jeremy">Jeremy</span><span class="pill p-tom">Tom</span><span class="pill p-group">Whole group evening</span><span class="lang-operator">⚠️ Book English room</span><span class="tip">📌 Book ahead</span></div>
+    </div>
+
+    <div class="act-card" data-persons="vincent jeremy tom" data-lang="easy" data-type="gaming">
+      <div class="act-head"><div class="act-icon">🎮</div><div class="act-name">Wudaokou gaming arcades & board game cafés</div></div>
+      <p class="act-desc">The Wudaokou university district doubles up perfectly — multi-floor gaming arcades with rhythm games, VR, and crane machines, plus a cluster of board game cafés with thousands of titles (many playable without Chinese). A natural guys' evening for Vincent, Jeremy, and Tom. The historically-themed Chinese strategy games in the cafés are worth seeking out specifically for Tom — Three Kingdoms and imperial China games are a major part of the local board game market. Very cheap, very local, very good.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-jeremy">Jeremy</span><span class="pill p-tom">Tom</span><span class="lang-easy">✅ No language needed</span></div>
+    </div>
+
+    <div class="act-card" data-persons="tom group" data-lang="operator" data-type="culture experience authentic">
+      <div class="act-head"><div class="act-icon">🏠</div><div class="act-name">Private hutong family homestay dinner</div></div>
+      <p class="act-desc">Families in the old Hutong districts open their courtyard homes for private dinners — home-cooked Beijing food around a family table, with stories about life in the hutongs before and after modernisation. A style of Beijing life that's rapidly disappearing. The Hutong cultural centre facilitates English-language versions. Far more meaningful than any restaurant and genuinely one of those travel memories that sticks.</p>
+      <div class="tag-row"><span class="pill p-tom">Tom</span><span class="pill p-group">Whole group</span><span class="lang-operator">⚠️ Book via The Hutong</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Crafts & culture</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="tom vincent sharon" data-lang="operator" data-type="craft culture">
+      <div class="act-head"><div class="act-icon">✍️</div><div class="act-name">Calligraphy or seal carving workshop</div></div>
+      <p class="act-desc">Hands-on 2–3 hour workshops in Chinese brush calligraphy or traditional stone seal carving — a craft practiced for over 2,000 years. The Hutong cultural centre runs excellent English-language versions. You leave with something you made yourself. Great for Vincent's crafts and making interests, Tom for the cultural depth, and Sharon's love of making things.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-tom">Tom</span><span class="pill p-sharon">Sharon</span><span class="lang-operator">⚠️ Book via The Hutong</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Photography & views</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="vincent dad jeremy" data-lang="easy" data-type="photo">
+      <div class="act-head"><div class="act-icon">📷</div><div class="act-name">Dawn photography — Temple of Heaven</div></div>
+      <p class="act-desc">The park opens early and fills with locals doing tai chi, flying kites, and playing erhu — completely unscripted and beautiful. The light at 7am on a clear October morning with the Hall of Prayer behind them is one of the great street photography opportunities in Asia. Bring a longer lens. Free once inside the park and largely tourist-free before 9am. A natural early morning pairing for Vincent, Dad, and Jeremy.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-dad">Dad</span><span class="pill p-jeremy">Jeremy</span><span class="lang-easy">✅ No language needed</span></div>
+    </div>
+
+    <div class="act-card" data-persons="dad mum vincent jeremy" data-lang="easy" data-type="photo">
+      <div class="act-head"><div class="act-icon">🌅</div><div class="act-name">Jingshan Park — overhead Forbidden City views</div></div>
+      <p class="act-desc">The artificial hill directly north of the Forbidden City gives the single best overhead view of the golden rooftops, especially beautiful in late afternoon light. Free to enter, 15-minute walk from the north gate. Almost no Western tourists despite being extraordinary. The golden rooftop composition is one of the most satisfying architectural shots in Beijing — essential for Dad, Vincent, and Jeremy.</p>
+      <div class="tag-row"><span class="pill p-dad">Dad</span><span class="pill p-mum">Mum</span><span class="pill p-vincent">Vincent</span><span class="pill p-jeremy">Jeremy</span><span class="lang-easy">✅ No language needed</span></div>
+    </div>
+
+    <div class="act-card" data-persons="vincent jeremy" data-lang="easy" data-type="photo culture">
+      <div class="act-head"><div class="act-icon">🏭</div><div class="act-name">798 Art District — architecture & street art photography</div></div>
+      <p class="act-desc">A converted Cold War-era military electronics factory complex now housing Beijing's main contemporary art scene — and one of the most photogenic urban spaces in the city. Bauhaus-influenced brutalist factory buildings covered in large-scale murals, outdoor sculpture installations, and neon-lit gallery fronts. Very different visual language to the imperial sights. Vincent for the design and authentic creative neighbourhood feel; Jeremy for the urban architecture shots. Free to wander, open daily.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-jeremy">Jeremy</span><span class="lang-easy">✅ No language needed</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Food — authentic & local</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="vincent" data-lang="easy" data-type="food authentic"></div>
+      <p class="act-desc">A kilometre-long strip of restaurants that comes alive after 10pm — packed entirely with locals eating hotpot and crayfish until 3am. Zero tourists, completely chaotic in the best possible way, and the atmosphere alone is worth the visit. Beijing hotpot is a communal, hours-long affair — order a split broth pot (half spicy, half mild), cook everything at the table, and settle in. One of the most authentic food experiences in Beijing and completely accessible with zero Chinese — you point at what you want.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-group">Great for the group</span><span class="lang-easy">✅ Point to order</span></div>
+    </div>
+
+    <div class="act-card" data-persons="vincent" data-lang="easy" data-type="food">
+      <div class="act-head"><div class="act-icon">🥣</div><div class="act-name">Local canteen breakfast — jianbing & douzhir</div></div>
+      <p class="act-desc">Beijing's street breakfast culture is extraordinary and almost entirely missed by tourists. Jianbing (an egg and chilli crêpe cooked on a griddle in front of you) is the iconic one, but the real test for a foodie is douzhir — a fermented mung bean milk that Beijingers drink with fried dough rings. It's an acquired taste that divides opinion sharply, which is exactly why it's worth trying. Find it at a neighbourhood canteen before 9am. A genuinely authentic food experience that costs almost nothing.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="lang-easy">✅ Point and order</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Shopping — deals & bargains</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="mum sharon" data-lang="easy" data-type="shopping">
+      <div class="act-head"><div class="act-icon">🛍️</div><div class="act-name">Silk Street Market (Xiushui)</div></div>
+      <p class="act-desc">The classic Beijing bargain market — a multi-floor indoor venue famous for silk, cashmere scarves, clothing, jewellery, and souvenirs at heavily negotiable prices. Haggling is not just expected, it's the point. Start at 20–30% of the asking price and walk away slowly if they won't move — they'll almost always call you back. By NZ standards even a "bad" deal is still excellent value. No language needed beyond a calculator and some stubborn body language.</p>
+      <div class="tag-row"><span class="pill p-mum">Mum</span><span class="pill p-sharon">Sharon</span><span class="lang-easy">✅ Calculator haggling</span><span class="badge-shopping">💰 Bargain hunting</span></div>
+    </div>
+
+    <div class="act-card" data-persons="mum sharon" data-lang="easy" data-type="shopping">
+      <div class="act-head"><div class="act-icon">🏺</div><div class="act-name">Panjiayuan antique & craft market</div></div>
+      <p class="act-desc">Beijing's largest flea and antique market — thousands of stalls with vintage ceramics, Mao-era memorabilia, calligraphy scrolls, jade, folk crafts, and genuine antiques. Best on weekend mornings. A brilliant browsing experience even without buying — the haggling is fun and prices are very low. Sharon will love the craft and textile sections; Mum for the general treasure hunting. Everything is negotiable.</p>
+      <div class="tag-row"><span class="pill p-mum">Mum</span><span class="pill p-sharon">Sharon</span><span class="lang-easy">✅ No language needed</span><span class="badge-shopping">💰 Bargain hunting</span><span class="tip">📌 Weekend mornings only</span></div>
+    </div>
+
+  </div>
+
+  <!-- ===================== XI'AN ===================== -->
+  <div class="panel" id="panel-xian">
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Experiences & evenings</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="vincent jeremy tom group" data-lang="operator" data-type="experience gaming">
+      <div class="act-head"><div class="act-icon">🧩</div><div class="act-name">Immersive historical puzzle experience</div></div>
+      <p class="act-desc">Xi'an's immersive entertainment scene is built around its imperial history — live-action puzzle games set inside recreated Tang dynasty environments where you solve mysteries as a character within the story. More narrative-driven and theatrical than a standard escape room, and the historical setting makes it especially good for Tom. Look for venues near the Bell Tower or check Dianping for current top-rated options.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-jeremy">Jeremy</span><span class="pill p-tom">Tom</span><span class="pill p-group">Whole group evening</span><span class="lang-operator">⚠️ Book English-compatible room</span></div>
+    </div>
+
+    <div class="act-card" data-persons="vincent jeremy tom" data-lang="easy" data-type="gaming">
+      <div class="act-head"><div class="act-icon">🎲</div><div class="act-name">Imperial-themed gaming teahouses</div></div>
+      <p class="act-desc">Xi'an has a growing scene of gaming teahouses — traditional teahouse settings where you play tabletop games, many themed around Three Kingdoms and imperial Chinese history. A perfect crossover for Tom's history and board gaming interests in one sitting, and a genuinely local experience rather than a tourist one. Best found via Dianping on the night. Cheap, relaxed, and a great window into how young locals spend their evenings in Xi'an.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-jeremy">Jeremy</span><span class="pill p-tom">Tom</span><span class="lang-easy">✅ Games are largely visual</span></div>
+    </div>
+
+    <div class="act-card" data-persons="tom" data-lang="easy" data-type="culture experience">
+      <div class="act-head"><div class="act-icon">🎭</div><div class="act-name">Tang Dynasty music & dance show</div></div>
+      <p class="act-desc">A theatrical dinner performance recreating Tang dynasty court music, dance, and costume. The Tang period (618–907 AD) is China's cultural golden age and Xi'an was its capital. Entirely visual and musical — no language needed at all. The Shaanxi Grand Opera House runs the most reputable version. Best for Tom who'll appreciate the historical context most, but great for the whole group as an evening activity.</p>
+      <div class="tag-row"><span class="pill p-tom">Tom</span><span class="pill p-group">Whole group evening</span><span class="lang-easy">✅ Fully visual — no language needed</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Culture & history</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="tom dad" data-lang="easy" data-type="culture">
+      <div class="act-head"><div class="act-icon">🏛️</div><div class="act-name">Shaanxi History Museum</div></div>
+      <p class="act-desc">One of China's finest museums and criminally undervisited compared to the Terracotta Warriors. Covers 1 million years of Shaanxi history — Zhou, Qin, Han, and Tang dynasties all had capitals here. The Tang dynasty gold and silver treasures section is extraordinary. Free entry but requires advance online booking. English audio guide available. Allow 3 hours minimum. Tom and Dad will find this more rewarding than almost anything else in Xi'an.</p>
+      <div class="tag-row"><span class="pill p-tom">Tom</span><span class="pill p-dad">Dad</span><span class="lang-easy">✅ English audio guide available</span><span class="tip">📌 Free — book online</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Crafts & making</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="sharon vincent" data-lang="operator" data-type="craft">
+      <div class="act-head"><div class="act-icon">✂️</div><div class="act-name">Paper cutting or shadow puppet workshop</div></div>
+      <p class="act-desc">Shaanxi is famous for intricate paper cutting (jiǎnzhǐ) and leather shadow puppets — crafts with 1,000+ years of history. Many workshops are run by older artisans with no English, so book specifically through an English-language cultural operator. Sharon for the crafting; Vincent for the making and design angle. You take home something genuinely beautiful.</p>
+      <div class="tag-row"><span class="pill p-sharon">Sharon</span><span class="pill p-vincent">Vincent</span><span class="lang-operator">⚠️ Book via English operator</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Food & photography</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="sharon mum group" data-lang="easy" data-type="food">
+      <div class="act-head"><div class="act-icon">🍢</div><div class="act-name">Muslim Quarter street food deep dive</div></div>
+      <p class="act-desc">Go beyond the obvious — biangbiang noodles, persimmon cakes, pomegranate juice pressed fresh, cold rice noodles, hand-pulled candy. Go with a local food guide or just point and order. The Muslim Quarter market stalls also sell scarves, silk goods, ceramic Terracotta Warrior replicas, and local crafts at prices well below any gift shop — everything negotiable. Sharon for the market energy, Mum for shopping and eating, everyone for the food.</p>
+      <div class="tag-row"><span class="pill p-sharon">Sharon</span><span class="pill p-mum">Mum</span><span class="pill p-group">Whole group</span><span class="lang-easy">✅ Point and order</span><span class="badge-shopping">💰 Bargain stalls too</span></div>
+    </div>
+
+    <div class="act-card" data-persons="vincent dad jeremy" data-lang="easy" data-type="photo">
+      <div class="act-head"><div class="act-icon">🌇</div><div class="act-name">City Wall at golden hour — photography</div></div>
+      <p class="act-desc">The Xi'an city wall at dusk in October turns warm amber in the low light, with the moat below reflecting the sky and the city glowing beyond the battlements. Cycle the wall in the late afternoon and be at the south gate tower at sunset. One of those shots that doesn't need a fancy camera to come out beautifully. The Muslim Quarter lanterns visible from the wall at dusk add another layer. Plan this for the last evening in Xi'an before Shanghai.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-dad">Dad</span><span class="pill p-jeremy">Jeremy</span><span class="lang-easy">✅ No language needed</span></div>
+    </div>
+
+    <div class="act-card" data-persons="vincent jeremy" data-lang="easy" data-type="photo">
+      <div class="act-head"><div class="act-icon">🏮</div><div class="act-name">Muslim Quarter at night — street photography</div></div>
+      <p class="act-desc">The Muslim Quarter after dark is one of the most visually rich street photography environments in China — red lanterns strung overhead, steam billowing from food stalls, dense crowds moving through narrow lanes, vivid neon against old stone architecture. October evenings are cool enough to shoot comfortably. The colour contrast and depth of the alleys lend themselves particularly well to the kind of urban shots Jeremy will be after. No photography restrictions, locals are generally happy to be photographed.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-jeremy">Jeremy</span><span class="lang-easy">✅ No language needed</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Food — authentic & local</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="vincent" data-lang="easy" data-type="food authentic">
+      <div class="act-head"><div class="act-icon">🍖</div><div class="act-name">Yangrou paomo — local breakfast ritual</div></div>
+      <p class="act-desc">Xi'an's most iconic local breakfast — a rich mutton broth into which you tear apart and crumble a dense flatbread by hand (the tearing is done by you, not the kitchen, and the size of the pieces matters). The bowl then goes back to the kitchen to be finished with glass noodles and pickled garlic. Eaten at communal tables in no-frills canteens at 7am alongside locals who've been eating this way for generations. For a foodie this is the most authentic food experience in Xi'an — completely off most tourist itineraries and costs almost nothing.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="lang-easy">✅ Point and order — simple process</span></div>
+    </div>
+
+    <div class="act-card" data-persons="vincent" data-lang="easy" data-type="food">
+      <div class="act-head"><div class="act-icon">🍝</div><div class="act-name">Fresh biang biang noodles at a local canteen</div></div>
+      <p class="act-desc">The noodles in the Muslim Quarter tourist stretch are fine but the real experience is sitting in a back-street canteen watching a cook hand-pull belt-wide noodles from a single lump of dough, slap them against the counter, and tear them directly into boiling water. The finished bowl — with chilli oil, garlic, vinegar, and black bean — is one of those dishes that's almost impossible to replicate outside Shaanxi. For Vincent specifically, watching the making process is as interesting as the eating. Find it one street back from the main Muslim Quarter drag.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="lang-easy">✅ Point and order</span></div>
+    </div>
+
+  </div>
+
+  <!-- ===================== SHANGHAI ===================== -->
+  <div class="panel" id="panel-shanghai">
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Experiences & full-day activities</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="vincent jeremy sharon tom group" data-lang="easy" data-type="experience">
+      <div class="act-head"><div class="act-icon">🏰</div><div class="act-name">Shanghai Disneyland — full day (Day 13)</div></div>
+      <p class="act-desc">Not just another Disney park. Shanghai has the world's only Zootopia land, the best Pirates of the Caribbean ride on the planet (trackless, moves in every direction), and TRON Lightcycle Power Run exclusive to this park. The castle is the tallest Disney has ever built. Fully bilingual — all signage, ride instructions, and cast members in English. Arrive at opening and hit Zootopia: Hot Pursuit first — queues hit 90–120 minutes by mid-morning. Book tickets online in advance.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-jeremy">Jeremy</span><span class="pill p-sharon">Sharon</span><span class="pill p-tom">Tom</span><span class="pill p-group">Full group day</span><span class="lang-easy">✅ Fully bilingual park</span><span class="badge-disney">🎢 Day 13</span><span class="tip">📌 Book tickets online</span></div>
+    </div>
+
+    <div class="act-card" data-persons="vincent jeremy tom group" data-lang="operator" data-type="experience gaming">
+      <div class="act-head"><div class="act-icon">🧩</div><div class="act-name">Shanghai flagship escape room — top tier</div></div>
+      <p class="act-desc">Shanghai is the escape room capital of China and arguably the world — venues here operate at a level that rivals theme park attractions. Full mechanical sets, live actors, custom soundtracks, and genuinely clever puzzles. Look for Foxin Rooms and Takagism in the Jing'an area. Book 2–3 weeks ahead and specifically request English game masters. A group evening non-negotiable.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-jeremy">Jeremy</span><span class="pill p-tom">Tom</span><span class="pill p-group">Whole group evening</span><span class="lang-operator">⚠️ Book English game master</span><span class="tip">📌 Book 2–3 weeks ahead</span></div>
+    </div>
+
+    <div class="act-card" data-persons="sharon vincent group" data-lang="easy" data-type="experience">
+      <div class="act-head"><div class="act-icon">🌸</div><div class="act-name">teamLab Borderless Shanghai</div></div>
+      <p class="act-desc">The confirmed Shanghai permanent installation from the Japanese digital art collective — 50 interconnected artworks across a 6,600m² museum on the Huangpu riverside near the Power Station of Art. Rooms of borderless projection where digital flowers bloom around you, schools of fish respond to your movement, and light cascades across floors and walls with no clear boundary between installations. Plan 2–4 hours minimum — there's no map and no set route, which is the point. Download the teamLab app before you go for the interactive layer. Fully visual, zero language needed. For Sharon and Vincent this hits the immersive experience interest from a completely different angle to escape rooms — meditative, sensory, and genuinely beautiful. Great for the whole group.</p>
+      <div class="tag-row"><span class="pill p-sharon">Sharon</span><span class="pill p-vincent">Vincent</span><span class="pill p-group">Whole group</span><span class="lang-easy">✅ No language needed</span><span class="tip">📌 Book tickets in advance</span></div>
+    </div>
+
+    <div class="act-card" data-persons="vincent group" data-lang="easy" data-type="experience">
+      <div class="act-head"><div class="act-icon">🎭</div><div class="act-name">Sleep No More Shanghai — Punchdrunk immersive theatre</div></div>
+      <p class="act-desc">The Shanghai production of Punchdrunk's legendary immersive theatre show — running continuously since 2016 and considered by many fans to be the most fully realised version of the concept. Set in a 1930s Shanghai hotel across multiple floors, the audience wears masks and moves freely through the space while actors perform scenes simultaneously throughout. No dialogue — it's all movement, music, and atmosphere, so language is completely irrelevant. The noir 1930s Shanghai setting gains an extra layer of meaning when you're actually in Shanghai. Book well in advance — it sells out regularly. Critical tip: split up as a group at the start. The show is designed for solo exploration and following individual characters down corridors into private moments. Stay together and you'll miss most of what makes it extraordinary. If an actor takes you alone into a locked room for a one-on-one scene — go. It's the thing people are still talking about a year later.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-group">Whole group evening</span><span class="lang-easy">✅ No dialogue — fully visual</span><span class="tip">📌 Book well in advance — splits up as group</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Gaming & tech</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="vincent jeremy tom" data-lang="easy" data-type="gaming">
+      <div class="act-head"><div class="act-icon">🎲</div><div class="act-name">Board game cafés — Jing'an & French Concession</div></div>
+      <p class="act-desc">Shanghai has the strongest board game café culture of the three cities — multi-floor venues with thousands of games (many playable without Chinese), friendly staff, and a completely local crowd. The French Concession area has the highest concentration. Some venues run regular game nights with English-speaking locals. Historically-themed Chinese strategy games (Three Kingdoms etc.) are widely available — great for Tom's crossover interest. A great low-cost evening that costs almost nothing.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-jeremy">Jeremy</span><span class="pill p-tom">Tom</span><span class="lang-easy">✅ Most games playable without language</span></div>
+    </div>
+
+    <div class="act-card" data-persons="vincent jeremy" data-lang="easy" data-type="gaming">
+      <div class="act-head"><div class="act-icon">💻</div><div class="act-name">Shanghai electronics & gadget markets</div></div>
+      <p class="act-desc">The Electronics City buildings near People's Square are multi-storey labyrinths of gadgets, components, retro gaming hardware, custom keyboards, and technology years ahead of NZ. This is where local makers, engineers, and gamers actually shop. Vincent and Jeremy could lose 3 hours here easily. Prices are excellent; bargaining on the upper floors is done via calculator — no language needed whatsoever.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-jeremy">Jeremy</span><span class="lang-easy">✅ Calculator haggling — no language needed</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Crafts & making</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="vincent sharon" data-lang="easy" data-type="craft">
+      <div class="act-head"><div class="act-icon">🎨</div><div class="act-name">M50 Moganshan Road art & design district</div></div>
+      <p class="act-desc">A converted industrial complex with 100+ independent galleries, design studios, ceramics workshops, and craft spaces. Artists work in open studios — you can watch and talk to them (many speak some English). A genuine creative hub, not a tourist attraction. Much of the work is for sale at accessible prices. Vincent for the design and making angle; Sharon for the craft and textile studios. Free to enter. Pair with a coffee at one of the converted warehouse cafés.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-sharon">Sharon</span><span class="lang-easy">✅ Visual browsing — no language needed</span></div>
+    </div>
+
+    <div class="act-card" data-persons="sharon vincent" data-lang="operator" data-type="craft">
+      <div class="act-head"><div class="act-icon">🏺</div><div class="act-name">M50 ceramics studio session</div></div>
+      <p class="act-desc">Several ceramics studios within M50 offer short bookable sessions where you throw your own piece on a wheel or hand-build something. A natural extension of the M50 visit. Sharon's making and crafts interests are perfectly suited here, and Vincent will enjoy the hands-on making angle. Look for studios with English-speaking instructors or ask at the M50 information desk on arrival.</p>
+      <div class="tag-row"><span class="pill p-sharon">Sharon</span><span class="pill p-vincent">Vincent</span><span class="lang-operator">⚠️ Ask for English instructor</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Food & cooking</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="sharon group" data-lang="operator" data-type="food craft">
+      <div class="act-head"><div class="act-icon">🥟</div><div class="act-name">Xiaolongbao & dumpling making class</div></div>
+      <p class="act-desc">A hands-on class focused specifically on Shanghai's most famous food — soup dumplings (xiaolongbao). Learning the pleating technique is genuinely tricky and satisfying, and some operators also cover Shanghai pastries and baked buns which suits Sharon's baking interest well. UnTour Food Tours and Cookly both run excellent English-language versions. Very hands-on and skill-based — not just watching a chef.</p>
+      <div class="tag-row"><span class="pill p-sharon">Sharon</span><span class="pill p-group">Whole group</span><span class="lang-operator">⚠️ Book via UnTour or Cookly</span></div>
+    </div>
+
+    <div class="act-card" data-persons="sharon" data-lang="operator" data-type="food craft">
+      <div class="act-head"><div class="act-icon">🍞</div><div class="act-name">Chinese pastry & mooncake baking workshop</div></div>
+      <p class="act-desc">A baking-specific workshop for Sharon — focused on traditional Chinese pastry (dim sum pastry, sweetheart cakes, or mooncakes depending on season). Mooncake workshops involve decorative mould-pressing which Sharon will enjoy from a craft angle as much as a baking one. Several boutique culinary studios in the French Concession run these in English. Genuinely different from a general cooking class and much more hands-on for someone who already bakes.</p>
+      <div class="tag-row"><span class="pill p-sharon">Sharon</span><span class="lang-operator">⚠️ Book via culinary studio</span></div>
+    </div>
+
+    <div class="act-card" data-persons="sharon tom group" data-lang="operator" data-type="food culture">
+      <div class="act-head"><div class="act-icon">🌅</div><div class="act-name">Wet market morning + cooking class</div></div>
+      <p class="act-desc">Start at a neighbourhood wet market at 7am — fresh produce, live seafood, tofu makers, and real local life far from the tourist trail. Then a hands-on cooking class making Shanghai classics. UnTour Food Tours runs the best English-language combined market-to-kitchen experience in Shanghai. Sharon for the market and cooking; Tom for the cultural immersion; great for the whole group as a morning activity.</p>
+      <div class="tag-row"><span class="pill p-sharon">Sharon</span><span class="pill p-tom">Tom</span><span class="pill p-group">Whole group</span><span class="lang-operator">⚠️ Book via UnTour Food Tours</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Shopping — deals & bargains</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="mum sharon" data-lang="easy" data-type="shopping">
+      <div class="act-head"><div class="act-icon">👗</div><div class="act-name">AP Xinyang Fashion & Accessories Market</div></div>
+      <p class="act-desc">Near the Science & Technology Museum metro station — multi-floor indoor market with floors of clothing, bags, watches, accessories, and homewares at heavily negotiated prices. One of the best bargain markets in Shanghai and well known to deal hunters. Start at 10–15% of the asking price. No language needed — calculators do the talking. Mum will be in her element; Sharon for the textile and accessories sections.</p>
+      <div class="tag-row"><span class="pill p-mum">Mum</span><span class="pill p-sharon">Sharon</span><span class="lang-easy">✅ Calculator haggling</span><span class="badge-shopping">💰 Best bargain market</span></div>
+    </div>
+
+    <div class="act-card" data-persons="mum sharon" data-lang="easy" data-type="shopping">
+      <div class="act-head"><div class="act-icon">🧵</div><div class="act-name">South Bund Fabric Market</div></div>
+      <p class="act-desc">A fabric and textile market spanning multiple buildings — silk, cashmere, linen, and cotton by the metre at very low prices. The standout feature: you can get clothes custom-made within 24–48 hours for a fraction of Western tailoring costs. Bring a photo of what you want or describe it to a tailor. Sharon will love the fabric selection from a craft angle; Mum for the custom clothing value. One of the genuinely great shopping experiences in Shanghai.</p>
+      <div class="tag-row"><span class="pill p-mum">Mum</span><span class="pill p-sharon">Sharon</span><span class="lang-easy">✅ Photos & gestures work fine</span><span class="badge-shopping">💰 Custom tailoring</span><span class="tip">📌 Allow 48hrs for made items</span></div>
+    </div>
+
+    <div class="act-card" data-persons="mum sharon" data-lang="easy" data-type="shopping">
+      <div class="act-head"><div class="act-icon">🛍️</div><div class="act-name">Dongtai Road antiques & Tianzifang</div></div>
+      <p class="act-desc">Dongtai Road is Shanghai's famous antique street — vintage propaganda posters, porcelain, old cameras, jade jewellery, and genuine curios. Pair it with Tianzifang nearby — a warren of French Concession alleyways lined with independent boutiques, textile shops, handmade jewellery, and small galleries. Sharon's kind of morning; Mum for the browsing, the pretty surroundings, and the occasional treasure find.</p>
+      <div class="tag-row"><span class="pill p-mum">Mum</span><span class="pill p-sharon">Sharon</span><span class="lang-easy">✅ No language needed</span></div>
+    </div>
+
+    <div class="act-card" data-persons="mum sharon" data-lang="easy" data-type="shopping">
+      <div class="act-head"><div class="act-icon">👔</div><div class="act-name">Qipu Road clothing market</div></div>
+      <p class="act-desc">A massive multi-floor wholesale clothing market where locals shop for everyday clothing at extremely low prices — less polished than the tourist markets but genuinely cheap and worth a couple of hours if Mum is after clothing specifically. Less curated than AP Xinyang but a bigger range and lower prices. Best early in the morning when stock is fullest. Very local, very chaotic, very good value.</p>
+      <div class="tag-row"><span class="pill p-mum">Mum</span><span class="lang-easy">✅ No language needed</span><span class="badge-shopping">💰 Lowest prices</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Views & photography</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="mum dad vincent jeremy" data-lang="easy" data-type="photo">
+      <div class="act-head"><div class="act-icon">🌆</div><div class="act-name">Bund at dawn + rooftop bar at dusk</div></div>
+      <p class="act-desc">The Bund at 6:30am is almost tourist-free — joggers, locals exercising, the Pudong skyline reflected in still water, the first light hitting the art deco facades. Genuinely one of the prettiest views in Asia at that hour and perfect for photography before the crowds arrive. At dusk, standing on the Bund looking at Pudong just after sunset (blue hour) is the iconic shot — the towers light up gradually as the sky darkens behind them. Then bars on the upper floors of Bund buildings (Bar Rouge, New Heights, Flair Rooftop) give the skyline from above for one splurge evening.</p>
+      <div class="tag-row"><span class="pill p-mum">Mum</span><span class="pill p-dad">Dad</span><span class="pill p-vincent">Vincent</span><span class="pill p-jeremy">Jeremy</span><span class="lang-easy">✅ No language needed</span></div>
+    </div>
+
+    <div class="act-card" data-persons="vincent jeremy" data-lang="easy" data-type="photo">
+      <div class="act-head"><div class="act-icon">🌉</div><div class="act-name">Zhujiajiao water town — canal & bridge photography</div></div>
+      <p class="act-desc">If the group does the Zhujiajiao day trip on the flex day, the stone arch bridges and canal reflections make it one of the most photographically rewarding half-days near Shanghai. Early morning before the day-trippers arrive is the time to be there — the water is still, the light is soft, and you'll have the bridges largely to yourself. The visual contrast to the Shanghai skyline shots makes it a natural companion in an album. About 1 hour from central Shanghai by bus or car.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-jeremy">Jeremy</span><span class="lang-easy">✅ No language needed</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Food — authentic & local</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="vincent" data-lang="easy" data-type="food">
+      <div class="act-head"><div class="act-icon">🦀</div><div class="act-name">Hairy crab season — a once-a-year foodie event</div></div>
+      <p class="act-desc">Late October to early November is hairy crab season in Shanghai — one of the great seasonal eating events in Chinese food culture. Yangcheng Lake hairy crabs are steamed and eaten with ginger, vinegar, and Shaoxing rice wine in a ritual that takes 30–40 minutes per crab and involves a dedicated set of tiny tools. Locals book restaurants months in advance for this. For Vincent as a foodie, being in Shanghai at exactly the right time of year to eat the city's most celebrated seasonal dish is genuinely special. Ask your hotel to recommend a well-regarded local crab restaurant — not a tourist spot.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="pill p-group">Great for the group</span><span class="lang-easy">✅ Point to order</span><span class="tip">📌 Book restaurant in advance</span></div>
+    </div>
+
+    <div class="act-card" data-persons="vincent" data-lang="easy" data-type="food">
+      <div class="act-head"><div class="act-icon">🥟</div><div class="act-name">The xiaolongbao trail — comparing versions across the city</div></div>
+      <p class="act-desc">A proper foodie activity rather than a tourist tick — eating xiaolongbao at three or four different establishments across your Shanghai days and comparing the differences in skin thickness, broth intensity, and filling quality. Din Tai Fung is the famous benchmark but locals debate endlessly whether Jia Jia Tang Bao or Fu Chun does it better. Yang's Dumplings for the pan-fried version (sheng jian bao) is a completely different but equally essential comparison. Cheap enough to do multiple times across the trip without thinking about it.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="lang-easy">✅ Point and order</span></div>
+    </div>
+
+    <div class="act-card" data-persons="vincent" data-lang="easy" data-type="food authentic">
+      <div class="act-head"><div class="act-icon">🏘️</div><div class="act-name">Longtang neighbourhood — authentic local Shanghai</div></div>
+      <p class="act-desc">The old lane house neighbourhoods (longtang) away from the French Concession tourist strip are where everyday Shanghai actually lives — elderly residents playing mahjong on the pavement, laundry strung between buildings, local wet market vendors, hole-in-the-wall noodle shops with three tables and one dish. The Jing'an and Putuo districts have well-preserved longtang that feel genuinely untouched. For Vincent's authentic experience interest this is the side of Shanghai that most visitors never find because it doesn't have a sign. Just walk in and wander.</p>
+      <div class="tag-row"><span class="pill p-vincent">Vincent</span><span class="lang-easy">✅ No language needed — just wander</span></div>
+    </div>
+
+    <div class="cat-divider"><div class="cat-line"></div><div class="cat-label">Culture & architecture</div><div class="cat-line"></div></div>
+
+    <div class="act-card" data-persons="tom vincent" data-lang="easy" data-type="culture">
+      <div class="act-head"><div class="act-icon">🏗️</div><div class="act-name">1933 Old Millfun — immersive architecture</div></div>
+      <p class="act-desc">A 1930s slaughterhouse converted into one of Shanghai's most surreal spaces — a brutalist concrete labyrinth of walkways, bridges, and circular ramps across five floors, now housing boutiques, cafés, and creative studios. No tour needed, just wander and get lost. Tom for the layered history of the building; Vincent for the design and photography angles. Almost no Western tourists. Completely free to explore.</p>
+      <div class="tag-row"><span class="pill p-tom">Tom</span><span class="pill p-vincent">Vincent</span><span class="lang-easy">✅ No language needed</span></div>
+    </div>
+
+  </div>
+
+  <div id="no-results" class="no-results" style="display:none;">No activities match this combination — try adjusting the filters above.</div>
+
+</div>
+
+<script>
+  let currentCity = 'beijing';
+  let currentPerson = 'all';
+  let currentType = 'all';
+  let currentLang = 'all';
+
+  function showCity(city) {
+    currentCity = city;
+    ['beijing','xian','shanghai'].forEach(c => {
+      document.getElementById('ctab-' + c).className = 'ctab';
+      document.getElementById('panel-' + c).classList.remove('active');
+    });
+    document.getElementById('ctab-' + city).classList.add('on-' + city);
+    document.getElementById('panel-' + city).classList.add('active');
+    applyFilters();
+  }
+
+  function filterPerson(person) {
+    currentPerson = person;
+    document.querySelectorAll('.ptab').forEach(t => {
+      t.classList.remove('on');
+      if (t.dataset.person === person) t.classList.add('on');
+    });
+    applyFilters();
+  }
+
+  function filterType(type) {
+    currentType = type;
+    document.querySelectorAll('.ttab').forEach(t => {
+      t.classList.remove('on');
+      if (t.dataset.type === type) t.classList.add('on');
+    });
+    applyFilters();
+  }
+
+  function filterLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.ltab').forEach(t => {
+      t.classList.remove('on-all','on-easy','on-operator');
+      if (t.dataset.lang === lang) t.classList.add('on-' + lang);
+    });
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const panel = document.getElementById('panel-' + currentCity);
+    const cards = panel.querySelectorAll('.act-card');
+    let visible = 0;
+    cards.forEach(card => {
+      const persons = (card.dataset.persons || '').split(' ');
+      const types = (card.dataset.type || '').split(' ');
+      const lang = card.dataset.lang || 'easy';
+      const personMatch = currentPerson === 'all' || persons.includes(currentPerson);
+      const typeMatch = currentType === 'all' || types.includes(currentType);
+      const langMatch = currentLang === 'all' || lang === currentLang;
+      if (personMatch && typeMatch && langMatch) {
+        card.classList.remove('hidden');
+        visible++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+    const dividers = panel.querySelectorAll('.cat-divider');
+    dividers.forEach(div => {
+      let next = div.nextElementSibling;
+      let hasVisible = false;
+      while (next && !next.classList.contains('cat-divider')) {
+        if (next.classList.contains('act-card') && !next.classList.contains('hidden')) hasVisible = true;
+        next = next.nextElementSibling;
+      }
+      div.style.display = hasVisible ? 'flex' : 'none';
+    });
+    document.getElementById('no-results').style.display = visible === 0 ? 'block' : 'none';
+    const cityNames = { beijing: 'Beijing', xian: "Xi'an", shanghai: 'Shanghai' };
+    document.getElementById('results-count').textContent = visible + ' activit' + (visible === 1 ? 'y' : 'ies') + ' in ' + cityNames[currentCity];
+  }
+
+  applyFilters();
+</script>
+</body>
+</html>
