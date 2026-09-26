@@ -47,6 +47,7 @@
   .ov-shanghai .ov-nights { color: #085041; }
   .ov-nights-lbl { font-size: 11px; color: #888; margin-top: 1px; }
   .ov-checkin { font-size: 11px; color: #666; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.08); line-height: 1.5; }
+  .ov-hotel { font-size: 11px; font-weight: 700; color: #444; margin-top: 6px; }
 
   .city-section { margin-bottom: 40px; page-break-inside: avoid; }
   .city-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; padding-bottom: 10px; border-bottom: 2px solid; }
@@ -59,7 +60,14 @@
   .city-header.shanghai .city-name { color: #085041; }
   .city-meta { font-size: 13px; color: #888; }
 
-  .day-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  .hotel-box { background: #f8f7f4; border-radius: 8px; padding: 12px 14px; margin: 10px 0 14px; font-size: 12px; color: #555; line-height: 1.6; }
+  .hotel-box strong { color: #1a1a1a; font-size: 13px; }
+  .hotel-rooms { margin-top: 8px; padding-top: 8px; border-top: 1px solid #ebebeb; }
+  .hotel-room-row { display: flex; gap: 8px; padding: 3px 0; }
+  .room-label { font-weight: 600; color: #888; min-width: 60px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; padding-top: 1px; }
+  .room-detail { color: #444; font-size: 12px; }
+
+  .day-table { width: 100%; border-collapse: collapse; margin-top: 0; }
   .day-table th { text-align: left; padding: 6px 10px; font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #e8e8e8; }
   .day-table td { padding: 10px 10px; border-bottom: 1px solid #f4f3f0; vertical-align: top; line-height: 1.5; font-size: 13px; }
   .day-table tr:last-child td { border-bottom: none; }
@@ -94,7 +102,7 @@
     <p class="doc-sub">Family trip · October 2026</p>
     <h1 class="doc-title">China — Accommodation Guide</h1>
     <p class="doc-sub">Beijing · Xi'an · Shanghai</p>
-    <p class="doc-note">This document is for accommodation booking purposes. It shows which city the group is in each night, check-in and check-out dates, and a brief overview of each day's activities.</p>
+    <p class="doc-note">Confirmed bookings via Trip.com. Shows hotel details, check-in/check-out dates, and a brief overview of each day's activities.</p>
     <div class="people-row">
       <span class="person-pill pp-vincent">Vincent</span>
       <span class="person-pill pp-jeremy">Jeremy</span>
@@ -153,30 +161,33 @@
     <div class="overview-card ov-beijing">
       <div class="ov-city">Beijing</div>
       <div class="ov-dates">Tue 13 Oct – Mon 19 Oct</div>
-      <div class="ov-nights">5</div>
+      <div class="ov-nights">6</div>
       <div class="ov-nights-lbl">nights</div>
+      <div class="ov-hotel">Chongwenmen Hotel</div>
       <div class="ov-checkin">
-        <strong>Check-in:</strong> Tue 13 Oct (late night — 22:25 arrival)<br>
-        <strong>Check-out:</strong> Mon 19 Oct (morning — early train to Xi'an)
+        <strong>Check-in:</strong> Tue 13 Oct (late — 22:25 arrival)<br>
+        <strong>Check-out:</strong> Mon 19 Oct (morning — train to Xi'an)
       </div>
     </div>
     <div class="overview-card ov-xian">
       <div class="ov-city">Xi'an</div>
-      <div class="ov-dates">Mon 19 Oct – Thu 22 Oct</div>
-      <div class="ov-nights">3</div>
+      <div class="ov-dates">Mon 19 Oct – Fri 23 Oct</div>
+      <div class="ov-nights">4</div>
       <div class="ov-nights-lbl">nights</div>
+      <div class="ov-hotel">AHS-Park Hotel</div>
       <div class="ov-checkin">
         <strong>Check-in:</strong> Mon 19 Oct (afternoon — train arrives ~1pm)<br>
-        <strong>Check-out:</strong> Thu 22 Oct (morning — early flight to Shanghai)
+        <strong>Check-out:</strong> Fri 23 Oct (morning — flight to Shanghai)
       </div>
     </div>
     <div class="overview-card ov-shanghai">
       <div class="ov-city">Shanghai</div>
-      <div class="ov-dates">Thu 22 Oct – Wed 28 Oct</div>
-      <div class="ov-nights">6</div>
+      <div class="ov-dates">Fri 23 Oct – Wed 28 Oct</div>
+      <div class="ov-nights">5</div>
       <div class="ov-nights-lbl">nights</div>
+      <div class="ov-hotel">JI Hotel, The Bund</div>
       <div class="ov-checkin">
-        <strong>Check-in:</strong> Thu 22 Oct (early afternoon — flight arrives ~12pm)<br>
+        <strong>Check-in:</strong> Fri 23 Oct (afternoon — flight from Xi'an)<br>
         <strong>Check-out:</strong> Wed 28 Oct (midday — flight departs 13:35)
       </div>
     </div>
@@ -186,8 +197,24 @@
   <div class="city-section">
     <div class="city-header beijing">
       <span class="city-name">Beijing</span>
-      <span class="city-meta">5 nights · Tue 13 Oct – Mon 19 Oct</span>
+      <span class="city-meta">6 nights · Tue 13 Oct – Mon 19 Oct</span>
     </div>
+
+    <div class="hotel-box">
+      <strong>Chongwenmen Hotel</strong> · No. 2 Chongwenmen West Street, Dongcheng District, Beijing · +86-10-65122211<br>
+      Near metro, Tiananmen Square, Wangfujing, Forbidden City and Temple of Heaven
+      <div class="hotel-rooms">
+        <div class="hotel-room-row">
+          <span class="room-label">Room 1</span>
+          <span class="room-detail">Business Standard Room · 2 single beds · Jeremy LEE · breakfast included · Pay at hotel (CNY 3,086)</span>
+        </div>
+        <div class="hotel-room-row">
+          <span class="room-label">Room 2</span>
+          <span class="room-detail">Regular Double Bed Room · 1 double bed · Bill LEE + Sharon Lee · breakfast included · Pay at hotel (CNY 5,898)</span>
+        </div>
+      </div>
+    </div>
+
     <table class="day-table">
       <tr>
         <th>Day</th>
@@ -233,8 +260,8 @@
       <tr>
         <td class="day-id-cell">Day 5<span class="day-date">Sat 17 Oct</span></td>
         <td class="day-content-cell"><span class="day-ov">Temple of Heaven, Fragrant Hills, 798 Art District & escape room</span><ul>
-            <li>Very early: Temple of Heaven dawn photography (locals doing tai chi, kite flying)</li>
-            <li>Fragrant Hills for peak red foliage (best mid-October)</li>
+            <li>Very early: Temple of Heaven dawn photography</li>
+            <li>Fragrant Hills for peak red foliage</li>
             <li>Evening: 798 Art District then group escape room in Sanlitun</li>
           </ul></td>
         <td class="sleep-cell beijing">Beijing</td>
@@ -243,7 +270,7 @@
         <td class="day-id-cell">Day 6<span class="day-date">Sun 18 Oct</span></td>
         <td class="day-content-cell"><span class="day-ov">Summer Palace, Panjiayuan market, workshops & hutong dinner</span><ul>
             <li>Morning: Summer Palace boat ride</li>
-            <li>Afternoon: Panjiayuan antique market (Mum/Sharon) · gaming arcades (Vincent/Jeremy) · calligraphy workshop (Sharon/Tom)</li>
+            <li>Afternoon: Panjiayuan antique market · calligraphy workshop · gaming arcades</li>
             <li>Evening: private hutong family homestay dinner</li>
           </ul></td>
         <td class="sleep-cell beijing">Beijing</td>
@@ -251,22 +278,37 @@
       <tr class="transit-row">
         <td class="day-id-cell">Day 7 <span class="transit-badge">Transit</span><span class="day-date">Mon 19 Oct</span></td>
         <td class="day-content-cell"><span class="day-ov">Bullet train Beijing → Xi'an</span><ul>
-            <li>Morning bullet train to Xi'an (~4.5 hrs)</li>
-            <li>Check out of Beijing hotel before departure</li>
+            <li>Morning bullet train to Xi'an (~4.5 hrs) — check out before departure</li>
             <li>Arrive Xi'an early afternoon — check in to Xi'an hotel</li>
+            <li>Late afternoon: City Wall first look · Evening: Muslim Quarter dinner</li>
           </ul></td>
         <td class="sleep-cell xian">Xi'an (first night)</td>
       </tr>
     </table>
-    <div class="note-box"><strong>Beijing check-in note:</strong> The group arrives late on 13 Oct (22:25). Please ensure the hotel is aware of the late check-in time and that rooms are held. Early check-out on 19 Oct before the morning bullet train to Xi'an.</div>
+    <div class="note-box"><strong>Beijing check-in note:</strong> The group arrives late on 13 Oct (22:25). Please ensure the hotel is aware of the late check-in and that rooms are held. Check-out on 19 Oct before the morning bullet train to Xi'an.</div>
   </div>
 
   <!-- XI'AN -->
   <div class="city-section">
     <div class="city-header xian">
       <span class="city-name">Xi'an</span>
-      <span class="city-meta">3 nights · Mon 19 Oct – Thu 22 Oct</span>
+      <span class="city-meta">4 nights · Mon 19 Oct – Fri 23 Oct</span>
     </div>
+
+    <div class="hotel-box">
+      <strong>AHS-Park Hotel</strong> (Huimin Street, Bell Tower) · No. 351 East Street, Beilin District, Xi'an · +86-18909238389
+      <div class="hotel-rooms">
+        <div class="hotel-room-row">
+          <span class="room-label">Room 1</span>
+          <span class="room-detail">Aiqing Twin Room · 2 single beds · Vincent LEE · breakfast included · NZD 305.20 paid</span>
+        </div>
+        <div class="hotel-room-row">
+          <span class="room-label">Room 2</span>
+          <span class="room-detail">Double Bed Room · 1 queen bed · Sharon Lee + Bill LEE · breakfast included · NZD 630.40 paid · includes one-way airport pick-up for 2</span>
+        </div>
+      </div>
+    </div>
+
     <table class="day-table">
       <tr>
         <th>Day</th>
@@ -304,26 +346,50 @@
           </ul></td>
         <td class="sleep-cell xian">Xi'an</td>
       </tr>
+      <tr>
+        <td class="day-id-cell">Day 10<span class="day-date">Thu 22 Oct</span></td>
+        <td class="day-content-cell"><span class="day-ov">Xi'an free day — last night</span><ul>
+            <li>Flexible day — no fixed plans</li>
+            <li>Options: City Wall bike ride · Tang Paradise light show · Big Wild Goose Pagoda</li>
+            <li>Final Xi'an dinner in the Muslim Quarter</li>
+          </ul></td>
+        <td class="sleep-cell xian">Xi'an (last night)</td>
+      </tr>
       <tr class="transit-row">
-        <td class="day-id-cell">Day 10 <span class="transit-badge">Transit</span><span class="day-date">Thu 22 Oct</span></td>
+        <td class="day-id-cell">Day 11 <span class="transit-badge">Transit</span><span class="day-date">Fri 23 Oct</span></td>
         <td class="day-content-cell"><span class="day-ov">Fly Xi'an → Shanghai</span><ul>
-            <li>Early morning flight Xi'an → Shanghai (~2 hrs)</li>
-            <li>Check out of Xi'an hotel before departure</li>
+            <li>Morning flight Xi'an → Shanghai (~2 hrs) — check out before departure</li>
             <li>Arrive Shanghai early afternoon — check in to Shanghai hotel</li>
-            <li>Evening: Bund first look and rooftop bar at dusk</li>
+            <li>Afternoon: first Bund walk and Pudong skyline orientation</li>
+            <li>Evening: rooftop bar at blue hour</li>
           </ul></td>
         <td class="sleep-cell shanghai">Shanghai (first night)</td>
       </tr>
     </table>
-    <div class="note-box"><strong>Xi'an check-in note:</strong> Afternoon arrival on 19 Oct (bullet train from Beijing). Early check-out morning of 22 Oct for the Xi'an → Shanghai flight.</div>
+    <div class="note-box"><strong>Xi'an check-in note:</strong> Afternoon arrival on 19 Oct (bullet train from Beijing). The hotel includes one-way airport pick-up — confirm this is arranged for arrival. Check-out morning of 23 Oct for the Xi'an → Shanghai flight.</div>
   </div>
 
   <!-- SHANGHAI -->
   <div class="city-section">
     <div class="city-header shanghai">
       <span class="city-name">Shanghai</span>
-      <span class="city-meta">6 nights · Thu 22 Oct – Wed 28 Oct</span>
+      <span class="city-meta">5 nights · Fri 23 Oct – Wed 28 Oct</span>
     </div>
+
+    <div class="hotel-box">
+      <strong>JI Hotel (Shanghai The Bund Sichuan Middle Road)</strong> · No. 607 Sichuan Middle Road, Huangpu District, Shanghai · +86-21-63215050
+      <div class="hotel-rooms">
+        <div class="hotel-room-row">
+          <span class="room-label">Room 1</span>
+          <span class="room-detail">Twin Bedroom · 2 single beds · Vincent LEE · NZD 904.27 paid</span>
+        </div>
+        <div class="hotel-room-row">
+          <span class="room-label">Room 2</span>
+          <span class="room-detail">Superior Panoramic Double Room · 1 queen bed · Bill LEE + Sharon Lee · NZD 1,867.88 paid</span>
+        </div>
+      </div>
+    </div>
+
     <table class="day-table">
       <tr>
         <th>Day</th>
@@ -331,7 +397,7 @@
         <th>Sleep</th>
       </tr>
       <tr class="transit-row">
-        <td class="day-id-cell">Day 10 <span class="transit-badge">Transit</span><span class="day-date">Thu 22 Oct</span></td>
+        <td class="day-id-cell">Day 11 <span class="transit-badge">Transit</span><span class="day-date">Fri 23 Oct</span></td>
         <td class="day-content-cell"><span class="day-ov">Arrive Shanghai from Xi'an</span><ul>
             <li>Arrive early afternoon by flight from Xi'an</li>
             <li>Check in to hotel, freshen up</li>
@@ -341,7 +407,7 @@
         <td class="sleep-cell shanghai">Shanghai</td>
       </tr>
       <tr>
-        <td class="day-id-cell">Day 11<span class="day-date">Fri 23 Oct</span></td>
+        <td class="day-id-cell">Day 12<span class="day-date">Sat 24 Oct</span></td>
         <td class="day-content-cell"><span class="day-ov">Bund at dawn, French Concession, M50 & teamLab Borderless</span><ul>
             <li>Very early: Bund at 6:30am for dawn photography</li>
             <li>Mid-morning: French Concession and Tianzifang alleyways</li>
@@ -351,7 +417,7 @@
         <td class="sleep-cell shanghai">Shanghai</td>
       </tr>
       <tr>
-        <td class="day-id-cell">Day 12<span class="day-date">Sat 24 Oct</span></td>
+        <td class="day-id-cell">Day 13<span class="day-date">Sun 25 Oct</span></td>
         <td class="day-content-cell"><span class="day-ov">Hangzhou day trip — West Lake & tea village</span><ul>
             <li>Early train to Hangzhou (~45 min, depart 7:30am)</li>
             <li>West Lake boat ride and Su Causeway walk</li>
@@ -362,7 +428,7 @@
         <td class="sleep-cell shanghai">Shanghai</td>
       </tr>
       <tr>
-        <td class="day-id-cell">Day 13<span class="day-date">Sun 25 Oct</span></td>
+        <td class="day-id-cell">Day 14<span class="day-date">Mon 26 Oct</span></td>
         <td class="day-content-cell"><span class="day-ov">Shanghai Disneyland — full day</span><ul>
             <li>Full day at Shanghai Disneyland</li>
             <li>Highlights: Zootopia land (world exclusive), TRON Lightcycle, Pirates of the Caribbean</li>
@@ -371,21 +437,11 @@
         <td class="sleep-cell shanghai">Shanghai</td>
       </tr>
       <tr>
-        <td class="day-id-cell">Day 14<span class="day-date">Mon 26 Oct</span></td>
+        <td class="day-id-cell">Day 15<span class="day-date">Tue 27 Oct</span></td>
         <td class="day-content-cell"><span class="day-ov">Split morning activities & Great World Dream evening</span><ul>
             <li>Morning split: cooking class (Sharon/Tom) · electronics market (Vincent/Jeremy) · shopping (Mum/Sharon)</li>
             <li>Hairy crab lunch — peak season in late October</li>
-            <li>Afternoon: rest and free time</li>
             <li>Evening: Great World Dream immersive theatre</li>
-          </ul></td>
-        <td class="sleep-cell shanghai">Shanghai</td>
-      </tr>
-      <tr>
-        <td class="day-id-cell">Day 15<span class="day-date">Tue 27 Oct</span></td>
-        <td class="day-content-cell"><span class="day-ov">Free day — flexible</span><ul>
-            <li>Full free day in Shanghai — no fixed plans</li>
-            <li>Options: Suzhou day trip · 1933 Old Millfun · Old City and Yuyuan Garden · rest day</li>
-            <li>Final Shanghai dinner — somewhere special</li>
           </ul></td>
         <td class="sleep-cell shanghai">Shanghai</td>
       </tr>
@@ -400,7 +456,7 @@
         <td class="sleep-cell transit">✈️ Overnight flight</td>
       </tr>
     </table>
-    <div class="note-box"><strong>Shanghai check-in note:</strong> Afternoon arrival on 22 Oct (flight from Xi'an). Check-out by late morning on 28 Oct — flight departs Shanghai Hongqiao at 13:35. Note: Shanghai has two airports — the flight departs from <strong>Hongqiao (SHA)</strong>, not Pudong (PVG). Allow at least 2 hours before departure.</div>
+    <div class="note-box"><strong>Shanghai check-in note:</strong> Afternoon arrival on 23 Oct (flight from Xi'an). Check-out by late morning on 28 Oct — flight departs Shanghai <strong>Hongqiao (SHA)</strong>, not Pudong (PVG). Allow at least 2 hours before the 13:35 departure.</div>
   </div>
 
 </body>
