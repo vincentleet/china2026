@@ -3,19 +3,136 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>China family trip — itinerary 2026</title>
+<title>China 2026 — Itinerary</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f7f4; color: #1a1a1a; padding: 32px 16px; }
-  .container { max-width: 820px; margin: 0 auto; }
-  .trip-header { margin-bottom: 28px; }
-  .trip-title { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
-  .trip-sub { font-size: 14px; color: #666; margin-bottom: 2px; }
-  .summary-row { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 8px; margin-bottom: 20px; }
-  .s-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 10px; padding: 12px; text-align: center; }
-  .s-num { font-size: 19px; font-weight: 700; color: #1a1a1a; }
-  .s-lbl { font-size: 11px; color: #888; margin-top: 2px; }
-  .people-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+
+  :root {
+    --sidebar-w: 220px;
+    --c-beijing: #0C447C;
+    --c-beijing-bg: #E6F1FB;
+    --c-beijing-bd: #378ADD;
+    --c-xian: #633806;
+    --c-xian-bg: #FAEEDA;
+    --c-xian-bd: #EF9F27;
+    --c-shanghai: #085041;
+    --c-shanghai-bg: #E1F5EE;
+    --c-shanghai-bd: #1D9E75;
+    --c-transit: #444441;
+    --c-transit-bg: #F1EFE8;
+    --c-transit-bd: #888780;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f8f7f4;
+    color: #1a1a1a;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    background: #fff;
+    border-right: 1px solid #e8e8e8;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 10;
+  }
+
+  .sidebar-header {
+    padding: 20px 16px 14px;
+    border-bottom: 1px solid #f0efe9;
+  }
+  .sidebar-title { font-size: 14px; font-weight: 700; color: #1a1a1a; line-height: 1.3; }
+  .sidebar-sub { font-size: 11px; color: #aaa; margin-top: 2px; }
+
+  .sidebar-nav { padding: 10px 8px; flex: 1; }
+
+  .nav-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #ccc;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 10px 8px 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.3;
+    transition: background 0.1s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+  .nav-item:hover { background: #f8f7f4; color: #1a1a1a; }
+  .nav-item.active { background: #1a1a1a; color: #fff; }
+  .nav-item.active .nav-badge { background: rgba(255,255,255,0.2); color: #fff; }
+
+  .nav-day-num {
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 28px;
+    color: inherit;
+    opacity: 0.6;
+  }
+  .nav-item.active .nav-day-num { opacity: 0.7; }
+
+  .nav-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 99px;
+    white-space: nowrap;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .nb-beijing { background: var(--c-beijing-bg); color: var(--c-beijing); }
+  .nb-xian { background: var(--c-xian-bg); color: var(--c-xian); }
+  .nb-shanghai { background: var(--c-shanghai-bg); color: var(--c-shanghai); }
+  .nb-transit { background: var(--c-transit-bg); color: var(--c-transit); }
+
+  .nav-item.active.city-beijing { background: var(--c-beijing); }
+  .nav-item.active.city-xian { background: var(--c-xian); }
+  .nav-item.active.city-shanghai { background: var(--c-shanghai); }
+  .nav-item.active.city-transit { background: #555; }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    padding: 32px 36px;
+    max-width: 800px;
+  }
+
+  /* ── PAGES ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── OVERVIEW PAGE ── */
+  .ov-title { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  .ov-sub { font-size: 14px; color: #888; margin-bottom: 20px; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px; }
+  .stat { background: #fff; border: 1px solid #e8e8e8; border-radius: 10px; padding: 12px; text-align: center; }
+  .stat-n { font-size: 18px; font-weight: 700; }
+  .stat-l { font-size: 11px; color: #888; margin-top: 2px; }
+
+  .people-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 24px; }
   .person-pill { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 99px; }
   .pp-vincent { background: #EEEDFE; color: #3C3489; }
   .pp-jeremy { background: #E6F1FB; color: #0C447C; }
@@ -23,660 +140,869 @@
   .pp-tom { background: #FAEEDA; color: #633806; }
   .pp-dad { background: #EAF3DE; color: #27500A; }
   .pp-mum { background: #FAECE7; color: #993C1D; }
+
   .flight-box { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 16px 18px; margin-bottom: 20px; }
-  .flight-box-title { font-size: 13px; font-weight: 700; color: #1a1a1a; margin-bottom: 10px; }
+  .box-title { font-size: 12px; font-weight: 700; color: #1a1a1a; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
   .flight-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-top: 1px solid #f0efe9; font-size: 13px; }
   .flight-row:first-of-type { border-top: none; }
-  .flight-time { font-weight: 700; color: #1a1a1a; min-width: 48px; flex-shrink: 0; }
+  .flight-time { font-weight: 700; min-width: 48px; flex-shrink: 0; }
   .flight-info { color: #555; flex: 1; line-height: 1.4; }
   .flight-num { font-size: 11px; color: #aaa; display: block; margin-top: 1px; }
-  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
-  .ftab { padding: 6px 14px; border-radius: 8px; border: 1px solid #ddd; background: #fff; font-size: 12px; font-weight: 600; cursor: pointer; color: #666; }
-  .ftab.on-all { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
-  .ftab.on-beijing { background: #E6F1FB; color: #0C447C; border-color: #378ADD; }
-  .ftab.on-xian { background: #FAEEDA; color: #633806; border-color: #EF9F27; }
-  .ftab.on-shanghai { background: #E1F5EE; color: #085041; border-color: #1D9E75; }
-  .ftab.on-transit { background: #F1EFE8; color: #444441; border-color: #888780; }
-  .section-div { display: flex; align-items: center; gap: 10px; margin: 22px 0 12px; }
-  .section-div.hidden { display: none; }
-  .section-line { flex: 1; height: 1px; background: #e0ddd8; }
-  .section-lbl { font-size: 11px; font-weight: 700; color: #bbb; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
-  .day-row { margin-bottom: 10px; }
-  .day-row.hidden { display: none; }
-  .day-inner { display: flex; gap: 12px; align-items: flex-start; }
-  .day-left { min-width: 68px; display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 14px; flex-shrink: 0; }
-  .day-num { font-size: 11px; font-weight: 700; color: #999; text-align: center; line-height: 1.3; }
-  .day-date-left { font-size: 10px; color: #bbb; text-align: center; line-height: 1.3; }
-  .day-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 99px; white-space: nowrap; margin-top: 2px; }
-  .b-beijing { background: #E6F1FB; color: #0C447C; }
-  .b-xian { background: #FAEEDA; color: #633806; }
-  .b-shanghai { background: #E1F5EE; color: #085041; }
-  .b-transit { background: #F1EFE8; color: #444441; }
-  .b-arrival { background: #F1EFE8; color: #444441; }
-  .day-card { flex: 1; background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; overflow: hidden; }
-  .day-card.is-transit { border-color: #d8d5ce; background: #faf9f7; }
-  .day-card-header { padding: 12px 16px 10px; border-bottom: 1px solid #f0efe9; }
-  .day-card.is-transit .day-card-header { background: #f4f3f0; border-bottom-color: #e8e5de; }
-  .day-title { font-size: 15px; font-weight: 700; color: #1a1a1a; margin: 0; line-height: 1.3; }
-  .day-card.is-transit .day-title { color: #444; }
-  .day-card-body { padding: 12px 16px; }
-  .bullet-list { list-style: none; padding: 0; margin: 0 0 10px; }
-  .bullet-list li { font-size: 13px; color: #555; line-height: 1.55; padding: 3px 0 3px 18px; position: relative; }
-  .bullet-list li::before { content: '·'; position: absolute; left: 6px; color: #bbb; font-size: 16px; line-height: 1.3; }
-  .transit-list { list-style: none; padding: 0; margin: 0 0 10px; }
-  .transit-list li { font-size: 13px; color: #666; line-height: 1.55; padding: 4px 0 4px 22px; position: relative; border-top: 1px solid #f0efe9; }
+
+  .city-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+  .city-card { border-radius: 12px; padding: 16px; cursor: pointer; transition: opacity 0.1s; }
+  .city-card:hover { opacity: 0.85; }
+  .city-card.cc-beijing { background: var(--c-beijing-bg); border: 1px solid #C5DCEF; }
+  .city-card.cc-xian { background: var(--c-xian-bg); border: 1px solid #EDD9A8; }
+  .city-card.cc-shanghai { background: var(--c-shanghai-bg); border: 1px solid #A8DECE; }
+  .cc-name { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+  .cc-beijing .cc-name { color: var(--c-beijing); }
+  .cc-xian .cc-name { color: var(--c-xian); }
+  .cc-shanghai .cc-name { color: var(--c-shanghai); }
+  .cc-dates { font-size: 11px; color: #888; margin-bottom: 6px; }
+  .cc-nights { font-size: 22px; font-weight: 700; }
+  .cc-beijing .cc-nights { color: var(--c-beijing); }
+  .cc-xian .cc-nights { color: var(--c-xian); }
+  .cc-shanghai .cc-nights { color: var(--c-shanghai); }
+  .cc-nl { font-size: 11px; color: #888; }
+
+  .bookings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .booking-item { font-size: 12px; color: #555; padding: 8px 10px; background: #f8f7f4; border-radius: 8px; line-height: 1.4; }
+
+  /* ── DAY PAGE ── */
+  .day-header { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #ededeb; }
+  .day-header-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+  .day-label { font-size: 12px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.08em; }
+  .day-main-title { font-size: 22px; font-weight: 700; line-height: 1.3; margin-bottom: 8px; }
+  .day-meta-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .day-city-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .dcb-beijing { background: var(--c-beijing-bg); color: var(--c-beijing); border: 1px solid var(--c-beijing-bd); }
+  .dcb-xian { background: var(--c-xian-bg); color: var(--c-xian); border: 1px solid var(--c-xian-bd); }
+  .dcb-shanghai { background: var(--c-shanghai-bg); color: var(--c-shanghai); border: 1px solid var(--c-shanghai-bd); }
+  .dcb-transit { background: var(--c-transit-bg); color: var(--c-transit); border: 1px solid var(--c-transit-bd); }
+  .day-sleep { font-size: 12px; color: #888; display: flex; align-items: center; gap: 5px; }
+
+  .day-nav-btns { display: flex; gap: 8px; margin-top: 16px; }
+  .day-nav-btn {
+    font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 8px;
+    border: 1px solid #e0ddd8; background: #fff; color: #666; cursor: pointer;
+    transition: background 0.1s;
+  }
+  .day-nav-btn:hover { background: #f4f3f0; }
+
+  .content-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; overflow: hidden; margin-bottom: 14px; }
+  .content-card.is-transit { background: #faf9f7; border-color: #d8d5ce; }
+
+  .card-section-label {
+    font-size: 10px; font-weight: 700; color: #bbb; text-transform: uppercase;
+    letter-spacing: 0.08em; padding: 12px 16px 0;
+  }
+
+  .bullet-list { list-style: none; padding: 12px 16px; margin: 0; }
+  .bullet-list li {
+    font-size: 13px; color: #555; line-height: 1.6;
+    padding: 4px 0 4px 18px; position: relative;
+  }
+  .bullet-list li::before { content: '·'; position: absolute; left: 5px; color: #bbb; font-size: 18px; line-height: 1.2; }
+
+  .transit-list { list-style: none; padding: 12px 16px; margin: 0; }
+  .transit-list li {
+    font-size: 13px; color: #666; line-height: 1.6;
+    padding: 5px 0 5px 24px; position: relative;
+    border-top: 1px solid #f0efe9;
+  }
   .transit-list li:first-child { border-top: none; }
   .transit-list li::before { content: '✈'; position: absolute; left: 0; font-size: 13px; }
   .transit-list li.train::before { content: '🚄'; }
   .transit-list li.note::before { content: '📌'; }
-  .transit-list li.sleep::before { content: '🏨'; }
-  .tag-row { display: flex; gap: 5px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid #f0efe9; margin-top: 2px; }
-  .act-pill { font-size: 11px; padding: 2px 9px; border-radius: 99px; background: #f4f3f0; color: #555; border: 1px solid #e8e8e8; }
-  .tip-pill { font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 99px; background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
-  .flight-pill { font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 99px; background: #E6F1FB; color: #0C447C; border: 1px solid #85B7EB; }
-  .sleep-row { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #f8f7f4; border-top: 1px solid #f0efe9; font-size: 12px; color: #888; }
-  .sleep-row.beijing { border-left: 3px solid #378ADD; }
-  .sleep-row.xian { border-left: 3px solid #EF9F27; }
-  .sleep-row.shanghai { border-left: 3px solid #1D9E75; }
-  .sleep-row.transit { border-left: 3px solid #888780; }
-  .sleep-icon { font-size: 14px; }
-  .sleep-text { font-weight: 600; color: #555; }
-  .bookings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .booking-item { font-size: 12px; color: #555; padding: 7px 10px; background: #f8f7f4; border-radius: 6px; line-height: 1.4; }
-  @media (max-width: 600px) {
-    .summary-row { grid-template-columns: repeat(3, minmax(0,1fr)); }
-    .day-left { min-width: 52px; }
-    .bookings-grid { grid-template-columns: 1fr; }
+  .transit-list li.sleep-li::before { content: '🏨'; }
+
+  .tag-row {
+    display: flex; gap: 5px; flex-wrap: wrap;
+    padding: 10px 16px 12px; border-top: 1px solid #f0efe9;
   }
-  @media print {
-    body { background: #fff; padding: 16px; }
-    .filter-row { display: none; }
-    .day-row.hidden { display: block !important; }
-    .section-div.hidden { display: flex !important; }
+  .act-pill { font-size: 11px; padding: 3px 9px; border-radius: 99px; background: #f4f3f0; color: #555; border: 1px solid #e8e8e8; }
+  .tip-pill { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
+  .flight-pill { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: var(--c-beijing-bg); color: var(--c-beijing); border: 1px solid #85B7EB; }
+
+  .sleep-footer {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 16px; font-size: 12px; color: #888;
+    border-top: 1px solid #f0efe9;
+  }
+  .sleep-footer.beijing { border-left: 3px solid var(--c-beijing-bd); }
+  .sleep-footer.xian { border-left: 3px solid var(--c-xian-bd); }
+  .sleep-footer.shanghai { border-left: 3px solid var(--c-shanghai-bd); }
+  .sleep-footer.transit { border-left: 3px solid var(--c-transit-bd); }
+  .sleep-footer strong { color: #555; }
+
+  /* ── MOBILE ── */
+  .mob-nav-toggle {
+    display: none;
+    position: fixed; top: 12px; left: 12px; z-index: 100;
+    background: #1a1a1a; color: #fff; border: none;
+    border-radius: 8px; padding: 8px 12px; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+
+  @media (max-width: 700px) {
+    .mob-nav-toggle { display: block; }
+    .sidebar { transform: translateX(-100%); transition: transform 0.2s; }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; padding: 20px 16px; padding-top: 56px; }
+    .stats-row { grid-template-columns: repeat(3, 1fr); }
+    .city-cards { grid-template-columns: 1fr; }
+    .bookings-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
-<div class="container">
 
-  <div class="trip-header">
-    <p class="trip-sub">Family trip · October 2026</p>
-    <h1 class="trip-title">China — 14 days</h1>
-    <p class="trip-sub">Auckland → Beijing → Xi'an → Shanghai → Auckland</p>
-    <p class="trip-sub" style="margin-top:4px;color:#aaa;">Air China CA837 outbound · China Eastern MU503 return</p>
+<button class="mob-nav-toggle" onclick="toggleSidebar()">☰ Days</button>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">China 2026</div>
+    <div class="sidebar-sub">Family trip · Oct 13–29</div>
   </div>
+  <div class="sidebar-nav">
+    <div class="nav-section-label">Overview</div>
+    <button class="nav-item active" id="nav-overview" onclick="show('overview')">
+      🗺️ Trip overview
+    </button>
 
-  <div class="summary-row">
-    <div class="s-card"><div class="s-num">14</div><div class="s-lbl">total days</div></div>
-    <div class="s-card"><div class="s-num">3</div><div class="s-lbl">cities</div></div>
-    <div class="s-card"><div class="s-num">6</div><div class="s-lbl">travellers</div></div>
-    <div class="s-card"><div class="s-num">Oct 13</div><div class="s-lbl">depart AKL</div></div>
-    <div class="s-card"><div class="s-num">Oct 27</div><div class="s-lbl">return AKL</div></div>
+    <div class="nav-section-label" style="margin-top:6px;">Outbound</div>
+    <button class="nav-item city-transit" id="nav-d1" onclick="show('d1')">
+      <span class="nav-day-num">D1</span>Depart Auckland<span class="nav-badge nb-transit">✈️</span>
+    </button>
+
+    <div class="nav-section-label" style="margin-top:6px;">🏯 Beijing</div>
+    <button class="nav-item city-beijing" id="nav-d2" onclick="show('d2')">
+      <span class="nav-day-num">D2</span>Arrive Beijing<span class="nav-badge nb-beijing">BJS</span>
+    </button>
+    <button class="nav-item city-beijing" id="nav-d3" onclick="show('d3')">
+      <span class="nav-day-num">D3</span>Forbidden City<span class="nav-badge nb-beijing">BJS</span>
+    </button>
+    <button class="nav-item city-beijing" id="nav-d4" onclick="show('d4')">
+      <span class="nav-day-num">D4</span>Great Wall<span class="nav-badge nb-beijing">BJS</span>
+    </button>
+    <button class="nav-item city-beijing" id="nav-d5" onclick="show('d5')">
+      <span class="nav-day-num">D5</span>Temple + 798<span class="nav-badge nb-beijing">BJS</span>
+    </button>
+    <button class="nav-item city-beijing" id="nav-d6" onclick="show('d6')">
+      <span class="nav-day-num">D6</span>Summer Palace<span class="nav-badge nb-beijing">BJS</span>
+    </button>
+
+    <div class="nav-section-label" style="margin-top:6px;">🐉 Xi'an</div>
+    <button class="nav-item city-transit" id="nav-d7" onclick="show('d7')">
+      <span class="nav-day-num">D7</span>Train to Xi'an<span class="nav-badge nb-transit">🚄</span>
+    </button>
+    <button class="nav-item city-xian" id="nav-d8" onclick="show('d8')">
+      <span class="nav-day-num">D8</span>Terracotta Warriors<span class="nav-badge nb-xian">XIY</span>
+    </button>
+    <button class="nav-item city-xian" id="nav-d9" onclick="show('d9')">
+      <span class="nav-day-num">D9</span>Mt Huashan<span class="nav-badge nb-xian">XIY</span>
+    </button>
+
+    <div class="nav-section-label" style="margin-top:6px;">🏙️ Shanghai</div>
+    <button class="nav-item city-transit" id="nav-d10" onclick="show('d10')">
+      <span class="nav-day-num">D10</span>Fly to Shanghai<span class="nav-badge nb-transit">✈️</span>
+    </button>
+    <button class="nav-item city-shanghai" id="nav-d11" onclick="show('d11')">
+      <span class="nav-day-num">D11</span>Bund + teamLab<span class="nav-badge nb-shanghai">SHA</span>
+    </button>
+    <button class="nav-item city-shanghai" id="nav-d12" onclick="show('d12')">
+      <span class="nav-day-num">D12</span>Hangzhou<span class="nav-badge nb-shanghai">SHA</span>
+    </button>
+    <button class="nav-item city-shanghai" id="nav-d13" onclick="show('d13')">
+      <span class="nav-day-num">D13</span>Disneyland<span class="nav-badge nb-shanghai">SHA</span>
+    </button>
+    <button class="nav-item city-shanghai" id="nav-d14" onclick="show('d14')">
+      <span class="nav-day-num">D14</span>Last day + show<span class="nav-badge nb-shanghai">SHA</span>
+    </button>
+    <button class="nav-item city-shanghai" id="nav-d15" onclick="show('d15')">
+      <span class="nav-day-num">D15</span>Free day<span class="nav-badge nb-shanghai">SHA</span>
+    </button>
+
+    <div class="nav-section-label" style="margin-top:6px;">Return</div>
+    <button class="nav-item city-transit" id="nav-d16" onclick="show('d16')">
+      <span class="nav-day-num">D16</span>Depart Shanghai<span class="nav-badge nb-transit">✈️</span>
+    </button>
   </div>
+</nav>
 
-  <div class="people-row">
-    <span class="person-pill pp-vincent">Vincent</span>
-    <span class="person-pill pp-jeremy">Jeremy</span>
-    <span class="person-pill pp-sharon">Sharon</span>
-    <span class="person-pill pp-tom">Tom</span>
-    <span class="person-pill pp-dad">Dad</span>
-    <span class="person-pill pp-mum">Mum</span>
-  </div>
+<!-- MAIN CONTENT -->
+<main class="main" id="main">
 
-  <div class="flight-box">
-    <p class="flight-box-title">Flights — confirmed</p>
-    <div class="flight-row">
-      <span class="flight-time">20:30</span>
-      <span class="flight-info">Auckland (AKL) → Beijing Capital (PEK) — direct<span class="flight-num">Air China CA837 · ~11h 10m · Tue 13 Oct</span></span>
+  <!-- ═══ OVERVIEW ═══ -->
+  <div class="page active" id="page-overview">
+    <p style="font-size:12px;color:#aaa;margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">Family trip · October 2026</p>
+    <h1 class="ov-title">China — 14 days</h1>
+    <p class="ov-sub">Auckland → Beijing → Xi'an → Shanghai → Auckland · via Hong Kong · Cathay Pacific</p>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-n">14</div><div class="stat-l">days</div></div>
+      <div class="stat"><div class="stat-n">3</div><div class="stat-l">cities</div></div>
+      <div class="stat"><div class="stat-n">6</div><div class="stat-l">travellers</div></div>
+      <div class="stat"><div class="stat-n">Oct 13</div><div class="stat-l">depart AKL</div></div>
+      <div class="stat"><div class="stat-n">Oct 29</div><div class="stat-l">return AKL</div></div>
     </div>
-    <div class="flight-row">
-      <span class="flight-time">04:40</span>
-      <span class="flight-info">Arrive Beijing Capital Airport<span class="flight-num">Wed 14 Oct · Rest morning · First full day from afternoon</span></span>
+
+    <div class="people-row">
+      <span class="person-pill pp-vincent">Vincent</span>
+      <span class="person-pill pp-jeremy">Jeremy</span>
+      <span class="person-pill pp-sharon">Sharon</span>
+      <span class="person-pill pp-tom">Tom</span>
+      <span class="person-pill pp-dad">Dad</span>
+      <span class="person-pill pp-mum">Mum</span>
     </div>
-    <div class="flight-row">
-      <span class="flight-time">00:10</span>
-      <span class="flight-info">Shanghai (PVG) → Auckland (AKL) — direct<span class="flight-num">China Eastern MU503 · Mon 27 Oct · Arrive Auckland 16:35 same day</span></span>
+
+    <div class="flight-box">
+      <p class="box-title">Confirmed flights</p>
+      <div class="flight-row">
+        <span class="flight-time">11:15</span>
+        <span class="flight-info">Auckland → Hong Kong<span class="flight-num">CX7402 · Tue 13 Oct · Boeing 787-9 · operated by Air New Zealand · 1h15m connection</span></span>
+      </div>
+      <div class="flight-row">
+        <span class="flight-time">19:00</span>
+        <span class="flight-info">Hong Kong → Beijing<span class="flight-num">CX344 · Tue 13 Oct · Airbus A330-300 · arrive 22:25</span></span>
+      </div>
+      <div class="flight-row">
+        <span class="flight-time">13:35</span>
+        <span class="flight-info">Shanghai → Hong Kong<span class="flight-num">CX349 · Wed 28 Oct · Airbus A330-300 · 5h15m layover (airside)</span></span>
+      </div>
+      <div class="flight-row">
+        <span class="flight-time">21:35</span>
+        <span class="flight-info">Hong Kong → Auckland<span class="flight-num">CX113 · Wed 28 Oct · Airbus A350-900 · arrive Thu 29 Oct 13:25</span></span>
+      </div>
     </div>
-  </div>
 
-  <div class="filter-row">
-    <div class="ftab on-all" id="ftab-all" onclick="filt('all')">All days</div>
-    <div class="ftab" id="ftab-beijing" onclick="filt('beijing')">🏯 Beijing</div>
-    <div class="ftab" id="ftab-xian" onclick="filt('xian')">🐉 Xi'an</div>
-    <div class="ftab" id="ftab-shanghai" onclick="filt('shanghai')">🏙️ Shanghai</div>
-    <div class="ftab" id="ftab-transit" onclick="filt('transit')">✈️ Transit</div>
-  </div>
+    <div class="city-cards">
+      <div class="city-card cc-beijing" onclick="show('d2')">
+        <div class="cc-name">Beijing</div>
+        <div class="cc-dates">13–19 Oct</div>
+        <div class="cc-nights">5</div>
+        <div class="cc-nl">nights · Days 1–6</div>
+      </div>
+      <div class="city-card cc-xian" onclick="show('d7')">
+        <div class="cc-name">Xi'an</div>
+        <div class="cc-dates">19–22 Oct</div>
+        <div class="cc-nights">3</div>
+        <div class="cc-nl">nights · Days 7–9</div>
+      </div>
+      <div class="city-card cc-shanghai" onclick="show('d10')">
+        <div class="cc-name">Shanghai</div>
+        <div class="cc-dates">22–28 Oct</div>
+        <div class="cc-nights">6</div>
+        <div class="cc-nl">nights · Days 10–16</div>
+      </div>
+    </div>
 
-  <div id="itinerary">
-
-    <!-- ======= TRANSIT OUTBOUND ======= -->
-    <div class="section-div" id="sec-transit1" data-city="transit"><div class="section-line"></div><div class="section-lbl">Outbound — Auckland to Beijing</div><div class="section-line"></div></div>
-
-    <div class="day-row" data-city="transit">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 1</div>
-          <div class="day-date-left">Tue 13 Oct</div>
-          <div class="day-badge b-transit">Transit</div>
-        </div>
-        <div class="day-card is-transit">
-          <div class="day-card-header"><p class="day-title">✈️ Depart Auckland → Beijing (direct)</p></div>
-          <div class="day-card-body">
-            <ul class="transit-list">
-              <li>Depart Auckland at 20:30 on Air China CA837</li>
-              <li class="note">Direct flight — no stopover, no connections</li>
-              <li class="note">Flight time approximately 11 hours 10 minutes</li>
-              <li class="sleep">Overnight flight — sleep on the plane</li>
-            </ul>
-          </div>
-          <div class="sleep-row transit"><span class="sleep-icon">✈️</span><span class="sleep-text">Overnight — on the plane</span></div>
+    <div class="content-card" style="margin-bottom:14px;">
+      <p class="card-section-label">Key bookings — do these in advance</p>
+      <div style="padding:12px 16px;">
+        <div class="bookings-grid">
+          <div class="booking-item">🏯 Forbidden City tickets (online only, daily cap)</div>
+          <div class="booking-item">🐉 Terracotta Warriors + private English guide</div>
+          <div class="booking-item">🚄 Beijing → Xi'an bullet train (6 seats together)</div>
+          <div class="booking-item">✈️ Xi'an → Shanghai flight (Trip.com for best price)</div>
+          <div class="booking-item">🌸 teamLab Borderless Shanghai tickets</div>
+          <div class="booking-item">🏰 Shanghai Disneyland tickets (online)</div>
+          <div class="booking-item">🎭 Great World Dream — verify Oct 2026 + book</div>
+          <div class="booking-item">🧩 Beijing escape room — English room, Sanlitun</div>
+          <div class="booking-item">🏛️ Shaanxi History Museum (free — book online)</div>
+          <div class="booking-item">🏠 Hutong homestay dinner (via The Hutong)</div>
+          <div class="booking-item">🚐 Private van for 6 — Mutianyu Great Wall</div>
+          <div class="booking-item">🥟 UnTour Food Tours cooking class (Shanghai)</div>
         </div>
       </div>
     </div>
 
-    <!-- ======= BEIJING ======= -->
-    <div class="section-div" id="sec-beijing" data-city="beijing"><div class="section-line"></div><div class="section-lbl">Beijing — 4 nights (Days 2–6)</div><div class="section-line"></div></div>
-
-    <div class="day-row" data-city="beijing">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 2</div>
-          <div class="day-date-left">Wed 14 Oct</div>
-          <div class="day-badge b-arrival">Arrival</div>
-        </div>
-        <div class="day-card">
-          <div class="day-card-header"><p class="day-title">Arrive Beijing 04:40 — soft landing day</p></div>
-          <div class="day-card-body">
-            <ul class="bullet-list">
-              <li>Land at Beijing Capital Airport at 04:40 — collect bags, clear customs</li>
-              <li>Metro or pre-arranged transfer to hotel — check in early or leave bags and rest in lobby</li>
-              <li>Sleep until 9–10am to recover from overnight flight</li>
-              <li>Gentle afternoon: Wangfujing pedestrian street for a first look at the city, street food snacks, browse</li>
-              <li>Optional evening: nearby hutong wander in Nanluoguxiang — lanterns, bars, dumpling shops</li>
-              <li>Early night — big days start tomorrow</li>
-            </ul>
-            <div class="tag-row">
-              <span class="act-pill">Wangfujing Street</span>
-              <span class="act-pill">Nanluoguxiang hutong (optional)</span>
-              <span class="tip-pill">📌 Arrange early check-in or hotel bag storage</span>
-            </div>
-          </div>
-          <div class="sleep-row beijing"><span class="sleep-icon">🏨</span><span class="sleep-text">Sleep: Beijing</span></div>
+    <div class="content-card">
+      <p class="card-section-label">Practical prep — before leaving NZ</p>
+      <div style="padding:12px 16px;">
+        <div class="bookings-grid">
+          <div class="booking-item">📱 Download a VPN before departure (blocked in China)</div>
+          <div class="booking-item">💬 Set up WeChat + WeChat Pay before leaving NZ</div>
+          <div class="booking-item">🚖 Install DiDi (Chinese ride-hailing, like Uber)</div>
+          <div class="booking-item">🚄 Install Trip.com for trains + domestic flights</div>
+          <div class="booking-item">🗺️ Download Google Maps offline for Chinese cities</div>
+          <div class="booking-item">💴 Bring some CNY cash — backup for small vendors</div>
         </div>
       </div>
-    </div>
-
-    <div class="day-row" data-city="beijing">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 3</div>
-          <div class="day-date-left">Thu 15 Oct</div>
-          <div class="day-badge b-beijing">Beijing</div>
-        </div>
-        <div class="day-card">
-          <div class="day-card-header"><p class="day-title">Tiananmen Square, Forbidden City & Jingshan Park</p></div>
-          <div class="day-card-body">
-            <ul class="bullet-list">
-              <li>Early start — Tiananmen Square at opening for photos before crowds build</li>
-              <li>Full morning inside the Forbidden City — the scale genuinely needs time, don't rush it</li>
-              <li>Tickets must be booked online weeks in advance (daily cap, no walk-ups at the gate)</li>
-              <li>After lunch: Jingshan Park directly north — the hilltop pavilion gives the single best overhead view of the Forbidden City's golden rooftops in Beijing</li>
-              <li>Almost no Western tourists here despite being extraordinary — Dad, Jeremy, and Vincent bring cameras</li>
-              <li>Evening: Peking duck dinner near Wangfujing — book a well-regarded local restaurant, not a tourist trap</li>
-            </ul>
-            <div class="tag-row">
-              <span class="act-pill">Tiananmen Square</span>
-              <span class="act-pill">Forbidden City</span>
-              <span class="act-pill">Jingshan Park views</span>
-              <span class="act-pill">Peking duck dinner</span>
-              <span class="tip-pill">📌 Pre-book Forbidden City tickets</span>
-            </div>
-          </div>
-          <div class="sleep-row beijing"><span class="sleep-icon">🏨</span><span class="sleep-text">Sleep: Beijing</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="day-row" data-city="beijing">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 4</div>
-          <div class="day-date-left">Fri 16 Oct</div>
-          <div class="day-badge b-beijing">Beijing</div>
-        </div>
-        <div class="day-card">
-          <div class="day-card-header"><p class="day-title">Great Wall at Mutianyu — full day</p></div>
-          <div class="day-card-body">
-            <ul class="bullet-list">
-              <li>Private van for the group — much better than tour buses, depart hotel ~8am</li>
-              <li>Mutianyu is the right section: fewer crowds than Badaling, well-restored, beautiful valley setting</li>
-              <li>Cable car up to the wall — saves legs for the ridge walk between watchtowers</li>
-              <li>Mid-October foliage in the surrounding forest is at or near peak — the colours from the wall are extraordinary</li>
-              <li>Optional toboggan run back down — fast, fun, good for the group</li>
-              <li>Walking the full ridge between towers is a legitimate hike with real elevation changes</li>
-              <li>Back in Beijing by late afternoon — rest evening or nearby dinner</li>
-            </ul>
-            <div class="tag-row">
-              <span class="act-pill">Mutianyu Great Wall</span>
-              <span class="act-pill">Cable car up</span>
-              <span class="act-pill">Autumn foliage</span>
-              <span class="act-pill">Ridge walk</span>
-              <span class="act-pill">Toboggan (optional)</span>
-              <span class="tip-pill">📌 Book private van for 6</span>
-            </div>
-          </div>
-          <div class="sleep-row beijing"><span class="sleep-icon">🏨</span><span class="sleep-text">Sleep: Beijing</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="day-row" data-city="beijing">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 5</div>
-          <div class="day-date-left">Sat 17 Oct</div>
-          <div class="day-badge b-beijing">Beijing</div>
-        </div>
-        <div class="day-card">
-          <div class="day-card-header"><p class="day-title">Temple of Heaven (dawn), Fragrant Hills, 798 Art District & escape room</p></div>
-          <div class="day-card-body">
-            <ul class="bullet-list">
-              <li>Very early start — Temple of Heaven park at 7am: locals doing tai chi, flying kites, playing erhu, completely unscripted</li>
-              <li>The light on the Hall of Prayer at that hour is one of the best photography opportunities in Asia — Vincent, Jeremy, and Dad bring cameras</li>
-              <li>Then Fragrant Hills for peak autumn foliage — smoke trees turn brilliant red-orange in mid-October, best on a weekday to avoid crowds</li>
-              <li>Late afternoon: 798 Art District for Cold War-era factory architecture, outdoor sculpture, and street art — great for photography and design interest</li>
-              <li>Evening: group escape room in Sanlitun — book an English-compatible room well in advance, this is a group non-negotiable</li>
-              <li>Optional late night: Guijie Ghost Street hotpot if the group has energy — restaurants open until 3am, zero tourists</li>
-            </ul>
-            <div class="tag-row">
-              <span class="act-pill">Temple of Heaven dawn</span>
-              <span class="act-pill">Fragrant Hills foliage</span>
-              <span class="act-pill">798 Art District</span>
-              <span class="act-pill">Escape room evening</span>
-              <span class="act-pill">Ghost Street hotpot (optional)</span>
-              <span class="tip-pill">📌 Book escape room ahead — English room</span>
-            </div>
-          </div>
-          <div class="sleep-row beijing"><span class="sleep-icon">🏨</span><span class="sleep-text">Sleep: Beijing</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="day-row" data-city="beijing">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 6</div>
-          <div class="day-date-left">Sun 18 Oct</div>
-          <div class="day-badge b-beijing">Beijing</div>
-        </div>
-        <div class="day-card">
-          <div class="day-card-header"><p class="day-title">Summer Palace, Panjiayuan market, calligraphy workshop & hutong dinner</p></div>
-          <div class="day-card-body">
-            <ul class="bullet-list">
-              <li>Morning: Summer Palace boat ride on Kunming Lake — pavilions, marble bridge, forested hills</li>
-              <li>Early afternoon: split the group — Mum and Sharon to Panjiayuan antique and craft market (best on weekends, thousands of stalls, everything negotiable)</li>
-              <li>Vincent, Tom, and Sharon: calligraphy or seal carving workshop via The Hutong cultural centre (book in advance, English-language)</li>
-              <li>Vincent and Jeremy: Wudaokou gaming arcades and board game cafés if workshop not for them</li>
-              <li>Evening: private hutong family homestay dinner — home-cooked Beijing food in a courtyard home, book via The Hutong cultural centre</li>
-              <li>One of the most memorable evenings of the whole trip for the group</li>
-            </ul>
-            <div class="tag-row">
-              <span class="act-pill">Summer Palace</span>
-              <span class="act-pill">Panjiayuan market</span>
-              <span class="act-pill">Calligraphy workshop</span>
-              <span class="act-pill">Gaming arcades (V/J)</span>
-              <span class="act-pill">Hutong homestay dinner</span>
-              <span class="tip-pill">📌 Book hutong dinner + workshop via The Hutong</span>
-            </div>
-          </div>
-          <div class="sleep-row beijing"><span class="sleep-icon">🏨</span><span class="sleep-text">Sleep: Beijing — last night</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ======= TRANSIT BEIJING TO XI'AN ======= -->
-    <div class="section-div" id="sec-transit2" data-city="transit"><div class="section-line"></div><div class="section-lbl">Transit — Beijing to Xi'an</div><div class="section-line"></div></div>
-
-    <div class="day-row" data-city="transit">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 7</div>
-          <div class="day-date-left">Mon 19 Oct</div>
-          <div class="day-badge b-transit">Transit</div>
-        </div>
-        <div class="day-card is-transit">
-          <div class="day-card-header"><p class="day-title">🚄 Beijing → Xi'an by high-speed rail + Muslim Quarter evening</p></div>
-          <div class="day-card-body">
-            <ul class="transit-list">
-              <li class="train">Morning bullet train Beijing → Xi'an — approximately 4.5 hours, book seats together in advance</li>
-              <li class="note">Arrive Xi'an early afternoon — check in to hotel, rest briefly</li>
-              <li class="note">Late afternoon: walk the top of the ancient City Wall for a first look at its scale</li>
-              <li>Evening: Muslim Quarter for dinner and street food — lanterns, steam from food stalls, red-lit alleyways</li>
-              <li class="note">Excellent night photography — Jeremy, Vincent, and Dad bring cameras</li>
-            </ul>
-            <div class="tag-row">
-              <span class="flight-pill">🚄 Bullet train ~4.5 hrs</span>
-              <span class="act-pill">City Wall first look</span>
-              <span class="act-pill">Muslim Quarter dinner</span>
-              <span class="act-pill">Night street photography</span>
-              <span class="tip-pill">📌 Book train seats together in advance</span>
-            </div>
-          </div>
-          <div class="sleep-row xian"><span class="sleep-icon">🏨</span><span class="sleep-text">Sleep: Xi'an — first night</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ======= XI'AN ======= -->
-    <div class="section-div" id="sec-xian" data-city="xian"><div class="section-line"></div><div class="section-lbl">Xi'an — 2 full days (Days 8–9)</div><div class="section-line"></div></div>
-
-    <div class="day-row" data-city="xian">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 8</div>
-          <div class="day-date-left">Tue 20 Oct</div>
-          <div class="day-badge b-xian">Xi'an</div>
-        </div>
-        <div class="day-card">
-          <div class="day-card-header"><p class="day-title">Terracotta Warriors — full day</p></div>
-          <div class="day-card-body">
-            <ul class="bullet-list">
-              <li>Full day at the Mausoleum of Qin Shi Huang — the most historically significant day of the entire trip</li>
-              <li>Visit all three pits plus the bronze chariot museum — don't skip Pit 2 and 3, they're less crowded and equally fascinating</li>
-              <li>Book a private English-speaking guide in advance — context transforms this from impressive to extraordinary</li>
-              <li>Allow the full day; it earns it — most people wish they'd spent longer</li>
-              <li>Early evening: Shaanxi History Museum if energy allows — free entry, advance online booking required, Tang dynasty gold treasures section is extraordinary for Tom and Dad</li>
-              <li>Dinner: fresh biang biang noodles at a local canteen — watch the cook hand-pull the noodles from a single lump of dough</li>
-            </ul>
-            <div class="tag-row">
-              <span class="act-pill">Terracotta Warriors</span>
-              <span class="act-pill">All three pits</span>
-              <span class="act-pill">Bronze chariot museum</span>
-              <span class="act-pill">Private English guide</span>
-              <span class="act-pill">Shaanxi Museum (eve)</span>
-              <span class="tip-pill">📌 Pre-book tickets & guide</span>
-              <span class="tip-pill">📌 Shaanxi Museum — free, book online</span>
-            </div>
-          </div>
-          <div class="sleep-row xian"><span class="sleep-icon">🏨</span><span class="sleep-text">Sleep: Xi'an</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="day-row" data-city="xian">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 9</div>
-          <div class="day-date-left">Wed 21 Oct</div>
-          <div class="day-badge b-xian">Xi'an</div>
-        </div>
-        <div class="day-card">
-          <div class="day-card-header"><p class="day-title">Mount Huashan — full day hike</p></div>
-          <div class="day-card-body">
-            <ul class="bullet-list">
-              <li>Very early start — train from Xi'an North to Huashan North station (~35 min) then shuttle to cable car base</li>
-              <li>Cable car up to North Peak — saves legs for the ridge hike between peaks</li>
-              <li>Hike East → West → South peaks if the group has the legs — chains assist on the steep sections</li>
-              <li>South Peak at 2,154m offers 360° views across the Shaanxi plains — breathtaking in mid-October clear air</li>
-              <li>Optional Plank Walk: a narrow ledge bolted to a sheer vertical cliff face — not for the faint-hearted, entirely optional</li>
-              <li>Back in Xi'an by early evening — City Wall at golden hour if any energy remains (the low October light turns the ancient stone warm amber)</li>
-            </ul>
-            <div class="tag-row">
-              <span class="act-pill">Mount Huashan</span>
-              <span class="act-pill">Cable car to North Peak</span>
-              <span class="act-pill">Ridge hike between peaks</span>
-              <span class="act-pill">South Peak 2,154m</span>
-              <span class="act-pill">Plank Walk (optional)</span>
-              <span class="act-pill">City Wall golden hour (eve)</span>
-              <span class="tip-pill">📌 Very early start — full day</span>
-            </div>
-          </div>
-          <div class="sleep-row xian"><span class="sleep-icon">🏨</span><span class="sleep-text">Sleep: Xi'an — last night</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ======= TRANSIT XI'AN TO SHANGHAI ======= -->
-    <div class="section-div" id="sec-transit3" data-city="transit"><div class="section-line"></div><div class="section-lbl">Transit — Xi'an to Shanghai</div><div class="section-line"></div></div>
-
-    <div class="day-row" data-city="transit">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 10</div>
-          <div class="day-date-left">Thu 22 Oct</div>
-          <div class="day-badge b-transit">Transit</div>
-        </div>
-        <div class="day-card is-transit">
-          <div class="day-card-header"><p class="day-title">✈️ Xi'an → Shanghai (fly) + Bund first look at dusk</p></div>
-          <div class="day-card-body">
-            <ul class="transit-list">
-              <li>Morning flight Xi'an → Shanghai — approximately 2 hours, book via Trip.com for best prices</li>
-              <li class="note">Arrive Shanghai early afternoon — metro to hotel, check in</li>
-              <li class="note">Afternoon: first Bund walk and Pudong skyline orientation</li>
-              <li>Evening: rooftop bar (Bar Rouge, New Heights, or Flair) for blue hour — the towers light up gradually as the sky darkens behind them</li>
-              <li class="note">Jeremy, Vincent, and Dad: this is the iconic Bund dusk shot — bring cameras</li>
-            </ul>
-            <div class="tag-row">
-              <span class="flight-pill">✈️ Xi'an → SHA ~2 hrs</span>
-              <span class="act-pill">Bund walk</span>
-              <span class="act-pill">Rooftop bar at dusk</span>
-              <span class="tip-pill">📌 Book flight via Trip.com</span>
-            </div>
-          </div>
-          <div class="sleep-row shanghai"><span class="sleep-icon">🏨</span><span class="sleep-text">Sleep: Shanghai — first night</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ======= SHANGHAI ======= -->
-    <div class="section-div" id="sec-shanghai" data-city="shanghai"><div class="section-line"></div><div class="section-lbl">Shanghai — 4 nights + departure (Days 11–14)</div><div class="section-line"></div></div>
-
-    <div class="day-row" data-city="shanghai">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 11</div>
-          <div class="day-date-left">Fri 23 Oct</div>
-          <div class="day-badge b-shanghai">Shanghai</div>
-        </div>
-        <div class="day-card">
-          <div class="day-card-header"><p class="day-title">Bund at dawn, French Concession, M50 & teamLab Borderless</p></div>
-          <div class="day-card-body">
-            <ul class="bullet-list">
-              <li>Very early: Bund at 6:30am — almost tourist-free, golden light on the art deco facades, Pudong skyline reflected in still water</li>
-              <li>Best photography window of the entire Shanghai leg — Vincent, Jeremy, and Dad bring cameras</li>
-              <li>Mid-morning: French Concession wander — tree-lined streets, Art Deco buildings, independent cafés</li>
-              <li>Tianzifang alleyways for Sharon and Mum — independent boutiques, textile shops, handmade jewellery</li>
-              <li>Afternoon: M50 Moganshan Road art district for Vincent and Sharon — 100+ open studios, ceramics workshops, galleries in converted factories</li>
-              <li>Evening: teamLab Borderless Shanghai on the Huangpu riverside — allow 3 hours minimum, download the teamLab app before you go</li>
-            </ul>
-            <div class="tag-row">
-              <span class="act-pill">Dawn Bund photography</span>
-              <span class="act-pill">French Concession</span>
-              <span class="act-pill">Tianzifang alleys</span>
-              <span class="act-pill">M50 art district</span>
-              <span class="act-pill">teamLab Borderless</span>
-              <span class="tip-pill">📌 Book teamLab tickets in advance</span>
-            </div>
-          </div>
-          <div class="sleep-row shanghai"><span class="sleep-icon">🏨</span><span class="sleep-text">Sleep: Shanghai</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="day-row" data-city="shanghai">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 12</div>
-          <div class="day-date-left">Sat 24 Oct</div>
-          <div class="day-badge b-shanghai">Shanghai</div>
-        </div>
-        <div class="day-card">
-          <div class="day-card-header"><p class="day-title">Hangzhou day trip — West Lake & Longjing tea village</p></div>
-          <div class="day-card-body">
-            <ul class="bullet-list">
-              <li>Early train from Shanghai Hongqiao station (~45 min) — depart by 7:30am to get ahead of day-trippers</li>
-              <li>Boat ride on West Lake — one of China's most celebrated landscapes, especially in mid-October foliage</li>
-              <li>Walk the ancient Su Causeway — tree-lined, willow-draped, gorgeous in autumn</li>
-              <li>Leifeng Pagoda for panoramic lake views — escalators to the ruins, stairs to the top</li>
-              <li>After lunch: taxi to Longjing tea village — watch hand-roasting of Dragon Well green tea and taste fresh from the farm</li>
-              <li>Train back to Shanghai by 6pm — dinner near the hotel, early night</li>
-            </ul>
-            <div class="tag-row">
-              <span class="act-pill">West Lake boat ride</span>
-              <span class="act-pill">Su Causeway walk</span>
-              <span class="act-pill">Leifeng Pagoda</span>
-              <span class="act-pill">Longjing tea village</span>
-              <span class="tip-pill">📌 Train by 7:30am — early start essential</span>
-            </div>
-          </div>
-          <div class="sleep-row shanghai"><span class="sleep-icon">🏨</span><span class="sleep-text">Sleep: Shanghai</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="day-row" data-city="shanghai">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 13</div>
-          <div class="day-date-left">Sun 25 Oct</div>
-          <div class="day-badge b-shanghai">Shanghai</div>
-        </div>
-        <div class="day-card">
-          <div class="day-card-header"><p class="day-title">Shanghai Disneyland — full day</p></div>
-          <div class="day-card-body">
-            <ul class="bullet-list">
-              <li>Arrive at park opening — head straight to Zootopia: Hot Pursuit (queues hit 90–120 min by mid-morning, the world's only Zootopia land)</li>
-              <li>TRON Lightcycle Power Run next — exclusive to Shanghai, you lean forward on a lightcycle and race through a neon digital world at speed</li>
-              <li>Pirates of the Caribbean — the best version in the world: trackless boat, seamless projections, stunning scale</li>
-              <li>The castle is the tallest Disney has ever built</li>
-              <li>Fully bilingual park — all signage, ride instructions, and cast members operate in English</li>
-              <li>Book tickets online in advance — October is busy</li>
-            </ul>
-            <div class="tag-row">
-              <span class="act-pill">Zootopia: Hot Pursuit</span>
-              <span class="act-pill">TRON Lightcycle</span>
-              <span class="act-pill">Pirates of the Caribbean</span>
-              <span class="act-pill">Castle</span>
-              <span class="tip-pill">📌 Book tickets online — arrive at opening</span>
-            </div>
-          </div>
-          <div class="sleep-row shanghai"><span class="sleep-icon">🏨</span><span class="sleep-text">Sleep: Shanghai</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="day-row" data-city="shanghai">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 14</div>
-          <div class="day-date-left">Mon 26 Oct</div>
-          <div class="day-badge b-shanghai">Shanghai</div>
-        </div>
-        <div class="day-card">
-          <div class="day-card-header"><p class="day-title">Split morning, hairy crab lunch & Great World Dream evening</p></div>
-          <div class="day-card-body">
-            <ul class="bullet-list">
-              <li>Morning split by interest — Sharon and Tom: wet market tour and xiaolongbao cooking class via UnTour Food Tours</li>
-              <li>Vincent and Jeremy: electronics market near People's Square (retro gaming hardware, custom keyboards, components — hours of browsing)</li>
-              <li>Mum and Sharon: AP Xinyang Fashion Market or South Bund Fabric Market for bargain shopping</li>
-              <li>Lunch: hairy crab — late October is peak hairy crab season in Shanghai, one of China's great seasonal food events, book a local restaurant in advance</li>
-              <li>Afternoon: pack, rest, check out or store bags</li>
-              <li>Evening: Great World Dream immersive theatre — 28 performers across multiple floors, interactive storylines, rooftop casino, hidden rooms (verify Oct 2026 availability and book ahead)</li>
-              <li>Head to airport after the show for the midnight departure</li>
-            </ul>
-            <div class="tag-row">
-              <span class="act-pill">Cooking class (Sharon/Tom)</span>
-              <span class="act-pill">Electronics market (V/J)</span>
-              <span class="act-pill">Bargain shopping (Mum/Sharon)</span>
-              <span class="act-pill">Hairy crab lunch</span>
-              <span class="act-pill">Great World Dream</span>
-              <span class="tip-pill">📌 Book crab restaurant + Great World Dream</span>
-            </div>
-          </div>
-          <div class="sleep-row transit"><span class="sleep-icon">✈️</span><span class="sleep-text">Overnight — on the plane home</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ======= TRANSIT RETURN ======= -->
-    <div class="section-div" id="sec-transit4" data-city="transit"><div class="section-line"></div><div class="section-lbl">Return — Shanghai to Auckland</div><div class="section-line"></div></div>
-
-    <div class="day-row" data-city="transit">
-      <div class="day-inner">
-        <div class="day-left">
-          <div class="day-num">Day 15</div>
-          <div class="day-date-left">Tue 27 Oct</div>
-          <div class="day-badge b-transit">Transit</div>
-        </div>
-        <div class="day-card is-transit">
-          <div class="day-card-header"><p class="day-title">✈️ Depart Shanghai 00:10 → arrive Auckland 16:35</p></div>
-          <div class="day-card-body">
-            <ul class="transit-list">
-              <li>Depart Shanghai Pudong at 00:10 on China Eastern MU503 — direct flight</li>
-              <li class="note">Arrive Auckland at 16:35 the same day (Monday 27 Oct)</li>
-              <li class="note">No stopover — direct flight home</li>
-              <li class="sleep">Home</li>
-            </ul>
-            <div class="tag-row">
-              <span class="flight-pill">MU503 PVG → AKL 00:10–16:35</span>
-            </div>
-          </div>
-          <div class="sleep-row transit"><span class="sleep-icon">🏠</span><span class="sleep-text">Home — Auckland</span></div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div style="margin-top:32px; background:#fff; border:1px solid #e8e8e8; border-radius:12px; padding:16px 18px; margin-bottom:12px;">
-    <p style="font-size:13px; font-weight:700; margin-bottom:12px; color:#1a1a1a;">Key bookings — do these in advance</p>
-    <div class="bookings-grid">
-      <div class="booking-item">🏯 Forbidden City tickets (online only, daily cap)</div>
-      <div class="booking-item">🐉 Terracotta Warriors + private English guide</div>
-      <div class="booking-item">🚄 Beijing → Xi'an bullet train (6 seats together)</div>
-      <div class="booking-item">✈️ Xi'an → Shanghai flight (Trip.com for best price)</div>
-      <div class="booking-item">🌸 teamLab Borderless Shanghai tickets</div>
-      <div class="booking-item">🏰 Shanghai Disneyland tickets (online)</div>
-      <div class="booking-item">🎭 Great World Dream — verify Oct 2026 + book</div>
-      <div class="booking-item">🧩 Beijing escape room — English room, Sanlitun</div>
-      <div class="booking-item">🏛️ Shaanxi History Museum (free — book online)</div>
-      <div class="booking-item">🏠 Hutong homestay dinner (via The Hutong)</div>
-      <div class="booking-item">🚐 Private van for 6 — Mutianyu Great Wall</div>
-      <div class="booking-item">🥟 UnTour Food Tours cooking class (Shanghai)</div>
     </div>
   </div>
 
-  <div style="background:#fff; border:1px solid #e8e8e8; border-radius:12px; padding:16px 18px;">
-    <p style="font-size:13px; font-weight:700; margin-bottom:12px; color:#1a1a1a;">Practical prep — do before leaving NZ</p>
-    <div class="bookings-grid">
-      <div class="booking-item">📱 Download a VPN before departure (blocked in China)</div>
-      <div class="booking-item">💬 Set up WeChat + WeChat Pay before leaving NZ</div>
-      <div class="booking-item">🚖 Install DiDi (Chinese ride-hailing, like Uber)</div>
-      <div class="booking-item">🚄 Install Trip.com for trains + domestic flights</div>
-      <div class="booking-item">🗺️ Download Google Maps offline for Chinese cities</div>
-      <div class="booking-item">💴 Bring some CNY cash — backup for small vendors</div>
+  <!-- ═══ DAY 1 ═══ -->
+  <div class="page" id="page-d1">
+    <div class="day-header">
+      <div class="day-header-top">
+        <span class="day-label">Day 1</span>
+        <span class="day-label" style="color:#ccc;">·</span>
+        <span class="day-label">Tue 13 Oct</span>
+      </div>
+      <h2 class="day-main-title">✈️ Depart Auckland</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-transit">Transit</span>
+        <span class="day-sleep">✈️ Overnight flight</span>
+      </div>
+    </div>
+    <div class="content-card is-transit">
+      <ul class="transit-list">
+        <li>Depart Auckland at 11:15 on CX7402 (operated by Air New Zealand) — Boeing 787-9</li>
+        <li class="note">Arrive Hong Kong 17:45 — tight 1h15m connection, no time to leave the terminal</li>
+        <li>Board CX344 at 19:00 — Airbus A330-300 to Beijing</li>
+        <li class="note">Flight time Auckland to Hong Kong is 11h30m, then Hong Kong to Beijing 3h25m</li>
+        <li class="sleep-li">Arrive Beijing Capital Airport at 22:25 — late night check-in to hotel</li>
+      </ul>
+      <div class="tag-row">
+        <span class="flight-pill">CX7402 AKL→HKG 11:15</span>
+        <span class="flight-pill">CX344 HKG→PEK 19:00</span>
+        <span class="tip-pill">📌 Allow time — tight HKG connection</span>
+      </div>
+    </div>
+    <div class="sleep-footer transit">🏨 <strong>Sleep: Beijing</strong> — late night arrival</div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('overview')">← Overview</button>
+      <button class="day-nav-btn" onclick="show('d2')">Day 2 →</button>
     </div>
   </div>
 
-</div>
+  <!-- ═══ DAY 2 ═══ -->
+  <div class="page" id="page-d2">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 2</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Wed 14 Oct</span></div>
+      <h2 class="day-main-title">Arrive Beijing — soft landing day</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-transit">Arrival</span>
+        <span class="day-sleep">🏨 Sleep: Beijing</span>
+      </div>
+    </div>
+    <div class="content-card">
+      <ul class="bullet-list">
+        <li>Arrived late previous night at 22:25 — sleep in to recover</li>
+        <li>Metro or pre-arranged transfer to hotel — check in early or leave bags and rest in lobby</li>
+        <li>Gentle afternoon: Wangfujing pedestrian street for a first look at the city, street food snacks, browse</li>
+        <li>Optional evening: hutong wander in Nanluoguxiang — lanterns, bars, dumpling shops</li>
+        <li>Early night — big days start tomorrow</li>
+      </ul>
+      <div class="tag-row">
+        <span class="act-pill">Wangfujing Street</span>
+        <span class="act-pill">Nanluoguxiang hutong (optional)</span>
+        <span class="tip-pill">📌 Arrange early check-in or hotel bag storage</span>
+      </div>
+    </div>
+    <div class="sleep-footer beijing">🏨 <strong>Sleep: Beijing</strong></div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d1')">← Day 1</button>
+      <button class="day-nav-btn" onclick="show('d3')">Day 3 →</button>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 3 ═══ -->
+  <div class="page" id="page-d3">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 3</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Thu 15 Oct</span></div>
+      <h2 class="day-main-title">Tiananmen Square, Forbidden City & Jingshan Park</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-beijing">Beijing</span>
+        <span class="day-sleep">🏨 Sleep: Beijing</span>
+      </div>
+    </div>
+    <div class="content-card">
+      <ul class="bullet-list">
+        <li>Early start — Tiananmen Square at opening for photos before crowds build</li>
+        <li>Full morning inside the Forbidden City — the scale genuinely needs time, don't rush it</li>
+        <li>Tickets must be booked online weeks in advance (daily cap, no walk-ups at the gate)</li>
+        <li>After lunch: Jingshan Park directly north — the hilltop pavilion gives the single best overhead view of the Forbidden City's golden rooftops in Beijing</li>
+        <li>Almost no Western tourists here despite being extraordinary — Dad, Jeremy, and Vincent bring cameras</li>
+        <li>Evening: Peking duck dinner near Wangfujing — book a well-regarded local restaurant, not a tourist trap</li>
+      </ul>
+      <div class="tag-row">
+        <span class="act-pill">Tiananmen Square</span>
+        <span class="act-pill">Forbidden City</span>
+        <span class="act-pill">Jingshan Park views</span>
+        <span class="act-pill">Peking duck dinner</span>
+        <span class="tip-pill">📌 Pre-book Forbidden City tickets online</span>
+      </div>
+    </div>
+    <div class="sleep-footer beijing">🏨 <strong>Sleep: Beijing</strong></div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d2')">← Day 2</button>
+      <button class="day-nav-btn" onclick="show('d4')">Day 4 →</button>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 4 ═══ -->
+  <div class="page" id="page-d4">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 4</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Fri 16 Oct</span></div>
+      <h2 class="day-main-title">Great Wall at Mutianyu — full day</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-beijing">Beijing</span>
+        <span class="day-sleep">🏨 Sleep: Beijing</span>
+      </div>
+    </div>
+    <div class="content-card">
+      <ul class="bullet-list">
+        <li>Private van for the group — much better than tour buses, depart hotel ~8am</li>
+        <li>Mutianyu is the right section: fewer crowds than Badaling, well-restored, beautiful valley setting</li>
+        <li>Cable car up to the wall — saves legs for the ridge walk between watchtowers</li>
+        <li>Mid-October foliage in the surrounding forest is at or near peak — the colours from the wall are extraordinary</li>
+        <li>Optional toboggan run back down — fast, fun, good for the group</li>
+        <li>Walking the full ridge between towers is a legitimate hike with real elevation changes</li>
+        <li>Back in Beijing by late afternoon — rest evening or nearby dinner</li>
+      </ul>
+      <div class="tag-row">
+        <span class="act-pill">Mutianyu Great Wall</span>
+        <span class="act-pill">Cable car up</span>
+        <span class="act-pill">Autumn foliage</span>
+        <span class="act-pill">Ridge walk</span>
+        <span class="act-pill">Toboggan (optional)</span>
+        <span class="tip-pill">📌 Book private van for 6</span>
+      </div>
+    </div>
+    <div class="sleep-footer beijing">🏨 <strong>Sleep: Beijing</strong></div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d3')">← Day 3</button>
+      <button class="day-nav-btn" onclick="show('d5')">Day 5 →</button>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 5 ═══ -->
+  <div class="page" id="page-d5">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 5</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Sat 17 Oct</span></div>
+      <h2 class="day-main-title">Temple of Heaven, Fragrant Hills, 798 Art District & escape room</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-beijing">Beijing</span>
+        <span class="day-sleep">🏨 Sleep: Beijing</span>
+      </div>
+    </div>
+    <div class="content-card">
+      <ul class="bullet-list">
+        <li>Very early start — Temple of Heaven park at 7am: locals doing tai chi, flying kites, playing erhu, completely unscripted</li>
+        <li>The light on the Hall of Prayer at that hour is one of the best photography opportunities in Asia — Vincent, Jeremy, and Dad bring cameras</li>
+        <li>Then Fragrant Hills for peak autumn foliage — smoke trees turn brilliant red-orange in mid-October, best on a weekday to avoid crowds</li>
+        <li>Late afternoon: 798 Art District for Cold War-era factory architecture, outdoor sculpture, and street art — great for photography and design interest</li>
+        <li>Evening: group escape room in Sanlitun — book an English-compatible room well in advance, this is a group non-negotiable</li>
+        <li>Optional late night: Guijie Ghost Street hotpot — restaurants open until 3am, zero tourists</li>
+      </ul>
+      <div class="tag-row">
+        <span class="act-pill">Temple of Heaven dawn</span>
+        <span class="act-pill">Fragrant Hills foliage</span>
+        <span class="act-pill">798 Art District</span>
+        <span class="act-pill">Escape room evening</span>
+        <span class="act-pill">Ghost Street hotpot (optional)</span>
+        <span class="tip-pill">📌 Book escape room ahead — English room, Sanlitun</span>
+      </div>
+    </div>
+    <div class="sleep-footer beijing">🏨 <strong>Sleep: Beijing</strong></div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d4')">← Day 4</button>
+      <button class="day-nav-btn" onclick="show('d6')">Day 6 →</button>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 6 ═══ -->
+  <div class="page" id="page-d6">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 6</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Sun 18 Oct</span></div>
+      <h2 class="day-main-title">Summer Palace, Panjiayuan market, calligraphy workshop & hutong dinner</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-beijing">Beijing</span>
+        <span class="day-sleep">🏨 Sleep: Beijing — last night</span>
+      </div>
+    </div>
+    <div class="content-card">
+      <ul class="bullet-list">
+        <li>Morning: Summer Palace boat ride on Kunming Lake — pavilions, marble bridge, forested hills</li>
+        <li>Early afternoon: split the group — Mum and Sharon to Panjiayuan antique and craft market (best on weekends, thousands of stalls, everything negotiable)</li>
+        <li>Vincent, Tom, and Sharon: calligraphy or seal carving workshop via The Hutong cultural centre (book in advance, English-language)</li>
+        <li>Vincent and Jeremy: Wudaokou gaming arcades and board game cafés if workshop not for them</li>
+        <li>Evening: private hutong family homestay dinner — home-cooked Beijing food in a courtyard home, book via The Hutong cultural centre</li>
+        <li>One of the most memorable evenings of the whole trip</li>
+      </ul>
+      <div class="tag-row">
+        <span class="act-pill">Summer Palace</span>
+        <span class="act-pill">Panjiayuan market</span>
+        <span class="act-pill">Calligraphy workshop</span>
+        <span class="act-pill">Gaming arcades (V/J)</span>
+        <span class="act-pill">Hutong homestay dinner</span>
+        <span class="tip-pill">📌 Book hutong dinner + workshop via The Hutong</span>
+      </div>
+    </div>
+    <div class="sleep-footer beijing">🏨 <strong>Sleep: Beijing</strong> — last night</div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d5')">← Day 5</button>
+      <button class="day-nav-btn" onclick="show('d7')">Day 7 →</button>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 7 ═══ -->
+  <div class="page" id="page-d7">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 7</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Mon 19 Oct</span></div>
+      <h2 class="day-main-title">🚄 Beijing → Xi'an by bullet train</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-transit">Transit</span>
+        <span class="day-sleep">🏨 Sleep: Xi'an — first night</span>
+      </div>
+    </div>
+    <div class="content-card is-transit">
+      <ul class="transit-list">
+        <li class="train">Morning bullet train Beijing → Xi'an — approximately 4.5 hours, book seats together in advance</li>
+        <li class="note">Check out of Beijing hotel before departure</li>
+        <li class="note">Arrive Xi'an early afternoon — check in to hotel, rest briefly</li>
+        <li>Late afternoon: walk the top of the ancient City Wall for a first look at its scale</li>
+        <li class="note">Evening: Muslim Quarter for dinner and street food — lanterns, steam from food stalls, red-lit alleyways</li>
+        <li class="note">Excellent night photography — Jeremy, Vincent, and Dad bring cameras</li>
+      </ul>
+      <div class="tag-row">
+        <span class="flight-pill">🚄 G-train Beijing→Xi'an ~4.5 hrs</span>
+        <span class="act-pill">City Wall first look</span>
+        <span class="act-pill">Muslim Quarter dinner</span>
+        <span class="act-pill">Night street photography</span>
+        <span class="tip-pill">📌 Book 6 train seats together in advance</span>
+      </div>
+    </div>
+    <div class="sleep-footer xian">🏨 <strong>Sleep: Xi'an</strong> — first night</div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d6')">← Day 6</button>
+      <button class="day-nav-btn" onclick="show('d8')">Day 8 →</button>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 8 ═══ -->
+  <div class="page" id="page-d8">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 8</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Tue 20 Oct</span></div>
+      <h2 class="day-main-title">Terracotta Warriors — full day</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-xian">Xi'an</span>
+        <span class="day-sleep">🏨 Sleep: Xi'an</span>
+      </div>
+    </div>
+    <div class="content-card">
+      <ul class="bullet-list">
+        <li>Full day at the Mausoleum of Qin Shi Huang — the most historically significant day of the entire trip</li>
+        <li>Visit all three pits plus the bronze chariot museum — don't skip Pit 2 and 3, they're less crowded and equally fascinating</li>
+        <li>Book a private English-speaking guide in advance — context transforms this from impressive to extraordinary</li>
+        <li>Allow the full day; it earns it — most people wish they'd spent longer</li>
+        <li>Early evening: Shaanxi History Museum if energy allows — free entry, advance online booking required, Tang dynasty gold treasures section is extraordinary for Tom and Dad</li>
+        <li>Dinner: fresh biang biang noodles at a local canteen — watch the cook hand-pull the noodles from a single lump of dough</li>
+      </ul>
+      <div class="tag-row">
+        <span class="act-pill">Terracotta Warriors</span>
+        <span class="act-pill">All three pits</span>
+        <span class="act-pill">Bronze chariot museum</span>
+        <span class="act-pill">Private English guide</span>
+        <span class="act-pill">Shaanxi Museum (eve)</span>
+        <span class="tip-pill">📌 Pre-book tickets & guide</span>
+        <span class="tip-pill">📌 Shaanxi Museum — free, book online</span>
+      </div>
+    </div>
+    <div class="sleep-footer xian">🏨 <strong>Sleep: Xi'an</strong></div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d7')">← Day 7</button>
+      <button class="day-nav-btn" onclick="show('d9')">Day 9 →</button>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 9 ═══ -->
+  <div class="page" id="page-d9">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 9</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Wed 21 Oct</span></div>
+      <h2 class="day-main-title">Mount Huashan — full day hike</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-xian">Xi'an</span>
+        <span class="day-sleep">🏨 Sleep: Xi'an — last night</span>
+      </div>
+    </div>
+    <div class="content-card">
+      <ul class="bullet-list">
+        <li>Very early start — train from Xi'an North to Huashan North station (~35 min) then shuttle to cable car base</li>
+        <li>Cable car up to North Peak — saves legs for the ridge hike between peaks</li>
+        <li>Hike East → West → South peaks if the group has the legs — chains assist on the steep sections</li>
+        <li>South Peak at 2,154m offers 360° views across the Shaanxi plains — breathtaking in mid-October clear air</li>
+        <li>Optional Plank Walk: a narrow ledge bolted to a sheer vertical cliff face — not for the faint-hearted, entirely optional</li>
+        <li>Back in Xi'an by early evening — City Wall at golden hour if any energy remains (the low October light turns the ancient stone warm amber)</li>
+      </ul>
+      <div class="tag-row">
+        <span class="act-pill">Mount Huashan</span>
+        <span class="act-pill">Cable car to North Peak</span>
+        <span class="act-pill">Ridge hike between peaks</span>
+        <span class="act-pill">South Peak 2,154m</span>
+        <span class="act-pill">Plank Walk (optional)</span>
+        <span class="act-pill">City Wall golden hour (eve)</span>
+        <span class="tip-pill">📌 Very early start — full day</span>
+      </div>
+    </div>
+    <div class="sleep-footer xian">🏨 <strong>Sleep: Xi'an</strong> — last night</div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d8')">← Day 8</button>
+      <button class="day-nav-btn" onclick="show('d10')">Day 10 →</button>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 10 ═══ -->
+  <div class="page" id="page-d10">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 10</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Thu 22 Oct</span></div>
+      <h2 class="day-main-title">✈️ Xi'an → Shanghai + Bund at dusk</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-transit">Transit</span>
+        <span class="day-sleep">🏨 Sleep: Shanghai — first night</span>
+      </div>
+    </div>
+    <div class="content-card is-transit">
+      <ul class="transit-list">
+        <li>Morning flight Xi'an → Shanghai — approximately 2 hours, book via Trip.com for best prices</li>
+        <li class="note">Check out of Xi'an hotel before departure</li>
+        <li class="note">Arrive Shanghai early afternoon — metro to hotel, check in</li>
+        <li>Afternoon: first Bund walk and Pudong skyline orientation</li>
+        <li class="note">Evening: rooftop bar (Bar Rouge, New Heights, or Flair) for blue hour — the towers light up as the sky darkens</li>
+        <li class="note">Jeremy, Vincent, and Dad: this is the iconic Bund dusk shot — bring cameras</li>
+      </ul>
+      <div class="tag-row">
+        <span class="flight-pill">✈️ Xi'an → Shanghai ~2 hrs</span>
+        <span class="act-pill">Bund walk</span>
+        <span class="act-pill">Rooftop bar at dusk</span>
+        <span class="tip-pill">📌 Book Xi'an→Shanghai flight via Trip.com</span>
+      </div>
+    </div>
+    <div class="sleep-footer shanghai">🏨 <strong>Sleep: Shanghai</strong> — first night</div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d9')">← Day 9</button>
+      <button class="day-nav-btn" onclick="show('d11')">Day 11 →</button>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 11 ═══ -->
+  <div class="page" id="page-d11">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 11</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Fri 23 Oct</span></div>
+      <h2 class="day-main-title">Bund at dawn, French Concession, M50 & teamLab Borderless</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-shanghai">Shanghai</span>
+        <span class="day-sleep">🏨 Sleep: Shanghai</span>
+      </div>
+    </div>
+    <div class="content-card">
+      <ul class="bullet-list">
+        <li>Very early: Bund at 6:30am — almost tourist-free, golden light on the art deco facades, Pudong skyline reflected in still water</li>
+        <li>Best photography window of the entire Shanghai leg — Vincent, Jeremy, and Dad bring cameras</li>
+        <li>Mid-morning: French Concession wander — tree-lined streets, Art Deco buildings, independent cafés</li>
+        <li>Tianzifang alleyways for Sharon and Mum — independent boutiques, textile shops, handmade jewellery</li>
+        <li>Afternoon: M50 Moganshan Road art district for Vincent and Sharon — 100+ open studios, ceramics workshops, galleries in converted factories</li>
+        <li>Evening: teamLab Borderless Shanghai on the Huangpu riverside — allow 3 hours minimum, download the teamLab app before you go</li>
+      </ul>
+      <div class="tag-row">
+        <span class="act-pill">Dawn Bund photography</span>
+        <span class="act-pill">French Concession</span>
+        <span class="act-pill">Tianzifang alleys</span>
+        <span class="act-pill">M50 art district</span>
+        <span class="act-pill">teamLab Borderless</span>
+        <span class="tip-pill">📌 Book teamLab tickets in advance</span>
+      </div>
+    </div>
+    <div class="sleep-footer shanghai">🏨 <strong>Sleep: Shanghai</strong></div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d10')">← Day 10</button>
+      <button class="day-nav-btn" onclick="show('d12')">Day 12 →</button>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 12 ═══ -->
+  <div class="page" id="page-d12">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 12</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Sat 24 Oct</span></div>
+      <h2 class="day-main-title">Hangzhou day trip — West Lake & Longjing tea village</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-shanghai">Shanghai</span>
+        <span class="day-sleep">🏨 Sleep: Shanghai</span>
+      </div>
+    </div>
+    <div class="content-card">
+      <ul class="bullet-list">
+        <li>Early train from Shanghai Hongqiao station (~45 min) — depart by 7:30am to get ahead of day-trippers</li>
+        <li>Boat ride on West Lake — one of China's most celebrated landscapes, especially in mid-October foliage</li>
+        <li>Walk the ancient Su Causeway — tree-lined, willow-draped, gorgeous in autumn</li>
+        <li>Leifeng Pagoda for panoramic lake views — escalators to the ruins, stairs to the top</li>
+        <li>After lunch: taxi to Longjing tea village — watch hand-roasting of Dragon Well green tea and taste fresh from the farm</li>
+        <li>Train back to Shanghai by 6pm — dinner near the hotel, early night</li>
+      </ul>
+      <div class="tag-row">
+        <span class="act-pill">West Lake boat ride</span>
+        <span class="act-pill">Su Causeway walk</span>
+        <span class="act-pill">Leifeng Pagoda</span>
+        <span class="act-pill">Longjing tea village</span>
+        <span class="tip-pill">📌 Train by 7:30am — early start essential</span>
+      </div>
+    </div>
+    <div class="sleep-footer shanghai">🏨 <strong>Sleep: Shanghai</strong></div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d11')">← Day 11</button>
+      <button class="day-nav-btn" onclick="show('d13')">Day 13 →</button>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 13 ═══ -->
+  <div class="page" id="page-d13">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 13</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Sun 25 Oct</span></div>
+      <h2 class="day-main-title">Shanghai Disneyland — full day</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-shanghai">Shanghai</span>
+        <span class="day-sleep">🏨 Sleep: Shanghai</span>
+      </div>
+    </div>
+    <div class="content-card">
+      <ul class="bullet-list">
+        <li>Arrive at park opening — head straight to Zootopia: Hot Pursuit (queues hit 90–120 min by mid-morning, the world's only Zootopia land)</li>
+        <li>TRON Lightcycle Power Run next — exclusive to Shanghai, you lean forward on a lightcycle and race through a neon digital world at speed</li>
+        <li>Pirates of the Caribbean — the best version in the world: trackless boat, seamless projections, stunning scale</li>
+        <li>The castle is the tallest Disney has ever built</li>
+        <li>Fully bilingual park — all signage, ride instructions, and cast members operate in English</li>
+        <li>Book tickets online in advance — October is busy</li>
+      </ul>
+      <div class="tag-row">
+        <span class="act-pill">Zootopia: Hot Pursuit</span>
+        <span class="act-pill">TRON Lightcycle</span>
+        <span class="act-pill">Pirates of the Caribbean</span>
+        <span class="act-pill">Castle</span>
+        <span class="tip-pill">📌 Book tickets online — arrive at opening</span>
+      </div>
+    </div>
+    <div class="sleep-footer shanghai">🏨 <strong>Sleep: Shanghai</strong></div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d12')">← Day 12</button>
+      <button class="day-nav-btn" onclick="show('d14')">Day 14 →</button>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 14 ═══ -->
+  <div class="page" id="page-d14">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 14</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Mon 26 Oct</span></div>
+      <h2 class="day-main-title">Split morning, hairy crab lunch & Great World Dream</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-shanghai">Shanghai</span>
+        <span class="day-sleep">🏨 Sleep: Shanghai</span>
+      </div>
+    </div>
+    <div class="content-card">
+      <ul class="bullet-list">
+        <li>Morning split by interest — Sharon and Tom: wet market tour and xiaolongbao cooking class via UnTour Food Tours</li>
+        <li>Vincent and Jeremy: electronics market near People's Square (retro gaming hardware, custom keyboards, components — hours of browsing)</li>
+        <li>Mum and Sharon: AP Xinyang Fashion Market or South Bund Fabric Market for bargain shopping</li>
+        <li>Lunch: hairy crab — late October is peak hairy crab season in Shanghai, one of China's great seasonal food events, book a local restaurant in advance</li>
+        <li>Afternoon: pack, rest, check out or store bags</li>
+        <li>Evening: Great World Dream immersive theatre — 28 performers across multiple floors, interactive storylines, rooftop casino, hidden rooms (verify Oct 2026 availability and book ahead)</li>
+      </ul>
+      <div class="tag-row">
+        <span class="act-pill">Cooking class (Sharon/Tom)</span>
+        <span class="act-pill">Electronics market (V/J)</span>
+        <span class="act-pill">Bargain shopping (Mum/Sharon)</span>
+        <span class="act-pill">Hairy crab lunch</span>
+        <span class="act-pill">Great World Dream</span>
+        <span class="tip-pill">📌 Book crab restaurant + Great World Dream</span>
+      </div>
+    </div>
+    <div class="sleep-footer shanghai">🏨 <strong>Sleep: Shanghai</strong></div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d13')">← Day 13</button>
+      <button class="day-nav-btn" onclick="show('d15')">Day 15 →</button>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 15 ═══ -->
+  <div class="page" id="page-d15">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 15</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Tue 27 Oct</span></div>
+      <h2 class="day-main-title">Free day in Shanghai</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-shanghai">Shanghai</span>
+        <span class="day-sleep">🏨 Sleep: Shanghai — last night</span>
+      </div>
+    </div>
+    <div class="content-card">
+      <ul class="bullet-list">
+        <li>Full free day — no fixed plans, decide on the day what the group wants</li>
+        <li>Option: Suzhou day trip — classical gardens, silk museum, canal town (~30 min by bullet train)</li>
+        <li>Option: Old City and Yuyuan Garden — Yu Garden's Ming dynasty rockeries and teahouse, bazaar street food around the pond</li>
+        <li>Option: 1933 Old Millfun — surreal brutalist former slaughterhouse now housing independent design studios and cafés</li>
+        <li>Option: rest day, slow brunch, last-minute shopping, foot massage</li>
+        <li>Final Shanghai dinner — somewhere worth it for the last night</li>
+      </ul>
+      <div class="tag-row">
+        <span class="act-pill">Suzhou day trip (optional)</span>
+        <span class="act-pill">Yuyuan Garden (optional)</span>
+        <span class="act-pill">1933 Old Millfun (optional)</span>
+        <span class="act-pill">Rest + shopping</span>
+      </div>
+    </div>
+    <div class="sleep-footer shanghai">🏨 <strong>Sleep: Shanghai</strong> — last night</div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d14')">← Day 14</button>
+      <button class="day-nav-btn" onclick="show('d16')">Day 16 →</button>
+    </div>
+  </div>
+
+  <!-- ═══ DAY 16 ═══ -->
+  <div class="page" id="page-d16">
+    <div class="day-header">
+      <div class="day-header-top"><span class="day-label">Day 16</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Wed 28 Oct</span></div>
+      <h2 class="day-main-title">✈️ Depart Shanghai → Auckland via Hong Kong</h2>
+      <div class="day-meta-row">
+        <span class="day-city-badge dcb-transit">Transit</span>
+        <span class="day-sleep">✈️ Overnight flight home</span>
+      </div>
+    </div>
+    <div class="content-card is-transit">
+      <ul class="transit-list">
+        <li class="note">Free morning — check out of hotel by late morning</li>
+        <li>Depart Shanghai Hongqiao (SHA) at 13:35 on CX349 — Airbus A330-300 to Hong Kong</li>
+        <li class="note">Note: departs from Hongqiao (SHA), not Pudong (PVG) — allow time to get there</li>
+        <li class="note">Arrive Hong Kong 16:20 — 5h15m layover, airside only, no sightseeing</li>
+        <li>Depart Hong Kong 21:35 on CX113 — Airbus A350-900 to Auckland</li>
+        <li class="sleep-li">Arrive Auckland 13:25 on Thursday 29 October</li>
+      </ul>
+      <div class="tag-row">
+        <span class="flight-pill">CX349 SHA→HKG 13:35</span>
+        <span class="flight-pill">CX113 HKG→AKL 21:35</span>
+        <span class="tip-pill">📌 SHA = Hongqiao, not Pudong</span>
+      </div>
+    </div>
+    <div class="sleep-footer transit">🏠 <strong>Home — Auckland</strong> Thu 29 Oct 13:25</div>
+    <div class="day-nav-btns">
+      <button class="day-nav-btn" onclick="show('d15')">← Day 15</button>
+      <button class="day-nav-btn" onclick="show('overview')">Overview →</button>
+    </div>
+  </div>
+
+</main>
 
 <script>
-let active = 'all';
-function filt(city) {
-  active = city;
-  document.querySelectorAll('.ftab').forEach(t => {
-    t.className = 'ftab';
-    if (t.id === 'ftab-' + city) t.classList.add('on-' + city);
-  });
-  document.querySelectorAll('.day-row').forEach(r => {
-    r.classList.toggle('hidden', city !== 'all' && r.dataset.city !== city);
-  });
-  document.querySelectorAll('.section-div').forEach(s => {
-    if (city === 'all') { s.classList.remove('hidden'); return; }
-    if (city === 'transit') { s.classList.add('hidden'); return; }
-    s.classList.toggle('hidden', s.dataset.city !== city);
-  });
-}
+  function show(id) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    // Show target
+    const page = document.getElementById('page-' + id);
+    const nav = document.getElementById('nav-' + id);
+    if (page) page.classList.add('active');
+    if (nav) nav.classList.add('active');
+    // Scroll to top
+    document.getElementById('main').scrollTop = 0;
+    window.scrollTo(0, 0);
+    // Close mobile sidebar
+    document.getElementById('sidebar').classList.remove('open');
+  }
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+  }
 </script>
 </body>
 </html>
