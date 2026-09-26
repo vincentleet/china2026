@@ -253,6 +253,35 @@
     .city-cards { grid-template-columns: 1fr; }
     .bookings-grid { grid-template-columns: 1fr; }
   }
+
+  .time-block { margin: 0 0 18px 0; }
+  .time-block:last-child { margin-bottom: 0; }
+  .time-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #999;
+    margin: 0 0 8px 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .time-label::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+  .time-block .bullet-list { margin: 0; }
+  .time-block .bullet-list li { margin-bottom: 6px; }
+  .time-block .bullet-list li:last-child { margin-bottom: 0; }
+
 </style>
 </head>
 <body>
@@ -482,13 +511,26 @@
       </div>
     </div>
     <div class="content-card">
-      <ul class="bullet-list">
+            <div class="time-block">
+        <div class="time-label">🌅 Morning</div>
+        <ul class="bullet-list">
         <li>Arrived late previous night at 22:25 — sleep in to recover</li>
         <li>Metro or pre-arranged transfer to hotel — check in early or leave bags and rest in lobby</li>
-        <li>Gentle afternoon: Wangfujing pedestrian street for a first look at the city, street food snacks, browse</li>
-        <li>Optional evening: hutong wander in Nanluoguxiang — lanterns, bars, dumpling shops</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">☀️ Afternoon</div>
+        <ul class="bullet-list">
+        <li>Gentle explore: Wangfujing pedestrian street for a first look at the city, street food snacks, browse</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">🌙 Evening</div>
+        <ul class="bullet-list">
+        <li>Optional hutong wander in Nanluoguxiang — lanterns, bars, dumpling shops</li>
         <li>Early night — big days start tomorrow</li>
-      </ul>
+        </ul>
+      </div>
       <div class="tag-row">
         <span class="act-pill">Wangfujing Street</span>
         <span class="act-pill">Nanluoguxiang hutong (optional)</span>
@@ -513,14 +555,27 @@
       </div>
     </div>
     <div class="content-card">
-      <ul class="bullet-list">
+            <div class="time-block">
+        <div class="time-label">🌅 Morning</div>
+        <ul class="bullet-list">
         <li>Early start — Tiananmen Square at opening for photos before crowds build</li>
         <li>Full morning inside the Forbidden City — the scale genuinely needs time, don't rush it</li>
         <li>Tickets must be booked online weeks in advance (daily cap, no walk-ups at the gate)</li>
-        <li>After lunch: Jingshan Park directly north — the hilltop pavilion gives the single best overhead view of the Forbidden City's golden rooftops in Beijing</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">☀️ Afternoon</div>
+        <ul class="bullet-list">
+        <li>Jingshan Park directly north — the hilltop pavilion gives the single best overhead view of the Forbidden City's golden rooftops in Beijing</li>
         <li>Almost no Western tourists here despite being extraordinary — Dad, Jeremy, and Vincent bring cameras</li>
-        <li>Evening: Peking duck dinner near Wangfujing — book a well-regarded local restaurant, not a tourist trap</li>
-      </ul>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">🌙 Evening</div>
+        <ul class="bullet-list">
+        <li>Peking duck dinner near Wangfujing — book a well-regarded local restaurant, not a tourist trap</li>
+        </ul>
+      </div>
       <div class="tag-row">
         <span class="act-pill">Tiananmen Square</span>
         <span class="act-pill">Forbidden City</span>
@@ -547,15 +602,28 @@
       </div>
     </div>
     <div class="content-card">
-      <ul class="bullet-list">
+            <div class="time-block">
+        <div class="time-label">🌅 Morning</div>
+        <ul class="bullet-list">
         <li>Private van for the group — much better than tour buses, depart hotel ~8am</li>
         <li>Mutianyu is the right section: fewer crowds than Badaling, well-restored, beautiful valley setting</li>
         <li>Cable car up to the wall — saves legs for the ridge walk between watchtowers</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">☀️ Afternoon</div>
+        <ul class="bullet-list">
         <li>Mid-October foliage in the surrounding forest is at or near peak — the colours from the wall are extraordinary</li>
         <li>Optional toboggan run back down — fast, fun, good for the group</li>
         <li>Walking the full ridge between towers is a legitimate hike with real elevation changes</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">🌙 Evening</div>
+        <ul class="bullet-list">
         <li>Back in Beijing by late afternoon — rest evening or nearby dinner</li>
-      </ul>
+        </ul>
+      </div>
       <div class="tag-row">
         <span class="act-pill">Mutianyu Great Wall</span>
         <span class="act-pill">Cable car up</span>
@@ -583,14 +651,27 @@
       </div>
     </div>
     <div class="content-card">
-      <ul class="bullet-list">
+            <div class="time-block">
+        <div class="time-label">🌅 Morning</div>
+        <ul class="bullet-list">
         <li>Very early start — Temple of Heaven park at 7am: locals doing tai chi, flying kites, playing erhu, completely unscripted</li>
         <li>The light on the Hall of Prayer at that hour is one of the best photography opportunities in Asia — Vincent, Jeremy, and Dad bring cameras</li>
         <li>Then Fragrant Hills for peak autumn foliage — smoke trees turn brilliant red-orange in mid-October, best on a weekday to avoid crowds</li>
-        <li>Late afternoon: 798 Art District for Cold War-era factory architecture, outdoor sculpture, and street art — great for photography and design interest</li>
-        <li>Evening: group escape room in Sanlitun — book an English-compatible room well in advance, this is a group non-negotiable</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">☀️ Afternoon</div>
+        <ul class="bullet-list">
+        <li>798 Art District for Cold War-era factory architecture, outdoor sculpture, and street art — great for photography and design interest</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">🌙 Evening</div>
+        <ul class="bullet-list">
+        <li>Group escape room in Sanlitun — book an English-compatible room well in advance, this is a group non-negotiable</li>
         <li>Optional late night: Guijie Ghost Street hotpot — restaurants open until 3am, zero tourists</li>
-      </ul>
+        </ul>
+      </div>
       <div class="tag-row">
         <span class="act-pill">Temple of Heaven dawn</span>
         <span class="act-pill">Fragrant Hills foliage</span>
@@ -618,14 +699,27 @@
       </div>
     </div>
     <div class="content-card">
-      <ul class="bullet-list">
-        <li>Morning: Summer Palace boat ride on Kunming Lake — pavilions, marble bridge, forested hills</li>
-        <li>Early afternoon: split the group — Mum and Sharon to Panjiayuan antique and craft market (best on weekends, thousands of stalls, everything negotiable)</li>
+            <div class="time-block">
+        <div class="time-label">🌅 Morning</div>
+        <ul class="bullet-list">
+        <li>Summer Palace boat ride on Kunming Lake — pavilions, marble bridge, forested hills</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">☀️ Afternoon</div>
+        <ul class="bullet-list">
+        <li>Split the group — Mum and Sharon to Panjiayuan antique and craft market (best on weekends, thousands of stalls, everything negotiable)</li>
         <li>Vincent, Tom, and Sharon: calligraphy or seal carving workshop via The Hutong cultural centre (book in advance, English-language)</li>
         <li>Vincent and Jeremy: Wudaokou gaming arcades and board game cafés if workshop not for them</li>
-        <li>Evening: private hutong family homestay dinner — home-cooked Beijing food in a courtyard home, book via The Hutong cultural centre</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">🌙 Evening</div>
+        <ul class="bullet-list">
+        <li>Private hutong family homestay dinner — home-cooked Beijing food in a courtyard home, book via The Hutong cultural centre</li>
         <li>One of the most memorable evenings of the whole trip</li>
-      </ul>
+        </ul>
+      </div>
       <div class="tag-row">
         <span class="act-pill">Summer Palace</span>
         <span class="act-pill">Panjiayuan market</span>
@@ -687,14 +781,27 @@
       </div>
     </div>
     <div class="content-card">
-      <ul class="bullet-list">
+            <div class="time-block">
+        <div class="time-label">🌅 Morning</div>
+        <ul class="bullet-list">
         <li>Full day at the Mausoleum of Qin Shi Huang — the most historically significant day of the entire trip</li>
         <li>Visit all three pits plus the bronze chariot museum — don't skip Pit 2 and 3, they're less crowded and equally fascinating</li>
         <li>Book a private English-speaking guide in advance — context transforms this from impressive to extraordinary</li>
-        <li>Allow the full day; it earns it — most people wish they'd spent longer</li>
-        <li>Early evening: Shaanxi History Museum if energy allows — free entry, advance online booking required, Tang dynasty gold treasures section is extraordinary for Tom and Dad</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">☀️ Afternoon</div>
+        <ul class="bullet-list">
+        <li>Allow the full afternoon at the site; it earns it — most people wish they'd spent longer</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">🌙 Evening</div>
+        <ul class="bullet-list">
+        <li>Shaanxi History Museum if energy allows — free entry, advance online booking required, Tang dynasty gold treasures section is extraordinary for Tom and Dad</li>
         <li>Dinner: fresh biang biang noodles at a local canteen — watch the cook hand-pull the noodles from a single lump of dough</li>
-      </ul>
+        </ul>
+      </div>
       <div class="tag-row">
         <span class="act-pill">Terracotta Warriors</span>
         <span class="act-pill">All three pits</span>
@@ -723,14 +830,27 @@
       </div>
     </div>
     <div class="content-card">
-      <ul class="bullet-list">
+            <div class="time-block">
+        <div class="time-label">🌅 Morning</div>
+        <ul class="bullet-list">
         <li>Very early start — train from Xi'an North to Huashan North station (~35 min) then shuttle to cable car base</li>
         <li>Cable car up to North Peak — saves legs for the ridge hike between peaks</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">☀️ Afternoon</div>
+        <ul class="bullet-list">
         <li>Hike East → West → South peaks if the group has the legs — chains assist on the steep sections</li>
         <li>South Peak at 2,154m offers 360° views across the Shaanxi plains — breathtaking in mid-October clear air</li>
         <li>Optional Plank Walk: a narrow ledge bolted to a sheer vertical cliff face — not for the faint-hearted, entirely optional</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">🌙 Evening</div>
+        <ul class="bullet-list">
         <li>Back in Xi'an by early evening — City Wall at golden hour if any energy remains (the low October light turns the ancient stone warm amber)</li>
-      </ul>
+        </ul>
+      </div>
       <div class="tag-row">
         <span class="act-pill">Mount Huashan</span>
         <span class="act-pill">Cable car to North Peak</span>
@@ -759,14 +879,27 @@
       </div>
     </div>
     <div class="content-card">
-      <ul class="bullet-list">
+            <div class="time-block">
+        <div class="time-label">🌅 Morning</div>
+        <ul class="bullet-list">
         <li>Flexible day — no fixed plans, decide on the morning what feels right after Huashan</li>
-        <li>Option: City Wall bike ride — 14km loop atop the Ming-dynasty walls, sunrise or sunset both magical</li>
-        <li>Option: Tang Paradise evening light show — large-scale Tang dynasty themed garden, spectacular illuminations after dark</li>
+        <li>Option: City Wall bike ride — 14km loop atop the Ming-dynasty walls, sunrise light is magical</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">☀️ Afternoon</div>
+        <ul class="bullet-list">
         <li>Option: Big Wild Goose Pagoda — centuries-old Buddhist pagoda, vast square with fountain show at dusk</li>
         <li>Option: Shaanxi History Museum — China's largest provincial museum, Tang dynasty gold and terracotta artefacts (free, timed entry — book online)</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">🌙 Evening</div>
+        <ul class="bullet-list">
+        <li>Option: Tang Paradise light show — large-scale Tang dynasty themed garden, spectacular illuminations after dark</li>
         <li>Final Xi'an dinner in the Muslim Quarter — try the spiced lamb skewers, rose jelly (meiGui bing fen), and persimmon cakes before leaving tomorrow</li>
-      </ul>
+        </ul>
+      </div>
       <div class="tag-row">
         <span class="act-pill">City Wall bike ride (optional)</span>
         <span class="act-pill">Tang Paradise light show (optional)</span>
@@ -826,14 +959,27 @@
       </div>
     </div>
     <div class="content-card">
-      <ul class="bullet-list">
+            <div class="time-block">
+        <div class="time-label">🌅 Morning</div>
+        <ul class="bullet-list">
         <li>Very early: Bund at 6:30am — almost tourist-free, golden light on the art deco facades, Pudong skyline reflected in still water</li>
         <li>Best photography window of the entire Shanghai leg — Vincent, Jeremy, and Dad bring cameras</li>
         <li>Mid-morning: French Concession wander — tree-lined streets, Art Deco buildings, independent cafés</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">☀️ Afternoon</div>
+        <ul class="bullet-list">
         <li>Tianzifang alleyways for Sharon and Mum — independent boutiques, textile shops, handmade jewellery</li>
-        <li>Afternoon: M50 Moganshan Road art district for Vincent and Sharon — 100+ open studios, ceramics workshops, galleries in converted factories</li>
-        <li>Evening: teamLab Borderless Shanghai on the Huangpu riverside — allow 3 hours minimum, download the teamLab app before you go</li>
-      </ul>
+        <li>M50 Moganshan Road art district for Vincent and Sharon — 100+ open studios, ceramics workshops, galleries in converted factories</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">🌙 Evening</div>
+        <ul class="bullet-list">
+        <li>teamLab Borderless Shanghai on the Huangpu riverside — allow 3 hours minimum, download the teamLab app before you go</li>
+        </ul>
+      </div>
       <div class="tag-row">
         <span class="act-pill">Dawn Bund photography</span>
         <span class="act-pill">French Concession</span>
@@ -861,14 +1007,27 @@
       </div>
     </div>
     <div class="content-card">
-      <ul class="bullet-list">
+            <div class="time-block">
+        <div class="time-label">🌅 Morning</div>
+        <ul class="bullet-list">
         <li>Early train from Shanghai Hongqiao station (~45 min) — depart by 7:30am to get ahead of day-trippers</li>
         <li>Boat ride on West Lake — one of China's most celebrated landscapes, especially in mid-October foliage</li>
         <li>Walk the ancient Su Causeway — tree-lined, willow-draped, gorgeous in autumn</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">☀️ Afternoon</div>
+        <ul class="bullet-list">
         <li>Leifeng Pagoda for panoramic lake views — escalators to the ruins, stairs to the top</li>
-        <li>After lunch: taxi to Longjing tea village — watch hand-roasting of Dragon Well green tea and taste fresh from the farm</li>
+        <li>Taxi to Longjing tea village — watch hand-roasting of Dragon Well green tea and taste fresh from the farm</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">🌙 Evening</div>
+        <ul class="bullet-list">
         <li>Train back to Shanghai by 6pm — dinner near the hotel, early night</li>
-      </ul>
+        </ul>
+      </div>
       <div class="tag-row">
         <span class="act-pill">West Lake boat ride</span>
         <span class="act-pill">Su Causeway walk</span>
@@ -895,14 +1054,27 @@
       </div>
     </div>
     <div class="content-card">
-      <ul class="bullet-list">
+            <div class="time-block">
+        <div class="time-label">🌅 Morning</div>
+        <ul class="bullet-list">
         <li>Arrive at park opening — head straight to Zootopia: Hot Pursuit (queues hit 90–120 min by mid-morning, the world's only Zootopia land)</li>
         <li>TRON Lightcycle Power Run next — exclusive to Shanghai, you lean forward on a lightcycle and race through a neon digital world at speed</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">☀️ Afternoon</div>
+        <ul class="bullet-list">
         <li>Pirates of the Caribbean — the best version in the world: trackless boat, seamless projections, stunning scale</li>
         <li>The castle is the tallest Disney has ever built</li>
         <li>Fully bilingual park — all signage, ride instructions, and cast members operate in English</li>
-        <li>Book tickets online in advance — October is busy</li>
-      </ul>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">🌙 Evening</div>
+        <ul class="bullet-list">
+        <li>Stay for the castle nighttime spectacular, fireworks, and final parade — the park comes alive after dark</li>
+        </ul>
+      </div>
       <div class="tag-row">
         <span class="act-pill">Zootopia: Hot Pursuit</span>
         <span class="act-pill">TRON Lightcycle</span>
@@ -929,15 +1101,28 @@
       </div>
     </div>
     <div class="content-card">
-      <ul class="bullet-list">
-        <li>Morning split by interest — Sharon and Tom: wet market tour and xiaolongbao cooking class via UnTour Food Tours</li>
+            <div class="time-block">
+        <div class="time-label">🌅 Morning</div>
+        <ul class="bullet-list">
+        <li>Split by interest — Sharon and Tom: wet market tour and xiaolongbao cooking class via UnTour Food Tours</li>
         <li>Vincent and Jeremy: electronics market near People's Square (retro gaming hardware, custom keyboards, components — hours of browsing)</li>
         <li>Mum and Sharon: AP Xinyang Fashion Market or South Bund Fabric Market for bargain shopping</li>
-        <li>Lunch: hairy crab — late October is peak hairy crab season in Shanghai, one of China's great seasonal food events, book a local restaurant in advance</li>
-        <li>Afternoon: rest, last-minute shopping, foot massage</li>
-        <li>Evening: Great World Dream immersive theatre — 28 performers across multiple floors, interactive storylines, rooftop casino, hidden rooms (verify Oct 2026 availability and book ahead)</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">☀️ Afternoon</div>
+        <ul class="bullet-list">
+        <li>Hairy crab lunch — late October is peak hairy crab season in Shanghai, one of China's great seasonal food events, book a local restaurant in advance</li>
+        <li>Rest, last-minute shopping, foot massage</li>
+        </ul>
+      </div>
+      <div class="time-block">
+        <div class="time-label">🌙 Evening</div>
+        <ul class="bullet-list">
+        <li>Great World Dream immersive theatre — 28 performers across multiple floors, interactive storylines, rooftop casino, hidden rooms (verify Oct 2026 availability and book ahead)</li>
         <li>Final Shanghai dinner — somewhere worth it for the last night</li>
-      </ul>
+        </ul>
+      </div>
       <div class="tag-row">
         <span class="act-pill">Cooking class (Sharon/Tom)</span>
         <span class="act-pill">Electronics market (V/J)</span>
