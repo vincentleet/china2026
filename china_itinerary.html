@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>China 2026 — Itinerary</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -401,6 +402,21 @@
   .time-block .bullet-list li { margin-bottom: 4px; }
   .time-block .bullet-list li:last-child { margin-bottom: 0; }
 
+  /* ── DAY MAP ── */
+  .day-map {
+    width: 100%;
+    height: 220px;
+    border-radius: 12px;
+    border: 1px solid #e8e8e8;
+    margin: 12px 0 16px;
+    overflow: hidden;
+    background: #eee;
+  }
+  .day-map:empty { display: none; }
+  /* Leaflet popup tweak */
+  .leaflet-popup-content-wrapper { border-radius: 8px !important; box-shadow: 0 2px 8px rgba(0,0,0,.15) !important; }
+  .leaflet-popup-content { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; margin: 8px 12px !important; }
+
   /* ── PRINT ── */
   @media print {
     /* Layout: no sidebar, full width */
@@ -429,6 +445,9 @@
 
     /* Keep tag rows from looking odd */
     .tag-row { display: none; }
+
+    /* Hide maps in print — OSM tiles don't render well on paper */
+    .day-map { display: none !important; }
 
     @page { margin: 0; size: A4; }
   }
@@ -669,6 +688,7 @@
         <span class="day-sleep">🏨 Chongwenmen Hotel, Beijing</span>
       </div>
     </div>
+    <div class="day-map" id="map-d2"></div>
     <div class="content-card">
       <div class="time-block">
         <div class="time-label">🌅 Morning</div>
@@ -716,6 +736,7 @@
         <span class="day-sleep">🏨 Chongwenmen Hotel, Beijing</span>
       </div>
     </div>
+    <div class="day-map" id="map-d3"></div>
     <div class="content-card">
             <div class="time-block">
         <div class="time-label">🌅 Morning</div>
@@ -766,6 +787,7 @@
         <span class="day-sleep">🏨 Chongwenmen Hotel, Beijing</span>
       </div>
     </div>
+    <div class="day-map" id="map-d4"></div>
     <div class="content-card">
             <div class="time-block">
         <div class="time-label">🌅 Morning</div>
@@ -815,6 +837,7 @@
         <span class="day-sleep">🏨 Chongwenmen Hotel, Beijing</span>
       </div>
     </div>
+    <div class="day-map" id="map-d5"></div>
     <div class="content-card">
             <div class="time-block">
         <div class="time-label">🌅 Morning</div>
@@ -865,6 +888,7 @@
         <span class="day-sleep">🏨 Chongwenmen Hotel — last night</span>
       </div>
     </div>
+    <div class="day-map" id="map-d6"></div>
     <div class="content-card">
       <div class="time-block">
         <div class="time-label">🌅 Morning</div>
@@ -913,6 +937,7 @@
         <span class="day-sleep">🏨 AHS-Park Hotel — first night</span>
       </div>
     </div>
+    <div class="day-map" id="map-d7"></div>
     <div class="content-card is-transit">
       <ul class="transit-list">
         <li class="train">Morning bullet train Beijing → Xi'an — approximately 4.5 hours, book seats together in advance</li>
@@ -947,6 +972,7 @@
         <span class="day-sleep">🏨 AHS-Park Hotel, Xi'an</span>
       </div>
     </div>
+    <div class="day-map" id="map-d8"></div>
     <div class="content-card">
             <div class="time-block">
         <div class="time-label">🌅 Morning</div>
@@ -996,6 +1022,7 @@
         <span class="day-sleep">🏨 AHS-Park Hotel, Xi'an</span>
       </div>
     </div>
+    <div class="day-map" id="map-d9"></div>
     <div class="content-card">
       <div class="time-block">
         <div class="time-label">🌅 Morning</div>
@@ -1052,6 +1079,7 @@
         <span class="day-sleep">🏨 AHS-Park Hotel — last night</span>
       </div>
     </div>
+    <div class="day-map" id="map-d10"></div>
     <div class="content-card">
             <div class="time-block">
         <div class="time-label">🌅 Morning</div>
@@ -1099,6 +1127,7 @@
         <span class="day-sleep">🏨 JI Hotel The Bund — first night</span>
       </div>
     </div>
+    <div class="day-map" id="map-d11"></div>
     <div class="content-card is-transit">
       <ul class="transit-list">
         <li>Morning flight Xi'an → Shanghai — approximately 2 hours, book via Trip.com for best prices</li>
@@ -1132,6 +1161,7 @@
         <span class="day-sleep">🏨 JI Hotel The Bund, Shanghai</span>
       </div>
     </div>
+    <div class="day-map" id="map-d12"></div>
     <div class="content-card">
             <div class="time-block">
         <div class="time-label">🌅 Morning</div>
@@ -1184,6 +1214,7 @@
         <span class="day-sleep">🏨 JI Hotel The Bund, Shanghai</span>
       </div>
     </div>
+    <div class="day-map" id="map-d13"></div>
     <div class="content-card">
       <div class="time-block">
         <div class="time-label">🌅 Morning</div>
@@ -1237,6 +1268,7 @@
         <span class="day-sleep">🏨 JI Hotel The Bund, Shanghai</span>
       </div>
     </div>
+    <div class="day-map" id="map-d14"></div>
     <div class="content-card">
             <div class="time-block">
         <div class="time-label">🌅 Morning</div>
@@ -1284,6 +1316,7 @@
         <span class="day-sleep">🏨 JI Hotel The Bund — last night</span>
       </div>
     </div>
+    <div class="day-map" id="map-d15"></div>
     <div class="content-card">
             <div class="time-block">
         <div class="time-label">🌅 Morning</div>
@@ -1333,6 +1366,7 @@
         <span class="day-sleep">✈️ Overnight flight home</span>
       </div>
     </div>
+    <div class="day-map" id="map-d16"></div>
     <div class="content-card is-transit">
       <ul class="transit-list">
         <li class="note">Free morning — check out of hotel by late morning</li>
@@ -1555,6 +1589,7 @@
 
 </main>
 
+<script id="leaflet-script" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
   function show(id) {
     // Hide all pages
@@ -1571,6 +1606,8 @@
     window.scrollTo(0, 0);
     // Close mobile sidebar
     document.getElementById('sidebar').classList.remove('open');
+    // Init map lazily
+    maybeInitMap(id);
   }
 
   /* ── Booking checklist state ── */
@@ -1600,6 +1637,64 @@
 
   function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
+  }
+
+  /* ── DAY MAPS (Leaflet + OpenStreetMap) ── */
+  const DAY_PINS = {
+    d2: [['Capital Airport (arrive)', 40.0799, 116.5875, '✈️'], ['Summer Palace', 39.9999, 116.2755, '🏯'], ['Wangfujing', 39.9168, 116.4075, '🛍️']],
+    d3: [['Tiananmen Square', 39.9055, 116.3976, '🏛️'], ['Forbidden City', 39.9163, 116.3972, '🏯'], ['Jingshan Park', 39.9239, 116.3881, '🌳'], ['Red Theatre', 39.8948, 116.4179, '🎭']],
+    d4: [['Mutianyu Great Wall', 40.4393, 116.5640, '🏔️']],
+    d5: [['Temple of Heaven', 39.8822, 116.4066, '⛩️'], ['Fragrant Hills Park', 40.0067, 116.1903, '🌿'], ['798 Art District', 39.9840, 116.5013, '🎨'], ['Sanlitun (escape room)', 39.9334, 116.4544, '🔐']],
+    d6: [['Beijing Wildlife Park', 39.7300, 116.3980, '🐼'], ['Panjiayuan Market', 39.8724, 116.4663, '🎪'], ['Drum Tower hutong area', 39.9388, 116.3957, '🏮']],
+    d7: [['Beijing West Station', 39.8990, 116.3221, '🚄'], ["Xi'an North Station", 34.3770, 108.9320, '🚄']],
+    d8: [['Terracotta Warriors', 34.3847, 109.2785, '🏺'], ["Qin Shi Huang's Mausoleum", 34.3815, 109.2529, '⛰️'], ['Big Wild Goose Pagoda', 34.2224, 108.9598, '🛕'], ['Shaanxi History Museum', 34.2326, 108.9417, '🏛️'], ['Muslim Quarter (evening)', 34.2658, 108.9455, '🌙']],
+    d9: [["Xi'an North Station (depart)", 34.3770, 108.9320, '🚄'], ['Mount Huashan — West Peak', 34.4863, 110.0838, '⛰️'], ['South Peak (2,154m)', 34.4748, 110.0859, '🏔️']],
+    d10: [["Xi'an City Wall (South Gate)", 34.2566, 108.9398, '🏯'], ['Tang Paradise', 34.2189, 108.9174, '🌸'], ['Muslim Quarter', 34.2658, 108.9455, '🕌']],
+    d11: [["Xi'an Xianyang Airport", 34.4471, 108.7515, '✈️'], ['The Bund, Shanghai', 31.2399, 121.4905, '🌆']],
+    d12: [['The Bund', 31.2399, 121.4905, '🌅'], ['French Concession', 31.2165, 121.4623, '🌿'], ['M50 Creative Park', 31.2519, 121.4361, '🎨'], ['teamLab Borderless', 31.2083, 121.5698, '💫']],
+    d13: [['Nanjing South Station', 31.9566, 118.7967, '🚄'], ['Sun Yat-sen Mausoleum', 32.0599, 118.8478, '🏛️'], ['Ming Xiaoling Sacred Way', 32.0530, 118.8338, '🦁'], ['Nanjing City Wall', 32.0459, 118.8026, '🏯'], ['Confucius Temple / Qinhuai River', 32.0207, 118.7897, '🏮']],
+    d14: [['Shanghai Disneyland', 31.1443, 121.6573, '🏰']],
+    d15: [['Yu Garden', 31.2274, 121.4923, '🌺'], ['Xintiandi', 31.2212, 121.4726, '🍵'], ['Great World (Da Shijie)', 31.2269, 121.4836, '🎡']],
+    d16: [['Shanghai Pudong Airport', 31.1443, 121.8083, '✈️']],
+  };
+
+  const _maps = {};
+  function initMap(dayId) {
+    if (_maps[dayId]) return;
+    const el = document.getElementById('map-' + dayId);
+    if (!el || typeof L === 'undefined') return;
+    const pins = DAY_PINS[dayId];
+    if (!pins || pins.length === 0) return;
+
+    const map = L.map(el, { zoomControl: true, scrollWheelZoom: false, attributionControl: true });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18,
+    }).addTo(map);
+
+    pins.forEach(([name, lat, lng, emoji]) => {
+      const icon = L.divIcon({
+        className: '',
+        html: `<div style="background:#1a1a1a;color:#fff;font-size:11px;font-weight:700;padding:3px 7px;border-radius:99px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3);display:flex;align-items:center;gap:4px;"><span>${emoji}</span><span>${name}</span></div>`,
+        iconAnchor: [0, 10],
+      });
+      L.marker([lat, lng], { icon }).addTo(map);
+    });
+
+    if (pins.length === 1) {
+      map.setView([pins[0][1], pins[0][2]], 13);
+    } else {
+      map.fitBounds(L.latLngBounds(pins.map(p => [p[1], p[2]])), { padding: [28, 28] });
+    }
+    _maps[dayId] = map;
+  }
+
+  function maybeInitMap(id) {
+    if (!DAY_PINS[id]) return;
+    setTimeout(() => {
+      if (typeof L !== 'undefined') { initMap(id); }
+      else { document.getElementById('leaflet-script').addEventListener('load', () => initMap(id), { once: true }); }
+    }, 80);
   }
 </script>
 </body>
