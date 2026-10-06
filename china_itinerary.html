@@ -193,9 +193,11 @@
     margin-top: 2px;
     transition: background .15s, border-color .15s;
   }
-  .bk-card.bk-done .bk-cb { background: #2d7a4f; border-color: #2d7a4f; }
+  .bk-card.bk-done .bk-cb, .bk-card.bk-locked .bk-cb { background: #2d7a4f; border-color: #2d7a4f; }
   .bk-ck { opacity: 0; font-size: 10px; color: #fff; font-weight: 700; }
-  .bk-card.bk-done .bk-ck { opacity: 1; }
+  .bk-card.bk-done .bk-ck, .bk-card.bk-locked .bk-ck { opacity: 1; }
+  .bk-card.bk-locked { cursor: default; }
+  .bk-card.bk-locked:hover { border-color: #e8e8e8; }
   .bk-body { min-width: 0; }
   .bk-top { display: flex; align-items: flex-start; gap: 7px; flex-wrap: wrap; margin-bottom: 4px; }
   .bk-name { font-size: 14px; font-weight: 600; flex: 1; min-width: 100px; }
@@ -318,6 +320,38 @@
   .content-card { background: #eeece8; border: 1px solid #dddad4; border-radius: 14px; overflow: hidden; margin-bottom: 16px; padding: 6px; display: flex; flex-direction: column; gap: 6px; }
   .content-card.is-transit { background: #f1efe9; border-color: #d8d5ce; padding: 0; }
 
+  /* ── BOOKING CARD (booking facts on top, description below) ── */
+  .bullet-list li.lk-li, .transit-list li.lk-li { padding: 6px 0; border-top: none; }
+  .bullet-list li.lk-li::before, .transit-list li.lk-li::before { content: none; }
+  .bk-act { border-radius: 12px; overflow: hidden; border: 1px solid; border-left-width: 6px; background: #fff; }
+  .bk-act-booked { border-color: #b9dfc6; border-left-color: #2d7a4f; }
+  .bk-act-todo { border-color: #f0b866; border-left-color: #e8820c; border-style: dashed; border-left-style: solid; }
+  .lk { display: grid; grid-template-columns: 84px 1fr auto auto; align-items: center; gap: 4px 14px; padding: 12px 16px 12px 14px; }
+  .bk-act-booked .lk { background: #eaf6ee; }
+  .bk-act-todo .lk { background: #fff1dc; }
+  .lk-time { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; }
+  .bk-act-booked .lk-time { color: #1a5a35; }
+  .bk-act-todo .lk-time { color: #9a4a00; }
+  .lk-name { font-size: 16px; font-weight: 700; color: #222; line-height: 1.35; }
+  .lk-dur { font-size: 13px; font-weight: 600; color: #555; white-space: nowrap; }
+  .lk-pill { font-size: 12px; font-weight: 700; padding: 4px 11px; border-radius: 99px; white-space: nowrap; }
+  .bk-act-booked .lk-pill { background: #2d7a4f; color: #fff; }
+  .bk-act-todo .lk-pill { background: #e8820c; color: #fff; }
+  .bk-facts { margin: 0; padding: 8px 16px 8px 14px; }
+  .bk-act-booked .bk-facts { background: #f5fbf7; }
+  .bk-act-todo .bk-facts { background: #fffaf2; }
+  .bk-facts > div { display: grid; grid-template-columns: 78px 1fr; gap: 10px; padding: 3px 0; font-size: 14px; line-height: 1.45; }
+  .bk-facts dt { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #8a8a84; padding-top: 2px; }
+  .bk-facts dd { margin: 0; color: #333; }
+  .bk-facts a { color: #c45c1a; font-weight: 600; text-decoration: none; }
+  .bk-desc { padding: 10px 16px 12px 14px; font-size: 15px; line-height: 1.6; color: #555; background: #fff; border-top: 1px solid #ecebe6; }
+  .bk-desc p { margin: 0; }
+  @media (max-width: 640px) {
+    .lk { grid-template-columns: 70px 1fr; }
+    .lk-dur, .lk-pill { grid-column: 2; justify-self: start; }
+    .bk-facts > div { grid-template-columns: 1fr; gap: 0; }
+  }
+
   .card-section-label {
     font-size: 12px; font-weight: 700; color: #bbb; text-transform: uppercase;
     letter-spacing: 0.08em; padding: 14px 18px 0;
@@ -412,6 +446,9 @@
     margin: 12px 0 16px;
     overflow: hidden;
     background: #eee;
+    position: relative;
+    z-index: 0; /* contain Leaflet's internal z-indexes (up to 1000) so the sidebar/menu stays on top */
+    isolation: isolate;
   }
   .day-map:empty { display: none; }
   /* Leaflet popup tweak */
@@ -526,10 +563,10 @@
       <span class="nav-day-num">Day 13</span>Nanjing<span class="nav-badge nb-shanghai">SHA</span>
     </button>
     <button class="nav-item city-shanghai" id="nav-d14" onclick="show('d14')">
-      <span class="nav-day-num">Day 14</span>Disneyland<span class="nav-badge nb-shanghai">SHA</span>
+      <span class="nav-day-num">Day 14</span>Zhongshan Pk + M50<span class="nav-badge nb-shanghai">SHA</span>
     </button>
     <button class="nav-item city-shanghai" id="nav-d15" onclick="show('d15')">
-      <span class="nav-day-num">Day 15</span>Last day + show<span class="nav-badge nb-shanghai">SHA</span>
+      <span class="nav-day-num">Day 15</span>Old Town + escape room<span class="nav-badge nb-shanghai">SHA</span>
     </button>
 
     <div class="nav-section-label" style="margin-top:6px;">Return</div>
@@ -553,7 +590,7 @@
   <!-- ═══ OVERVIEW ═══ -->
   <div class="page active" id="page-overview">
     <p style="font-size:12px;color:#aaa;margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">Family trip · October 2026</p>
-    <h1 class="ov-title">China — 14 days</h1>
+    <h1 class="ov-title">China — 16 days</h1>
     <p class="ov-sub">Auckland → Beijing → Xi'an → Shanghai → Auckland · via Hong Kong · Cathay Pacific</p>
 
     <div class="stats-row">
@@ -610,13 +647,13 @@
       </div>
       <div class="city-card cc-xian" onclick="show('d7')">
         <div class="cc-name">Xi'an</div>
-        <div class="cc-dates">19–22 Oct</div>
+        <div class="cc-dates">19–23 Oct</div>
         <div class="cc-nights">4</div>
         <div class="cc-nl">nights · Days 7–10</div>
       </div>
       <div class="city-card cc-shanghai" onclick="show('d11')">
         <div class="cc-name">Shanghai</div>
-        <div class="cc-dates">22–28 Oct</div>
+        <div class="cc-dates">23–28 Oct</div>
         <div class="cc-nights">5</div>
         <div class="cc-nl">nights · Days 11–16</div>
       </div>
@@ -634,11 +671,9 @@
           <div class="booking-item">🚄 Beijing → Xi'an bullet train G365 — confirmed ✓</div>
           <div class="booking-item">✈️ Xi'an → Shanghai flight HU7845 — confirmed ✓</div>
           <div class="booking-item">🌸 teamLab Borderless Shanghai tickets</div>
-          <div class="booking-item">🏰 Shanghai Disneyland tickets (online)</div>
-          <div class="booking-item">🧩 Beijing escape room — English room, Sanlitun</div>
+          <div class="booking-item">🧩 AURORA escape room, Shanghai (Tue 27 Oct 20:20, 4 players)</div>
           <div class="booking-item">🏛️ Shaanxi History Museum (free — book online)</div>
           <div class="booking-item">🧱 Mutianyu Great Wall tickets + coach — confirmed ✓</div>
-          <div class="booking-item">🥟 UnTour Food Tours cooking class (Shanghai)</div>
         </div>
       </div>
     </div>
@@ -674,12 +709,9 @@
     </div>
     <div class="content-card is-transit">
       <ul class="transit-list">
-        <li>Depart Auckland at 11:15 on CX7402 (operated by Air New Zealand) — Boeing 787-9</li>
-        <li class="note">Arrive Hong Kong 17:45 — tight 1h15m connection, no time to leave the terminal</li>
-        <li>Board CX344 at 19:00 — Airbus A330-300 to Beijing</li>
-        <li class="note">Flight time Auckland to Hong Kong is 11h30m, then Hong Kong to Beijing 3h25m</li>
-        <li class="sleep-li">Arrive Beijing Capital Airport at 22:25 — late night check-in to hotel</li>
-      </ul>
+        <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">11:15</div><div class="lk-name">Auckland → Hong Kong</div><div class="lk-dur">⏱ ~11h 30m</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Flight</dt><dd>CX7402 · operated by Air New Zealand</dd></div><div><dt>Aircraft</dt><dd>Boeing 787-9</dd></div><div><dt>Arrives</dt><dd>Hong Kong 17:45</dd></div></dl><div class="bk-desc"><p>Tight 1h15m connection in Hong Kong — no time to leave the terminal.</p></div></div></li>
+        <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">19:00</div><div class="lk-name">Hong Kong → Beijing</div><div class="lk-dur">⏱ ~3h 25m</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Flight</dt><dd>CX344 · Airbus A330-300</dd></div><div><dt>Arrives</dt><dd>Beijing Capital 22:25</dd></div></dl><div class="bk-desc"><p>Late-night arrival — straight to the hotel and check in.</p></div></div></li>
+        </ul>
       <div class="tag-row">
         <span class="flight-pill">CX7402 AKL→HKG 11:15</span>
         <span class="flight-pill">CX344 HKG→PEK 19:00</span>
@@ -710,20 +742,19 @@
         <ul class="bullet-list">
         <li>Arrived late previous night at 22:25 — sleep in to recover, no rush</li>
         <li>Jeremy is already checked in (he arrives earlier from Sydney); the rest of us will take a DiDi from Capital Airport directly to the hotel — straightforward ride, no need for pre-arranged transfers</li>
-        <li>Check in or leave bags at the hotel and rest before heading out</li>
         </ul>
       </div>
       <div class="time-block">
         <div class="time-label">☀️ Afternoon</div>
         <ul class="bullet-list">
-        <li><strong>Summer Palace</strong> (Yiheyuan) — guided tour booked: afternoon session, English guide, 2.5hrs, entering via the East Palace Gate. Boat ride on Kunming Lake, Long Corridor painted galleries, Longevity Hill pavilions; a gentle first taste of imperial Beijing. Admission ticket + cruise included. Cancel by 17:00 on 13 Oct if needed</li>
+        <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">Afternoon</div><div class="lk-name">Summer Palace guided tour</div><div class="lk-dur">⏱ ~2.5 hrs</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Tour</dt><dd>English guide · afternoon session (exact start TBC)</dd></div><div><dt>Entry</dt><dd>East Palace Gate</dd></div><div><dt>Included</dt><dd>Admission + Kunming Lake cruise</dd></div><div><dt>Cost</dt><dd>CNY 1,308 (4 adult + 2 senior)</dd></div><div><dt>Booking</dt><dd>#1486591927947958</dd></div><div><dt>Cancel</dt><dd>Free until 17:00 on 13 Oct</dd></div></dl><div class="bk-desc"><p>Summer Palace (Yiheyuan) — boat ride on Kunming Lake, Long Corridor painted galleries and Longevity Hill pavilions; a gentle first taste of imperial Beijing.</p></div></div></li>
         <li>Wangfujing pedestrian street on the way back for street food snacks and a first feel of the city</li>
         </ul>
       </div>
       <div class="time-block">
         <div class="time-label">🌙 Evening</div>
         <ul class="bullet-list">
-        <li>🎭 <strong>Red Theatre Acrobatic Show</strong> — booked: 6 tickets, Green mid rows 14–16, 17:40 show, meet at the theatre at 17:40. Chongwenmen area, 5 minutes from the hotel. Chinese acrobatics, contortion, and aerial acts — one of the best variety shows in Beijing <span class="req-pill req-tom">Dad</span></li>
+        <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">17:40</div><div class="lk-name">Red Theatre acrobatic show</div><div class="lk-dur">⏱ ~1.5 hrs</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Tickets</dt><dd>6 · Green section, mid rows 14–16</dd></div><div><dt>Meet</dt><dd>At the theatre at 17:40 (5 min from the hotel)</dd></div><div><dt>Cost</dt><dd>CNY 2,568</dd></div><div><dt>Booking</dt><dd>#1486591927971168</dd></div></dl><div class="bk-desc"><p>Chinese acrobatics, contortion and aerial acts — one of the best variety shows in Beijing. <span class="req-pill req-tom">Dad</span></p></div></div></li>
         <li>Dinner after the show nearby — easy walk back to the hotel to settle in</li>
         </ul>
       </div>
@@ -757,26 +788,23 @@
     </div>
     <div class="day-map" id="map-d3"></div>
     <div class="content-card">
-            <div class="time-block">
-        <div class="time-label">🌅 Morning</div>
-        <ul class="bullet-list">
-        <li>Booked: Mutianyu ticket + round-trip in-attraction shuttle + round-trip cable car + coach from Beijing, 6 tickets. Meet 08:30 at Xuanwumen Subway Station Exit G (the listing also mentions an 08:00 meet-up at Zhushikou Station Exit D — confirm in your travel notification). Bring passports — ID is required</li>
-        <li>Mutianyu is the right section: fewer crowds than Badaling, well-restored, beautiful valley setting</li>
-        <li>Cable car up to the wall — saves legs for the ridge walk between watchtowers</li>
-        </ul>
-      </div>
       <div class="time-block">
-        <div class="time-label">☀️ Afternoon</div>
+        <div class="time-label">🌅 Morning &amp; afternoon</div>
         <ul class="bullet-list">
+        <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">08:30</div><div class="lk-name">Mutianyu Great Wall</div><div class="lk-dur">⏱ ~5 hrs on site</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Meet</dt><dd>08:30 · Xuanwumen Subway Station Exit G (listing also notes 08:00 at Zhushikou Exit D — confirm in travel notification)</dd></div><div><dt>Included</dt><dd>Ticket, round-trip shuttle, round-trip cable car, coach from Beijing</dd></div><div><dt>Return</dt><dd>Coach drops near the Bird's Nest &amp; Water Cube after ~5 hrs at the Wall, then metro/DiDi to the hotel</dd></div><div><dt>Bring</dt><dd>Passports — ID required</dd></div><div><dt>Cost</dt><dd>CNY 1,530 · 6 tickets</dd></div><div><dt>Booking</dt><dd>#1486591928109095</dd></div><div><dt>Cancel</dt><dd>Free until 18:00 on 14 Oct</dd></div></dl><div class="bk-desc"><p>Mutianyu is the right section: fewer crowds than Badaling, well-restored, beautiful valley setting.</p></div></div></li>
+        <li>Cable car up to the wall — saves legs for the ridge walk between watchtowers</li>
         <li>Mid-October foliage in the surrounding forest is at or near peak — the colours from the wall are extraordinary</li>
         <li>Optional toboggan run back down — fast, fun, good for the group</li>
         <li>Walking the full ridge between towers is a legitimate hike with real elevation changes</li>
+        
         </ul>
       </div>
       <div class="time-block">
         <div class="time-label">🌙 Evening</div>
         <ul class="bullet-list">
-        <li>About 5 hours at the attraction, then the coach drops you near the Bird's Nest &amp; Water Cube (group disbands on arrival) — metro or DiDi back to the hotel, rest evening or nearby dinner</li>
+        <li>Olympic Park at dusk — the coach drops you beside the Bird's Nest and Water Cube, which light up after dark; an easy, flat stroll across the open plaza after a big day on the Wall (suggestion, nothing to book)</li>
+        <li>Dinner: Beijing-style copper-pot lamb hotpot (涮羊肉) nearby or back near the hotel — warming after the Wall, and walk-in is fine</li>
+        <li>Early night — Day 4 starts early at Tiananmen Square</li>
         </ul>
       </div>
       <div class="tag-row">
@@ -785,6 +813,7 @@
         <span class="act-pill">Autumn foliage</span>
         <span class="act-pill">Ridge walk</span>
         <span class="act-pill">Toboggan (optional)</span>
+        <span class="act-pill">Olympic Park at dusk (suggested)</span>
         <span class="tip-pill">📌 Booked ✓ (Trip.com) · free cancel by 18:00 14 Oct</span>
       </div>
     </div>
@@ -811,8 +840,7 @@
         <div class="time-label">🌅 Morning</div>
         <ul class="bullet-list">
         <li>Early start — Tiananmen Square at opening for photos before crowds build</li>
-        <li>Full morning inside the Forbidden City — the scale genuinely needs time, don't rush it</li>
-        <li>Tickets must be booked online weeks in advance (daily cap, no walk-ups at the gate)</li>
+        <li class="lk-li"><div class="bk-act bk-act-todo"><div class="lk"><div class="lk-time">Morning</div><div class="lk-name">Forbidden City</div><div class="lk-dur">⏱ ~3–4 hrs</div><span class="lk-pill">Need to book</span></div><dl class="bk-facts"><div><dt>Tickets</dt><dd>Online only — daily cap, no walk-ups at the gate</dd></div><div><dt>Opens</dt><dd>9 Oct, 8pm Beijing time (7-day window)</dd></div><div><dt>Cost</dt><dd>¥60 pp</dd></div><div><dt>Book</dt><dd><a href="https://gugong.jianmuwang.cn/" target="_blank" rel="noopener">Official booking site ↗</a></dd></div></dl><div class="bk-desc"><p>A full morning inside the Forbidden City — the scale genuinely needs time, don't rush it.</p></div></div></li>
         </ul>
       </div>
       <div class="time-block">
@@ -825,7 +853,7 @@
       <div class="time-block">
         <div class="time-label">🌙 Evening</div>
         <ul class="bullet-list">
-        <li>Peking duck dinner near Wangfujing — book a well-regarded local restaurant, not a tourist trap</li>
+        <li>Peking duck dinner near Wangfujing — find a well-regarded local restaurant on the day, not a tourist trap</li>
         <li>Nanluoguxiang hutong wander after dinner — lantern-lit alley lined with indie shops, bars, and snack stalls; one of the most atmospheric old streets in Beijing</li>
         </ul>
       </div>
@@ -849,7 +877,7 @@
   <div class="page" id="page-d5">
     <div class="day-header">
       <div class="day-header-top"><span class="day-label">Day 5</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Sat 17 Oct</span></div>
-      <h2 class="day-main-title">Temple of Heaven, Zhongguancun, 798 Art District & escape room</h2>
+      <h2 class="day-main-title">Temple of Heaven, noodle class, Zhongguancun & 798 Art District</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-beijing">Beijing</span>
         <span class="day-sleep">🏨 Chongwenmen Hotel, Beijing</span>
@@ -862,7 +890,7 @@
         <ul class="bullet-list">
         <li>Very early start — Temple of Heaven park at 7am: locals doing tai chi, flying kites, playing erhu, completely unscripted</li>
         <li>The light on the Hall of Prayer at that hour is one of the best photography opportunities in Asia — Vincent, Jeremy, and Dad bring cameras</li>
-        <li>🍜 <strong>Hand-Pulled Noodles class at The Hutong</strong> — 10:30–13:00, teacher Sophia Du (杜仁娟). Learn to pull Lamian noodles from scratch and prepare a Xinjiang sauce. Small-group, English-language, finishing with lunch. Venue is in the hutong area; bring the address/map, or call if lost: +86 159 0104 6127. Not yet booked — add to checklist</li>
+        <li class="lk-li"><div class="bk-act bk-act-todo"><div class="lk"><div class="lk-time">10:30</div><div class="lk-name">Hand-Pulled Noodles class</div><div class="lk-dur">⏱ 2.5 hrs</div><span class="lk-pill">Need to book</span></div><dl class="bk-facts"><div><dt>Where</dt><dd>The Hutong — bring the address/map</dd></div><div><dt>Who</dt><dd>Vincent, Sharon, Jeremy, Tom (4 people)</dd></div><div><dt>Teacher</dt><dd>Sophia Du (杜仁娟)</dd></div><div><dt>Contact</dt><dd>+86 159 0104 6127 if lost</dd></div><div><dt>Cost</dt><dd>See The Hutong site</dd></div><div><dt>Book</dt><dd><a href="https://www.thehutong.com/" target="_blank" rel="noopener">The Hutong ↗</a></dd></div></dl><div class="bk-desc"><p>Learn to pull Lamian noodles from scratch and prepare a Xinjiang sauce. Small-group, English-language, finishing with lunch.</p></div></div></li>
         </ul>
       </div>
       <div class="time-block">
@@ -876,7 +904,6 @@
       <div class="time-block">
         <div class="time-label">🌙 Evening</div>
         <ul class="bullet-list">
-        <li>Group escape room in Sanlitun — book an English-compatible room well in advance, this is a group non-negotiable</li>
         <li>Optional late night: Guijie Ghost Street hotpot — restaurants open until 3am, zero tourists</li>
         </ul>
       </div>
@@ -886,10 +913,8 @@
         <span class="act-pill">Zhongguancun electronics</span>
         <span class="act-pill">798 Art District</span>
         <span class="act-pill">🎴 Pokémon TCG Gym (Xidan)</span>
-        <span class="act-pill">Escape room evening</span>
         <span class="act-pill">Ghost Street hotpot (optional)</span>
         <span class="tip-pill">📌 Hand-Pulled Noodles: book via The Hutong · 10:30–13:00 · +86 159 0104 6127</span>
-        <span class="tip-pill">📌 Book escape room ahead — English room, Sanlitun</span>
         <span class="tip-pill">📌 iPhone battery repair: Zhongguancun stalls, ¥120–200, same day</span>
       </div>
     </div>
@@ -951,11 +976,8 @@
     <div class="day-map" id="map-d7"></div>
     <div class="content-card is-transit">
       <ul class="transit-list">
-        <li class="train">Booked: <strong>G365</strong> Beijing West 09:55 → Xi'an North 14:05 (4h10m), via Trip.com</li>
-        <li class="note">Check out of Beijing hotel before departure</li>
-        <li class="note">Arrive Xi'an North 14:05 — metro/taxi to the hotel, drop bags or check in</li>
-        <li>Afternoon: <strong>Shaanxi History Museum</strong> — free entry (advance online booking required); one of China's finest museums with Tang dynasty gold treasures, silk road artefacts, and terracotta warrior originals; particularly outstanding for Tom and Dad</li>
-        <li class="note">Allow 2 hours; it closes at 17:00 and the train now arrives 14:05, so aim for ~15:30 arrival and a shorter visit</li>
+        <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">09:55</div><div class="lk-name">G365 Beijing West → Xi'an North</div><div class="lk-dur">⏱ 4h 10m</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Train</dt><dd>G365 high-speed · arrives Xi'an North 14:05</dd></div><div><dt>Booked via</dt><dd>Trip.com</dd></div><div><dt>Before</dt><dd>Check out of the Beijing hotel before departure</dd></div></dl><div class="bk-desc"><p>Arrive 14:05 — metro/taxi to the hotel, drop bags or check in.</p></div></div></li>
+        <li class="lk-li"><div class="bk-act bk-act-todo"><div class="lk"><div class="lk-time">~15:30</div><div class="lk-name">Shaanxi History Museum</div><div class="lk-dur">⏱ ~1.5 hrs</div><span class="lk-pill">Need to book</span></div><dl class="bk-facts"><div><dt>Entry</dt><dd>Free — timed ticket booked online (WeChat mini-program or official site); slots fill within days</dd></div><div><dt>Plan</dt><dd>Arrive ~15:30 after the train; closes 17:00</dd></div><div><dt>Book</dt><dd><a href="https://www.sxhm.com/" target="_blank" rel="noopener">Official museum site ↗</a></dd></div></dl><div class="bk-desc"><p>One of China's finest museums — Tang dynasty gold treasures, silk road artefacts and terracotta warrior originals; particularly outstanding for Tom and Dad.</p></div></div></li>
         <li>Late afternoon / early evening: walk the top of the ancient City Wall for a first look at its scale</li>
         <li class="note">Evening: Muslim Quarter for dinner and street food — lanterns, steam from food stalls, red-lit alleyways</li>
         <li class="note">Excellent night photography — Jeremy, Vincent, and Dad bring cameras</li>
@@ -992,9 +1014,7 @@
             <div class="time-block">
         <div class="time-label">🌅 Morning</div>
         <ul class="bullet-list">
-        <li>Booked: Xi'an Terracotta Army Day Tour with English guide (carpool, 6 adults, morning option, no Huaqing Palace visit). Door-to-door pick-up at the hotel at <strong>07:40</strong> — pick-up and drop-off times can change, so check the travel notification the evening before</li>
-        <li>Visit all three pits plus the bronze chariot museum — don't skip Pit 2 and 3, they're less crowded and equally fascinating</li>
-        <li>Entry to the Mausoleum of Qin Shi Huang is included — ask the guide to cover Pits 2 and 3, not just Pit 1</li>
+        <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">07:40</div><div class="lk-name">Terracotta Warriors tour</div><div class="lk-dur">⏱ Morning (~5 hrs)</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Tour</dt><dd>English-guided carpool · morning option · 6 adults · no Huaqing Palace visit</dd></div><div><dt>Pick-up</dt><dd>07:40 door-to-door at the hotel — times can change, check the travel notification the evening before</dd></div><div><dt>Included</dt><dd>Entry to the Mausoleum of Qin Shi Huang</dd></div><div><dt>Cost</dt><dd>CNY 1,860</dd></div><div><dt>Booking</dt><dd>#1486591928609715</dd></div><div><dt>Cancel</dt><dd>Free until 22:00 on 19 Oct</dd></div></dl><div class="bk-desc"><p>Visit all three pits plus the bronze chariot museum — ask the guide to cover Pits 2 and 3, not just Pit 1; they're less crowded and equally fascinating.</p></div></div></li>
         </ul>
       </div>
       <div class="time-block">
@@ -1039,23 +1059,16 @@
       <div class="time-block">
         <div class="time-label">🌅 Morning</div>
         <ul class="bullet-list">
-        <li>Train from Xi'an North → Huashan North station (~35 min, ~¥35–50 pp) — aim to depart around 7:30am</li>
-        <li>Shuttle from station to West cable car base (~20 min, ~¥30 pp)</li>
-        <li>West Peak cable car up to West Peak (2,082m) — stunning enclosed gondola ride (~20 min, ¥280 pp round-trip)</li>
-        <li>Park entrance fee ¥160 pp — mandatory, covers the whole mountain</li>
-        </ul>
-      </div>
-      <div class="time-block">
-        <div class="time-label">☀️ Afternoon</div>
-        <ul class="bullet-list">
+        <li class="lk-li"><div class="bk-act bk-act-todo"><div class="lk"><div class="lk-time">~07:30</div><div class="lk-name">Huashan: train, park & cable car</div><div class="lk-dur">⏱ ~5–6 hrs</div><span class="lk-pill">Need to book</span></div><dl class="bk-facts"><div><dt>Train</dt><dd>Xi'an North → Huashan North · ~35 min · ~¥35–50 pp · pre-book</dd></div><div><dt>Shuttle</dt><dd>Station → West cable car base · ~20 min · ~¥30 pp</dd></div><div><dt>Cable car</dt><dd>West Peak (2,082m) round trip · ~20 min each way · ¥280 pp</dd></div><div><dt>Park entry</dt><dd>¥160 pp — mandatory, covers the whole mountain</dd></div><div><dt>Book</dt><dd>Park entry + cable car via Trip.com or Huashan WeChat</dd></div></dl><div class="bk-desc"><p>Stunning enclosed gondola ride up to West Peak — a half-day on the mountain (~¥535–560 pp all in), back at Huashan North around noon.</p></div></div></li>
         <li>Walk West Peak → South Peak (~600m, ~30 min) — the summit at 2,154m is the highest point on the mountain with panoramic views across the Shaanxi plains</li>
         <li>Optional Plank Walk from South Peak: a narrow wooden ledge bolted to a sheer cliff face — harness hire ~¥30, not required, entirely at the group's comfort level</li>
         <li>Walk back South Peak → West Peak (~40 min), then cable car down — back at Huashan North by around noon</li>
         <li>Return train to Xi'an — back in the city by ~1:30–2pm, leaving the afternoon fully free</li>
+        
         </ul>
       </div>
       <div class="time-block">
-        <div class="time-label">☀️ Afternoon (continued)</div>
+        <div class="time-label">☀️ Afternoon</div>
         <ul class="bullet-list">
         <li>Back in Xi'an by ~1:30–2pm — quick rest and lunch at the hotel or nearby</li>
         <li><strong>~3:00pm: City Wall bike ride</strong> — hire bikes at the South or North gate (¥45 pp for 100 min) and ride the full 14km loop atop the Ming-dynasty walls; the afternoon light in October turns the ancient stone a warm amber, and the city views in both directions are superb</li>
@@ -1151,9 +1164,7 @@
     <div class="day-map" id="map-d11"></div>
     <div class="content-card is-transit">
       <ul class="transit-list">
-        <li>Booked: <strong>Hainan Airlines HU7845</strong> — Xi'an Xianyang T3 08:30 → Shanghai Pudong T2 11:00 (airline ref NV485F)</li>
-        <li class="note">Check out of Xi'an hotel early — the airport is roughly 50 minutes from the Bell Tower, so leave by ~05:45</li>
-        <li class="note">Land at Pudong T2 at 11:00 — Metro Line 2 into the city to the hotel, check in or drop bags</li>
+        <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">08:30</div><div class="lk-name">Xi'an → Shanghai Pudong</div><div class="lk-dur">⏱ 2h 30m</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Flight</dt><dd>HU7845 Hainan Airlines · Economy · 6 pax</dd></div><div><dt>Route</dt><dd>Xianyang T3 08:30 → Pudong T2 11:00</dd></div><div><dt>Leave hotel</dt><dd>By ~05:45 — airport is ~50 min from the Bell Tower</dd></div><div><dt>Booking</dt><dd>#1486591468940666 · airline ref NV485F</dd></div></dl><div class="bk-desc"><p>Land at Pudong T2 at 11:00 — Metro Line 2 into the city to the hotel, check in or drop bags.</p></div></div></li>
         <li>Afternoon: cross to Pudong via Metro Line 2 — <strong>Binjiang Park</strong> on the east bank of the Huangpu; this is the riverside promenade looking directly west across the river at the Bund and Puxi skyline; completely free, almost no tourist crowds, and the view is better than from the Bund side itself because you have the full sweep of art deco buildings with the water between you. Best in late afternoon light on the way to the rooftop bar. Dad, Jeremy, Vincent — cameras out</li>
         <li class="note">This is the panoramic shot someone recommended — east of the river. If the weather's poor today, Day 12 dawn at the Bund is the backup, and the view also works from Day 15's Science Museum/Pudong afternoon</li>
         <li>First Bund walk on the way back — orientation, skyline in both directions</li>
@@ -1180,7 +1191,7 @@
   <div class="page" id="page-d12">
     <div class="day-header">
       <div class="day-header-top"><span class="day-label">Day 12</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Sat 24 Oct</span></div>
-      <h2 class="day-main-title">Bund at dawn, French Concession, M50 &amp; teamLab Borderless</h2>
+      <h2 class="day-main-title">Bund at dawn, French Concession, Xujiahui &amp; teamLab Borderless</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-shanghai">Shanghai</span>
         <span class="day-sleep">🏨 JI Hotel The Bund, Shanghai</span>
@@ -1200,16 +1211,13 @@
         <div class="time-label">☀️ Afternoon</div>
         <ul class="bullet-list">
         <li>Tianzifang alleyways for Sharon and Mum — independent boutiques, textile shops, handmade jewellery (a short metro or taxi from Xintiandi)</li>
-        <li>M50 Moganshan Road art district for Vincent and Sharon — 100+ open studios, ceramics workshops, galleries in converted factories</li>
-        <li class="is-requested">🎴 <strong>Pokémon Center Card Gym</strong> — B1, Wujiaochang Wanda Plaza: official Simplified Chinese TCG cards, battle areas, exclusive collectibles and themed plushies (open 10:00–21:00) <span class="req-pill req-vincent">Vincent</span></li>
-        <li class="is-requested">🎴 <strong>Pokémon TCG Gym, Cloud Nine Mall</strong> — 3F, Longemont Shopping Park, Changning District (Zhongshan Park Station Exit 5): China-only merchandise, 151-series items and statues (open 10:00–22:00) <span class="req-pill req-vincent">Vincent</span></li>
-        <li class="is-requested">🎴 <strong>Cramorant Gym</strong> (古月鸟 Gym) — also at Dragon's Dream mall, Zhongshan Park (Metro Lines 2/3/4 Exit 8), same complex as Cloud Nine; newly renovated 2025, specialises in official booster boxes and Japanese-format play; combine both on the same Zhongshan Park stop <span class="req-pill req-vincent">Vincent</span></li>
+        <li>Vincent and Jeremy: <strong>Baisihao Electronics City, Xujiahui</strong> (Metro Lines 1/9/11, Exit 1) — stalls selling Anbernic/Powkiddy handhelds, keyboards, switches, keycaps and Onyx Boox e-readers at factory-adjacent prices; a short taxi or metro ride from Tianzifang, on the same side of town</li>
         </ul>
       </div>
       <div class="time-block">
         <div class="time-label">🌙 Evening</div>
         <ul class="bullet-list">
-        <li>teamLab Borderless Shanghai on the Huangpu riverside — allow 3 hours minimum, download the teamLab app before you go</li>
+        <li class="lk-li"><div class="bk-act bk-act-todo"><div class="lk"><div class="lk-time">Evening</div><div class="lk-name">teamLab Borderless Shanghai</div><div class="lk-dur">⏱ 3+ hrs</div><span class="lk-pill">Need to book</span></div><dl class="bk-facts"><div><dt>Entry</dt><dd>Timed ticket — Saturdays sell out 2–4 weeks ahead; buy as soon as the date appears</dd></div><div><dt>Cost</dt><dd>~¥299 pp</dd></div><div><dt>Book</dt><dd><a href="https://www.teamlab.art/e/borderless-shanghai/" target="_blank" rel="noopener">teamLab official site ↗</a></dd></div></dl><div class="bk-desc"><p>On the Huangpu riverside — allow 3 hours minimum and download the teamLab app before you go.</p></div></div></li>
         </ul>
       </div>
       <div class="tag-row">
@@ -1217,10 +1225,7 @@
         <span class="act-pill">French Concession</span>
         <span class="act-pill">Xintiandi lunch</span>
         <span class="act-pill">Tianzifang alleys</span>
-        <span class="act-pill">M50 art district</span>
-        <span class="act-pill">🎴 Pokémon Card Gym (Wujiaochang)</span>
-        <span class="act-pill">🎴 Pokémon TCG Gym (Cloud Nine)</span>
-        <span class="act-pill">🎴 Cramorant Gym (Dragon's Dream)</span>
+        <span class="act-pill">Baisihao electronics (V/J — Xujiahui)</span>
         <span class="act-pill">teamLab Borderless</span>
         <span class="tip-pill">📌 Book teamLab tickets in advance</span>
       </div>
@@ -1247,8 +1252,8 @@
       <div class="time-block">
         <div class="time-label">🌅 Morning</div>
         <ul class="bullet-list">
-        <li>High-speed train from Shanghai Hongqiao → Nanjing South (~1h15m, ~¥100–130 pp) — depart by 8am</li>
-        <li>Sun Yat-sen Mausoleum (Zhongshan Ling) — 392 steps through a forested hillside to a spectacular hilltop tomb; crowds are lighter in the morning</li>
+        <li class="lk-li"><div class="bk-act bk-act-todo"><div class="lk"><div class="lk-time">by 08:00</div><div class="lk-name">Train to Nanjing</div><div class="lk-dur">⏱ ~1h 15m</div><span class="lk-pill">Need to book</span></div><dl class="bk-facts"><div><dt>Route</dt><dd>Shanghai Hongqiao → Nanjing South</dd></div><div><dt>Cost</dt><dd>~¥100–130 pp each way</dd></div><div><dt>Book</dt><dd>Both legs on Trip.com or 12306.cn — Sunday trains are busy, book 2+ weeks ahead</dd></div></dl><div class="bk-desc"><p>High-speed train out of Hongqiao — depart by 8am to make the most of the day.</p></div></div></li>
+        <li class="lk-li"><div class="bk-act bk-act-todo"><div class="lk"><div class="lk-time">Morning</div><div class="lk-name">Sun Yat-sen Mausoleum</div><div class="lk-dur">⏱ ~2 hrs</div><span class="lk-pill">Need to book</span></div><dl class="bk-facts"><div><dt>Entry</dt><dd>Free — reservation required (1–7 days ahead)</dd></div><div><dt>Book</dt><dd>Nanjing Tourism WeChat mini-program or Trip.com; Ming Xiaoling nearby needs booking ~3 days ahead</dd></div></dl><div class="bk-desc"><p>392 steps through a forested hillside to a spectacular hilltop tomb; crowds are lighter in the morning.</p></div></div></li>
         <li>Ming Xiaoling Mausoleum nearby — Sacred Way lined with stone animal statues, one of China's best-preserved imperial burial sites</li>
         </ul>
       </div>
@@ -1265,7 +1270,7 @@
         <ul class="bullet-list">
         <li class="is-requested">🏮 <strong>Qinhuai River Scenic Area (Confucius Temple)</strong> — the entire riverfront lights up at dusk with red lanterns, ornate bridges and reflected neon on the water; best views from the boats and the bridge walkways (open until 10pm) <span class="req-pill req-vincent">Vincent</span></li>
         <li>Dinner in the Confucius Temple food street — try Nanjing duck (the city's signature dish), small wontons and osmanthus rice cakes</li>
-        <li>Train back to Shanghai — last trains around 9:30–10pm, back at hotel by midnight</li>
+        <li class="lk-li"><div class="bk-act bk-act-todo"><div class="lk"><div class="lk-time">21:30+</div><div class="lk-name">Train back to Shanghai</div><div class="lk-dur">⏱ ~1h 15m</div><span class="lk-pill">Need to book</span></div><dl class="bk-facts"><div><dt>Route</dt><dd>Nanjing South → Shanghai</dd></div><div><dt>Timing</dt><dd>Last trains ~21:30–22:00 — book no earlier than 21:30 for the full Qinhuai evening</dd></div><div><dt>Cost</dt><dd>~¥100–130 pp</dd></div></dl><div class="bk-desc"><p>Back at the hotel by midnight.</p></div></div></li>
         </ul>
       </div>
       <div class="tag-row">
@@ -1290,7 +1295,7 @@
   <div class="page" id="page-d14">
     <div class="day-header">
       <div class="day-header-top"><span class="day-label">Day 14</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Mon 26 Oct</span></div>
-      <h2 class="day-main-title">Shanghai Disneyland — full day</h2>
+      <h2 class="day-main-title">Zhongshan Park gyms &amp; M50 art district</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-shanghai">Shanghai</span>
         <span class="day-sleep">🏨 JI Hotel The Bund, Shanghai</span>
@@ -1298,33 +1303,32 @@
     </div>
     <div class="day-map" id="map-d14"></div>
     <div class="content-card">
-            <div class="time-block">
+      <div class="time-block">
         <div class="time-label">🌅 Morning</div>
         <ul class="bullet-list">
-        <li>Arrive at park opening — head straight to Zootopia: Hot Pursuit (queues hit 90–120 min by mid-morning, the world's only Zootopia land)</li>
-        <li>TRON Lightcycle Power Run next — exclusive to Shanghai, you lean forward on a lightcycle and race through a neon digital world at speed</li>
+        <li>Slow start — both gyms open at 10:00, so no rush</li>
+        <li class="is-requested">🎴 <strong>Pokémon TCG Gym, Cloud Nine Mall</strong> — 3F, Longemont Shopping Park, Changning District (Zhongshan Park Station Exit 5): China-only merchandise, 151-series items and statues (open 10:00–22:00) <span class="req-pill req-vincent">Vincent</span></li>
+        <li class="is-requested">🎴 <strong>Cramorant Gym</strong> (古月鸟 Gym) — also at Dragon's Dream mall, Zhongshan Park (Metro Lines 2/3/4 Exit 8), same complex as Cloud Nine; newly renovated 2025, specialises in official booster boxes and Japanese-format play; combine both on the same Zhongshan Park stop <span class="req-pill req-vincent">Vincent</span></li>
         </ul>
       </div>
       <div class="time-block">
         <div class="time-label">☀️ Afternoon</div>
         <ul class="bullet-list">
-        <li>Pirates of the Caribbean — the best version in the world: trackless boat, seamless projections, stunning scale</li>
-        <li>The castle is the tallest Disney has ever built</li>
-        <li>Fully bilingual park — all signage, ride instructions, and cast members operate in English</li>
+        <li>M50 Moganshan Road art district for Vincent and Sharon — 100+ open studios, ceramics workshops, galleries in converted factories. In the neighbouring Putuo district, a short taxi from Zhongshan Park. Some galleries close on Mondays, so check opening times before going</li>
+        <li>Optional, separate trip: <strong>Pokémon Center Card Gym</strong> — B1, Wujiaochang Wanda Plaza (Yangpu, north-east): official Simplified Chinese TCG cards, battle areas and exclusive collectibles (open 10:00–21:00). It isn't near anything else in the plan, so only go if you want a dedicated trip <span class="req-pill req-vincent">Vincent</span></li>
         </ul>
       </div>
       <div class="time-block">
         <div class="time-label">🌙 Evening</div>
         <ul class="bullet-list">
-        <li>Stay for the castle nighttime spectacular, fireworks, and final parade — the park comes alive after dark</li>
+        <li>Free evening — dinner wherever looks good; nothing booked</li>
         </ul>
       </div>
       <div class="tag-row">
-        <span class="act-pill">Zootopia: Hot Pursuit</span>
-        <span class="act-pill">TRON Lightcycle</span>
-        <span class="act-pill">Pirates of the Caribbean</span>
-        <span class="act-pill">Castle</span>
-        <span class="tip-pill">📌 Book tickets online — arrive at opening</span>
+        <span class="act-pill">🎴 Pokémon TCG Gym (Cloud Nine)</span>
+        <span class="act-pill">🎴 Cramorant Gym (Dragon's Dream)</span>
+        <span class="act-pill">M50 art district (check Monday hours)</span>
+        <span class="act-pill">🎴 Wujiaochang gym (optional)</span>
       </div>
     </div>
     <div class="sleep-footer shanghai">🏨 <strong>JI Hotel The Bund, Shanghai</strong></div>
@@ -1338,7 +1342,7 @@
   <div class="page" id="page-d15">
     <div class="day-header">
       <div class="day-header-top"><span class="day-label">Day 15</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Tue 27 Oct</span></div>
-      <h2 class="day-main-title">Split morning, hairy crab lunch &amp; last evening in Shanghai</h2>
+      <h2 class="day-main-title">Old Town, hairy crab lunch, Science Museum &amp; escape room finale</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-shanghai">Shanghai</span>
         <span class="day-sleep">🏨 JI Hotel The Bund — last night</span>
@@ -1351,35 +1355,36 @@
         <ul class="bullet-list">
         <li><strong>Yu Garden &amp; Old Town</strong> (豫园) — a 16th-century Ming dynasty garden in the heart of the old city; ¥40 pp; ornamental rockwork, dragon-topped pavilion walls, koi ponds, and covered walkways. Go early (open 8:30am) before the afternoon tour groups arrive. The surrounding Yuyuan Bazaar is touristy but the food stalls are excellent — xiaolongbao, pan-fried pork buns, and osmanthus cake. A 10-minute walk to/from the hotel</li>
         <li class="is-requested">🎴 <strong>JE宝可梦卡牌</strong> — Room 212, Baimi Xiangxie, Guangxi North Road, Huangpu (near Nanjing East Road metro): dedicated Japanese PTCG singles dealer, the best source for individual Japanese cards in Shanghai; Wednesday night tournaments at 19:30. Worth visiting in the morning while the group is in the Yu Garden / Old Town area — same neighbourhood, 10-minute walk <span class="req-pill req-vincent">Vincent</span></li>
-        <li>After Yu Garden: split by interest — Sharon and Tom: wet market or xiaolongbao cooking class via UnTour Food Tours; Vincent and Jeremy: electronics markets (see notes below); Mum and Sharon: AP Xinyang Fashion Market or South Bund Fabric Market for bargain shopping</li>
+        <li>After Yu Garden: split by interest — Sharon and Tom: wet market wander; Vincent and Jeremy: AP Xinyang Market (see afternoon); Mum and Sharon: South Bund Fabric Market for bargain shopping</li>
         </ul>
       </div>
       <div class="time-block">
         <div class="time-label">☀️ Afternoon</div>
         <ul class="bullet-list">
-        <li>Hairy crab lunch — late October is peak hairy crab season in Shanghai, one of China's great seasonal food events; book a local restaurant in advance</li>
-        <li>Electronics markets for Vincent and Jeremy: <strong>Baisihao Electronics City, Xujiahui</strong> (Metro Lines 1/9/11, Exit 1) — stalls selling Anbernic/Powkiddy handhelds, keyboards, switches, keycaps, and Onyx Boox e-readers at factory-adjacent prices; <strong>AP Xinyang Market, Science Museum station</strong> (same Metro stop as the science museum) for tech accessories and components</li>
+        <li class="lk-li"><div class="bk-act bk-act-todo"><div class="lk"><div class="lk-time">~12:30</div><div class="lk-name">Hairy crab lunch</div><div class="lk-dur">⏱ ~1.5 hrs</div><span class="lk-pill">Need to book</span></div><dl class="bk-facts"><div><dt>Reserve</dt><dd>Table for 6 at a local restaurant, booked in advance</dd></div></dl><div class="bk-desc"><p>Late October is peak hairy crab season in Shanghai — one of China's great seasonal food events.</p></div></div></li>
+        <li>Vincent and Jeremy: <strong>AP Xinyang Market, Science Museum station</strong> (same Metro stop as the science museum) for tech accessories and components</li>
         <li><strong>Shanghai Science and Technology Museum</strong> (上海科技馆) — Metro Line 2, SSTM Station (Exit 7/8); ¥45 adults; open Tue–Sun 9:00–17:15; multiple floors covering robotics, space, earth sciences, life sciences, and three IMAX theatres; particularly strong for Tom; if the Binjiang Park view didn't happen on Day 11, this is in the same Pudong neighbourhood — easy to combine</li>
         </ul>
       </div>
       <div class="time-block">
         <div class="time-label">🌙 Evening</div>
         <ul class="bullet-list">
-        <li>Final Shanghai dinner — last night in China, so make it count; the Bund-facing restaurants in the JI Hotel neighbourhood, or book ahead for a rooftop view across the river</li>
-        <li>Post-dinner walk along the Bund if the weather holds — it reads completely differently at night, all lit up</li>
+        <li>Final Shanghai dinner — last night in China, so make it count; finish by about 19:30 to reach the escape room for 20:20. The Bund-facing restaurants in the JI Hotel neighbourhood, or book ahead for a rooftop view across the river</li>
+        <li class="lk-li"><div class="bk-act bk-act-todo"><div class="lk"><div class="lk-time">20:20</div><div class="lk-name">AURORA escape room (Mr. &amp; Mrs. Jawn)</div><div class="lk-dur">⏱ 115 min</div><span class="lk-pill">Need to book</span></div><dl class="bk-facts"><div><dt>Suggested</dt><dd>Tue 27 Oct, 20:20–22:15 — after the final dinner, then back to the hotel around 23:00. Alternatives: 19:15–21:10 or 21:25–23:20 (all CNY 288 pp)</dd></div><div><dt>Who</dt><dd>Vincent, Sharon, Jeremy, Tom (4 players — the minimum)</dd></div><div><dt>Where</dt><dd>屋有岛 (ARK新华店) · 5F Huaning Hongji Life Plaza, No. 300 Xuanhua Road, Changning District — about 25–30 min from the hotel by taxi</dd></div><div><dt>Room</dt><dd>AURORA (Chapter One) · English edition · non-horror</dd></div><div><dt>Cost</dt><dd>CNY 288 pp (CNY 1,152 for 4) — no deposit, pay by Alipay QR or cash on arrival</dd></div><div><dt>Book</dt><dd><a href="https://mrandmrsjawn.com/book" target="_blank" rel="noopener">mrandmrsjawn.com/book</a> → Shanghai, English, 4 players, 27 Oct. Confirmation email with booking code within 24 hrs</dd></div><div><dt>Cancel</dt><dd>Free 48+ hrs before · 50% refund 24–48 hrs · none inside 24 hrs</dd></div><div><dt>Wear</dt><dd>Sports shoes and trousers (light climbing and reaching); lockers available</dd></div><div><dt>Next day</dt><dd>Flight CX349 leaves Hongqiao at 13:35 — check out by late morning</dd></div></dl><div class="bk-desc"><p>A big mechanical fantasy room — a sword that has waited a thousand years and a sleeping dragon — with anime-style visuals and effects (2023 EGA Shanghai Triple Gold winner). A fantastic finale for the last night; Dad and Mum have a relaxed final evening.</p></div></div></li>
         </ul>
       </div>
       <div class="tag-row">
         <span class="act-pill">Yu Garden / Old Town (8:30am)</span>
-        <span class="act-pill">Cooking class (Sharon/Tom)</span>
         <span class="act-pill">🎴 JE宝可梦卡牌 (Japanese singles)</span>
-        <span class="act-pill">Electronics markets (V/J — Xujiahui/Baisihao)</span>
+        <span class="act-pill">AP Xinyang electronics (V/J)</span>
         <span class="act-pill">Bargain shopping (Mum/Sharon)</span>
         <span class="act-pill">Hairy crab lunch</span>
         <span class="act-pill">Shanghai Science Museum (¥45)</span>
+        <span class="act-pill">AURORA escape room (20:20)</span>
         <span class="tip-pill">📌 Yu Garden — ¥40 pp, go early</span>
         <span class="tip-pill">📌 Book crab restaurant ahead</span>
         <span class="tip-pill">📌 Science Museum closed Mondays — open Tue ✓</span>
+        <span class="tip-pill">📌 Book AURORA at mrandmrsjawn.com — 20:20, 4 players</span>
       </div>
     </div>
     <div class="sleep-footer shanghai">🏨 <strong>JI Hotel The Bund, Shanghai</strong> — last night</div>
@@ -1403,12 +1408,9 @@
     <div class="content-card is-transit">
       <ul class="transit-list">
         <li class="note">Free morning — check out of hotel by late morning</li>
-        <li>Depart Shanghai Hongqiao (SHA) at 13:35 on CX349 — Airbus A330-300 to Hong Kong</li>
-        <li class="note">Note: departs from Hongqiao (SHA), not Pudong (PVG) — allow time to get there</li>
-        <li class="note">Arrive Hong Kong 16:20 — 5h15m layover, airside only, no sightseeing</li>
-        <li>Depart Hong Kong 21:35 on CX113 — Airbus A350-900 to Auckland</li>
-        <li class="sleep-li">Arrive Auckland 13:25 on Thursday 29 October</li>
-      </ul>
+        <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">13:35</div><div class="lk-name">Shanghai Hongqiao → Hong Kong</div><div class="lk-dur">⏱ 2h 45m</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Flight</dt><dd>CX349 · Airbus A330-300</dd></div><div><dt>Airport</dt><dd>Hongqiao (SHA), not Pudong (PVG) — allow time to get there</dd></div></dl><div class="bk-desc"><p>Arrive Hong Kong 16:20 — 5h15m layover, airside only, no sightseeing.</p></div></div></li>
+        <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">21:35</div><div class="lk-name">Hong Kong → Auckland</div><div class="lk-dur">⏱ ~10h 50m</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Flight</dt><dd>CX113 · Airbus A350-900</dd></div><div><dt>Arrives</dt><dd>Auckland 13:25, Thursday 29 October</dd></div></dl><div class="bk-desc"><p>Home.</p></div></div></li>
+        </ul>
       <div class="tag-row">
         <span class="flight-pill">CX349 SHA→HKG 13:35</span>
         <span class="flight-pill">CX113 HKG→AKL 21:35</span>
@@ -1463,16 +1465,6 @@
       </div>
     </div>
 
-    <div class="bk-card" data-id="disneyland" onclick="bkToggle(this)">
-      <div class="bk-cb"><span class="bk-ck">✓</span></div>
-      <div class="bk-body">
-        <div class="bk-top"><span class="bk-name">Shanghai Disneyland</span><span class="bk-pill bk-now">Book now</span><span class="bk-city bk-sha">Shanghai · Day 14</span></div>
-        <div class="bk-meta"><span>📅 Mon 26 Oct</span><span>🕗 Rolling 30-day calendar</span><span>💴 ¥425 early bird / ¥475 standard pp</span></div>
-        <p class="bk-note">Early Bird ticket (10+ days ahead) saves ¥50 pp — ¥300 for 6 people. Book around <strong>13 Sep</strong> if not already done. Monday in late Oct is quieter.</p>
-        <a class="bk-link" href="https://www.shanghaidisneyresort.com/en/tickets/" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ Shanghai Disney tickets</a>
-      </div>
-    </div>
-
     <!-- BOOK SOON -->
     <div style="display:flex;align-items:center;gap:10px;margin:24px 0 10px;">
       <span style="font-size:13px;">🟠</span>
@@ -1484,7 +1476,7 @@
       <div class="bk-cb"><span class="bk-ck">✓</span></div>
       <div class="bk-body">
         <div class="bk-top"><span class="bk-name">Hand-Pulled Noodles class (The Hutong)</span><span class="bk-pill bk-soon">Book soon</span><span class="bk-city bk-bjs">Beijing · Day 5</span></div>
-        <div class="bk-meta"><span>📅 Sat 17 Oct · 10:30–13:00</span><span>🕗 Teacher: Sophia Du · small group</span><span>💴 See The Hutong site</span></div>
+        <div class="bk-meta"><span>📅 Sat 17 Oct · 10:30–13:00</span><span>🕗 Teacher: Sophia Du · 4 people (Vincent, Sharon, Jeremy, Tom)</span><span>💴 See The Hutong site</span></div>
         <p class="bk-note">Via <strong>The Hutong</strong> cultural centre. Learn to hand-pull Lamian noodles and make a Xinjiang sauce — ends with lunch. English-language. Call +86 159 0104 6127 if lost on the day.</p>
         <a class="bk-link" href="https://www.thehutong.com/" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ The Hutong</a>
       </div>
@@ -1493,9 +1485,10 @@
     <div class="bk-card" data-id="escape-room" onclick="bkToggle(this)">
       <div class="bk-cb"><span class="bk-ck">✓</span></div>
       <div class="bk-body">
-        <div class="bk-top"><span class="bk-name">Group escape room (Sanlitun)</span><span class="bk-pill bk-soon">Book soon</span><span class="bk-city bk-bjs">Beijing · Day 5</span></div>
-        <div class="bk-meta"><span>📅 Sat 17 Oct</span><span>🕗 Saturday evening — popular slot</span><span>💴 ~¥150–250 pp</span></div>
-        <p class="bk-note">Saturday evenings sell out fast. Look for English-compatible rooms; many Sanlitun venues list on Klook or WeChat. Book 2 weeks ahead for a 6-person slot.</p>
+        <div class="bk-top"><span class="bk-name">AURORA escape room (Mr. &amp; Mrs. Jawn, Shanghai)</span><span class="bk-pill bk-soon">Book soon</span><span class="bk-city bk-sha">Shanghai · Day 15</span></div>
+        <div class="bk-meta"><span>📅 Tue 27 Oct · 20:20 suggested (115 min)</span><span>🕗 English · 4 players: Vincent, Sharon, Jeremy, Tom</span><span>💴 CNY 288 pp (1,152 total) · pay on arrival</span></div>
+        <p class="bk-note">No deposit; confirmation email with booking code within 24 hrs. Free cancellation 48+ hrs before, 50% refund 24–48 hrs. Alternatives that evening: 19:15 or 21:25. Flight home is 13:35 the next day.</p>
+        <a class="bk-link" href="https://mrandmrsjawn.com/book" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ Book AURORA</a>
       </div>
     </div>
 
@@ -1503,7 +1496,7 @@
       <div class="bk-cb"><span class="bk-ck">✓</span></div>
       <div class="bk-body">
         <div class="bk-top"><span class="bk-name">Shaanxi History Museum</span><span class="bk-pill bk-soon">Book soon</span><span class="bk-city bk-xiy">Xi'an · Day 7 afternoon</span></div>
-        <div class="bk-meta"><span>📅 Mon 19 Oct · arrive ~14:30</span><span>🕗 Timed entry — limited slots</span><span>💴 Free</span></div>
+        <div class="bk-meta"><span>📅 Mon 19 Oct · arrive ~15:30</span><span>🕗 Timed entry — limited slots</span><span>💴 Free</span></div>
         <p class="bk-note">Free but timed entry must be booked online. Foreigners can book via WeChat mini-program or official site. Slots fill within days of release.</p>
         <a class="bk-link" href="https://www.sxhm.com/" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ Official museum site</a>
       </div>
@@ -1567,7 +1560,7 @@
       <div style="flex:1;height:1px;background:#e8e8e8;"></div>
     </div>
 
-    <div class="bk-card" data-id="summer-palace-tour" onclick="bkToggle(this)" style="opacity:0.55;">
+    <div class="bk-card bk-locked" data-id="summer-palace-tour" style="opacity:0.55;">
       <div class="bk-cb"><span class="bk-ck">✓</span></div>
       <div class="bk-body">
         <div class="bk-top"><span class="bk-name">Summer Palace Guided Tour</span><span class="bk-pill bk-confirmed">Confirmed ✓</span><span class="bk-city bk-bjs">Beijing · Day 2</span></div>
@@ -1576,7 +1569,7 @@
       </div>
     </div>
 
-    <div class="bk-card" data-id="red-theatre" onclick="bkToggle(this)" style="opacity:0.55;">
+    <div class="bk-card bk-locked" data-id="red-theatre" style="opacity:0.55;">
       <div class="bk-cb"><span class="bk-ck">✓</span></div>
       <div class="bk-body">
         <div class="bk-top"><span class="bk-name">Red Theatre Acrobatic Show</span><span class="bk-pill bk-confirmed">Confirmed ✓</span><span class="bk-city bk-bjs">Beijing · Day 2</span></div>
@@ -1584,7 +1577,7 @@
         <p class="bk-note">Booking #1486591927971168. Green section, rows 14–16. Meet at the theatre at 17:40. 5-minute walk from Chongwenmen Hotel.</p>
       </div>
     </div>
-    <div class="bk-card" data-id="great-wall-transport" onclick="bkToggle(this)" style="opacity:0.55;">
+    <div class="bk-card bk-locked" data-id="great-wall-transport" style="opacity:0.55;">
       <div class="bk-cb"><span class="bk-ck">✓</span></div>
       <div class="bk-body">
         <div class="bk-top"><span class="bk-name">Mutianyu Great Wall — ticket, cable car &amp; coach</span><span class="bk-pill bk-confirmed">Confirmed ✓</span><span class="bk-city bk-bjs">Beijing · Day 3</span></div>
@@ -1593,7 +1586,7 @@
       </div>
     </div>
 
-    <div class="bk-card" data-id="beijing-xian-train" onclick="bkToggle(this)" style="opacity:0.55;">
+    <div class="bk-card bk-locked" data-id="beijing-xian-train" style="opacity:0.55;">
       <div class="bk-cb"><span class="bk-ck">✓</span></div>
       <div class="bk-body">
         <div class="bk-top"><span class="bk-name">Beijing → Xi'an bullet train (G365)</span><span class="bk-pill bk-confirmed">Confirmed ✓</span><span class="bk-city" style="background:#e8e8f0;color:#444441;">Transit · Day 7</span></div>
@@ -1602,7 +1595,7 @@
       </div>
     </div>
 
-    <div class="bk-card" data-id="terracotta" onclick="bkToggle(this)" style="opacity:0.55;">
+    <div class="bk-card bk-locked" data-id="terracotta" style="opacity:0.55;">
       <div class="bk-cb"><span class="bk-ck">✓</span></div>
       <div class="bk-body">
         <div class="bk-top"><span class="bk-name">Terracotta Warriors English-guided tour</span><span class="bk-pill bk-confirmed">Confirmed ✓</span><span class="bk-city bk-xiy">Xi'an · Day 8</span></div>
@@ -1611,7 +1604,7 @@
       </div>
     </div>
 
-    <div class="bk-card" data-id="xian-shanghai-flight" onclick="bkToggle(this)" style="opacity:0.55;">
+    <div class="bk-card bk-locked" data-id="xian-shanghai-flight" style="opacity:0.55;">
       <div class="bk-cb"><span class="bk-ck">✓</span></div>
       <div class="bk-body">
         <div class="bk-top"><span class="bk-name">Xi'an → Shanghai flight (HU7845)</span><span class="bk-pill bk-confirmed">Confirmed ✓</span><span class="bk-city" style="background:#e8e8f0;color:#444441;">Transit · Day 11</span></div>
@@ -1656,9 +1649,10 @@
     const cards = document.querySelectorAll('.bk-card[data-id]');
     let done = 0;
     cards.forEach(card => {
+      const locked = card.classList.contains('bk-locked');
       const checked = !!s[card.dataset.id];
-      card.classList.toggle('bk-done', checked);
-      if (checked) done++;
+      if (!locked) card.classList.toggle('bk-done', checked);
+      if (locked || checked) done++;
     });
     const total = cards.length;
     const pct = total ? (done / total * 100) : 0;
@@ -1678,17 +1672,17 @@
     d2: [['Capital Airport (arrive)', 40.0799, 116.5875, '✈️'], ['Summer Palace', 39.9999, 116.2755, '🏯'], ['Wangfujing', 39.9168, 116.4075, '🛍️'], ['Red Theatre', 39.8948, 116.4179, '🎭']],
     d3: [['Mutianyu Great Wall', 40.4393, 116.5640, '🏔️']],
     d4: [['Tiananmen Square', 39.9055, 116.3976, '🏛️'], ['Forbidden City', 39.9163, 116.3972, '🏯'], ['Jingshan Park', 39.9239, 116.3881, '🌳'], ['Nanluoguxiang', 39.9306, 116.4043, '🏮']],
-    d5: [['Temple of Heaven', 39.8822, 116.4066, '⛩️'], ['Zhongguancun Electronics', 39.9831, 116.3108, '🔌'], ['798 Art District', 39.9840, 116.5013, '🎨'], ['Sanlitun (escape room)', 39.9334, 116.4544, '🔐']],
+    d5: [['Temple of Heaven', 39.8822, 116.4066, '⛩️'], ['Zhongguancun Electronics', 39.9831, 116.3108, '🔌'], ['798 Art District', 39.9840, 116.5013, '🎨']],
     d6: [['Beijing Wildlife Park', 39.7300, 116.3980, '🐼'], ['Panjiayuan Market', 39.8724, 116.4663, '🎪'], ['Drum Tower hutong area', 39.9388, 116.3957, '🏮']],
     d7: [['Beijing West Station', 39.8990, 116.3221, '🚄'], ["Xi'an North Station", 34.3770, 108.9320, '🚄'], ['Shaanxi History Museum', 34.2326, 108.9417, '🏛️'], ["Xi'an City Wall", 34.2566, 108.9398, '🏯'], ['Muslim Quarter', 34.2658, 108.9455, '🌙']],
     d8: [['Terracotta Warriors', 34.3847, 109.2785, '🏺'], ["Qin Shi Huang's Mausoleum", 34.3815, 109.2529, '⛰️'], ['Big Wild Goose Pagoda', 34.2224, 108.9598, '🛕'], ['Muslim Quarter (evening)', 34.2658, 108.9455, '🌙']],
     d9: [["Xi'an North Station (depart)", 34.3770, 108.9320, '🚄'], ['Mount Huashan — West Peak', 34.4863, 110.0838, '⛰️'], ['South Peak (2,154m)', 34.4748, 110.0859, '🏔️'], ["Xi'an City Wall (~3pm)", 34.2566, 108.9398, '🚲']],
     d10: [["Xi'an City Wall (South Gate)", 34.2566, 108.9398, '🏯'], ['Tang Paradise', 34.2189, 108.9174, '🌸'], ['Muslim Quarter', 34.2658, 108.9455, '🕌']],
     d11: [["Xi'an Xianyang Airport", 34.4471, 108.7515, '✈️'], ['Binjiang Park (Pudong view)', 31.2308, 121.5023, '📷'], ['The Bund, Shanghai', 31.2399, 121.4905, '🌆']],
-    d12: [['The Bund', 31.2399, 121.4905, '🌅'], ['French Concession', 31.2165, 121.4623, '🌿'], ['Xintiandi', 31.2212, 121.4726, '🏛️'], ['M50 Creative Park', 31.2519, 121.4361, '🎨'], ['teamLab Borderless', 31.2083, 121.5698, '💫']],
+    d12: [['The Bund', 31.2399, 121.4905, '🌅'], ['French Concession', 31.2165, 121.4623, '🌿'], ['Xintiandi', 31.2212, 121.4726, '🏛️'], ['Baisihao Electronics City (Xujiahui)', 31.1930, 121.4370, '🔌'], ['teamLab Borderless', 31.2083, 121.5698, '💫']],
     d13: [['Nanjing South Station', 31.9566, 118.7967, '🚄'], ['Sun Yat-sen Mausoleum', 32.0599, 118.8478, '🏛️'], ['Ming Xiaoling Sacred Way', 32.0530, 118.8338, '🦁'], ['Nanjing City Wall', 32.0459, 118.8026, '🏯'], ['Confucius Temple / Qinhuai River', 32.0207, 118.7897, '🏮']],
-    d14: [['Shanghai Disneyland', 31.1443, 121.6573, '🏰']],
-    d15: [['Yu Garden / Old Town', 31.2274, 121.4923, '🌺'], ['Shanghai Science Museum', 31.2199, 121.5441, '🔭']],
+    d14: [['Zhongshan Park gyms (Cloud Nine / Dragon\'s Dream)', 31.2200, 121.4170, '🎴'], ['M50 Creative Park', 31.2519, 121.4361, '🎨']],
+    d15: [['Yu Garden / Old Town', 31.2274, 121.4923, '🌺'], ['Shanghai Science Museum', 31.2199, 121.5441, '🔭'], ['AURORA escape room (approx. location)', 31.2050, 121.4230, '🧩']],
     d16: [['Shanghai Pudong Airport', 31.1443, 121.8083, '✈️']],
   };
 
