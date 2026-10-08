@@ -168,6 +168,15 @@
   .page { display: none; }
   .page.active { display: block; }
 
+
+  /* ── RESEARCH LIST ── */
+  .rs-card { background: #fff; border: 1px solid #e8e8e8; border-left: 5px solid #1a5298; border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; }
+  .rs-top { display: flex; align-items: flex-start; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+  .rs-name { font-size: 15px; font-weight: 600; flex: 1; min-width: 140px; }
+  .rs-pill { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: #e8f1fb; color: #1a5298; white-space: nowrap; }
+  .rs-note { font-size: 13.5px; color: #666; line-height: 1.55; margin: 0 0 6px; }
+  .rs-link { font-size: 13px; font-weight: 600; color: #c45c1a; text-decoration: none; }
+
   /* ── BOOKING CHECKLIST ── */
   .bk-card {
     background: #fff;
@@ -577,6 +586,9 @@
   <div class="sidebar-footer">
     <button class="sidebar-bookings-btn" id="nav-bookings" onclick="show('bookings')">
       ☑️ Booking checklist
+    </button>
+    <button class="sidebar-bookings-btn" id="nav-research" onclick="show('research')" style="margin-top:8px;">
+      🔎 Research list
     </button>
     <a class="sidebar-add-btn" href="https://airtable.com/appD7Yi410DGznLPJ/pag5UZk1de5xRZ5fj/form" target="_blank" rel="noopener">
       ＋ Add to Itinerary
@@ -1609,6 +1621,42 @@
         <div class="bk-meta"><span>📅 Fri 23 Oct · 08:30 → 11:00</span><span>🕗 Xianyang T3 → Shanghai Pudong T2</span><span>🎫 Hainan Airlines · Economy · 6 pax</span></div>
         <p class="bk-note">Booking #1486591468940666, airline ref NV485F. Lands at Pudong (PVG), not Hongqiao — take Metro Line 2 to the hotel.</p>
       </div>
+    </div>
+  </div>
+
+  <!-- ═══ RESEARCH LIST ═══ -->
+  <div class="page" id="page-research">
+    <p style="font-size:12px;color:#aaa;margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">China 2026</p>
+    <h1 class="ov-title">Research list</h1>
+    <p class="ov-sub" style="margin-bottom:20px;">Ideas and links to look into before deciding whether they go in the itinerary.</p>
+
+    <div class="rs-card">
+      <div class="rs-top"><span class="rs-name">teamLab — Megaliths in the Garden</span><span class="rs-pill">To research</span></div>
+      <p class="rs-note">Which city and venue is this, is it running in late October, and what do tickets cost? The page title doesn't say where it is. teamLab Borderless in Shanghai was removed because it isn't running, so this could be a replacement.</p>
+      <a class="rs-link" href="https://www.teamlab.art/e/megaliths_garden/" target="_blank" rel="noopener">↗ teamlab.art/e/megaliths_garden</a>
+    </div>
+
+    <div class="rs-card">
+      <div class="rs-top"><span class="rs-name">teamLab — Gold Waves (Lujiazui)</span><span class="rs-pill">To research</span></div>
+      <p class="rs-note">The page names Lujiazui Station. Check it's the Shanghai one, whether it's open on our dates, and how long it takes. Lujiazui is Pudong, near Binjiang Park, so it could pair with Day 11.</p>
+      <a class="rs-link" href="https://www.teamlab.art/e/goldwaves_lujiazui/" target="_blank" rel="noopener">↗ teamlab.art/e/goldwaves_lujiazui</a>
+    </div>
+
+    <div class="rs-card">
+      <div class="rs-top"><span class="rs-name">Shanghai LEGOLAND</span><span class="rs-pill">To research</span></div>
+      <p class="rs-note">Check whether it's open yet, where it is and how far from the city, ticket prices, and whether it's worth a day for our group.</p>
+    </div>
+
+    <div class="rs-card">
+      <div class="rs-top"><span class="rs-name">Trip.com things to do — listing 93730113</span><span class="rs-pill">To research</span></div>
+      <p class="rs-note">I couldn't read this listing, so check what it is, where, the price and the cancellation terms.</p>
+      <a class="rs-link" href="https://uk.trip.com/things-to-do/detail/93730113?locale=en-GB&curr=CNY" target="_blank" rel="noopener">↗ Trip.com listing</a>
+    </div>
+
+    <div class="rs-card">
+      <div class="rs-top"><span class="rs-name">Book The Hutong</span><span class="rs-pill">To research</span></div>
+      <p class="rs-note">Work out how to book the hand-pulled noodles class on Day 5 (Sat 17 Oct, 10:30, 4 people: Vincent, Sharon, Jeremy, Tom): booking method, price, whether payment is up front, and cancellation terms. Contact on the day: +86 159 0104 6127.</p>
+      <a class="rs-link" href="https://www.thehutong.com/" target="_blank" rel="noopener">↗ The Hutong</a>
     </div>
   </div>
 
