@@ -788,18 +788,9 @@
       <p class="card-section-label">Key bookings — do these in advance</p>
       <div style="padding:12px 16px;">
         <div class="bookings-grid">
-          <div class="booking-item">🏨 Beijing: Chongwenmen Hotel — confirmed ✓</div>
-          <div class="booking-item">🏨 Xi'an: AHS-Park Hotel (Bell Tower) — confirmed ✓</div>
-          <div class="booking-item">🏨 Shanghai: JI Hotel The Bund — confirmed ✓</div>
-          <div class="booking-item">🏯 Forbidden City small-group guided tour — confirmed ✓</div>
-          <div class="booking-item">🐉 Terracotta Warriors English-guided tour — confirmed ✓</div>
-          <div class="booking-item">🚄 Beijing → Xi'an bullet train G365 — confirmed ✓</div>
-          <div class="booking-item">🚄 Shanghai ⇄ Nanjing trains (Sun 25 Oct) — confirmed ✓</div>
-          <div class="booking-item">✈️ Xi'an → Shanghai flight HU7845 — confirmed ✓</div>
           <div class="booking-item">🏰 Shanghai Disneyland tickets (Mon 26 Oct, 3 tickets)</div>
           <div class="booking-item">🧩 AURORA escape room, Shanghai (Tue 27 Oct 20:20, 3 players — email first)</div>
           <div class="booking-item">🏛️ Shaanxi History Museum (free — book online)</div>
-          <div class="booking-item">🧱 Mutianyu Great Wall tickets + coach — confirmed ✓</div>
         </div>
       </div>
     </div>
@@ -2204,42 +2195,73 @@
 
   /* ── Extra Activities filters ── */
   let exCity = 'beijing', exPerson = 'all', exType = 'all', exLang = 'all';
+  const EX_CITIES = ['beijing','xian','shanghai'];
+  const EX_CITY_NAMES = { beijing: 'Beijing', xian: "Xi'an", shanghai: 'Shanghai' };
   function exShowCity(city) {
     exCity = city;
-    ['beijing','xian','shanghai'].forEach(c => {
-      document.getElementById('ex-ctab-' + c).className = 'ctab';
+    EX_CITIES.forEach(c => {
+      document.getElementById('ex-ctab-' + c).classList.remove('on-' + c);
       document.getElementById('ex-panel-' + c).classList.remove('active');
     });
     document.getElementById('ex-ctab-' + city).classList.add('on-' + city);
     document.getElementById('ex-panel-' + city).classList.add('active');
     exApplyFilters();
   }
-  function exFilterPerson(person) {
-    exPerson = person;
-    document.querySelectorAll('#page-extras .ptab').forEach(t => { t.classList.toggle('on', t.dataset.person === person); });
-    exApplyFilters();
+  function exFilterPerson(person) { exPerson = person; exApplyFilters(); }
+  function exFilterType(type) { exType = type; exApplyFilters(); }
+  function exFilterLang(lang) { exLang = lang; exApplyFilters(); }
+
+  function exMatch(card, f) {
+    const persons = (card.dataset.persons || '').split(' ');
+    const types = (card.dataset.type || '').split(' ');
+    const lang = card.dataset.lang || 'easy';
+    return (f.person === 'all' || persons.includes(f.person)) &&
+           (f.type === 'all' || types.includes(f.type)) &&
+           (f.lang === 'all' || lang === f.lang);
   }
-  function exFilterType(type) {
-    exType = type;
-    document.querySelectorAll('#page-extras .ttab').forEach(t => { t.classList.toggle('on', t.dataset.type === type); });
-    exApplyFilters();
+  function exCount(city, f) {
+    return [...document.querySelectorAll('#ex-panel-' + city + ' .act-card')].filter(c => exMatch(c, f)).length;
   }
-  function exFilterLang(lang) {
-    exLang = lang;
-    document.querySelectorAll('#page-extras .ltab').forEach(t => {
-      t.classList.remove('on-all','on-easy','on-operator');
-      if (t.dataset.lang === lang) t.classList.add('on-' + lang);
+  // Put "(n)" on each filter pill and hide pills with nothing in them.
+  function exUpdatePills() {
+    const cur = { person: exPerson, type: exType, lang: exLang };
+    const setPill = (el, base, n, active) => {
+      if (!el.dataset.base) el.dataset.base = base;
+      el.textContent = el.dataset.base + ' (' + n + ')';
+      el.style.display = (n === 0 && !active) ? 'none' : '';
+    };
+    document.querySelectorAll('#page-extras .ptab').forEach(el => {
+      const v = el.dataset.person, base = el.dataset.base || el.textContent.trim();
+      setPill(el, base, exCount(exCity, { ...cur, person: v }), v === exPerson && v === 'all');
+      el.classList.toggle('on', v === exPerson);
     });
-    exApplyFilters();
+    document.querySelectorAll('#page-extras .ttab').forEach(el => {
+      const v = el.dataset.type, base = el.dataset.base || el.textContent.trim();
+      setPill(el, base, exCount(exCity, { ...cur, type: v }), v === 'all');
+      el.classList.toggle('on', v === exType);
+    });
+    document.querySelectorAll('#page-extras .ltab').forEach(el => {
+      const v = el.dataset.lang, base = el.dataset.base || el.textContent.trim();
+      setPill(el, base, exCount(exCity, { ...cur, lang: v }), v === 'all');
+      el.classList.remove('on-all','on-easy','on-operator');
+      if (v === exLang) el.classList.add('on-' + v);
+    });
+    EX_CITIES.forEach(c => {
+      const el = document.getElementById('ex-ctab-' + c);
+      const base = el.dataset.base || el.textContent.trim();
+      setPill(el, base, exCount(c, cur), c === exCity);
+    });
   }
   function exApplyFilters() {
+    // If the active filter has nothing left in this city, fall back to "all".
+    const cur = () => ({ person: exPerson, type: exType, lang: exLang });
+    if (exPerson !== 'all' && exCount(exCity, cur()) === 0) exPerson = 'all';
+    if (exType !== 'all' && exCount(exCity, cur()) === 0) exType = 'all';
+    if (exLang !== 'all' && exCount(exCity, cur()) === 0) exLang = 'all';
     const panel = document.getElementById('ex-panel-' + exCity);
     let visible = 0;
     panel.querySelectorAll('.act-card').forEach(card => {
-      const persons = (card.dataset.persons || '').split(' ');
-      const types = (card.dataset.type || '').split(' ');
-      const lang = card.dataset.lang || 'easy';
-      const ok = (exPerson === 'all' || persons.includes(exPerson)) && (exType === 'all' || types.includes(exType)) && (exLang === 'all' || lang === exLang);
+      const ok = exMatch(card, cur());
       card.classList.toggle('hidden', !ok);
       if (ok) visible++;
     });
@@ -2252,8 +2274,8 @@
       div.style.display = has ? 'flex' : 'none';
     });
     document.getElementById('ex-no-results').style.display = visible === 0 ? 'block' : 'none';
-    const names = { beijing: 'Beijing', xian: "Xi'an", shanghai: 'Shanghai' };
-    document.getElementById('ex-results-count').textContent = visible + ' activit' + (visible === 1 ? 'y' : 'ies') + ' in ' + names[exCity];
+    document.getElementById('ex-results-count').textContent = visible + ' activit' + (visible === 1 ? 'y' : 'ies') + ' in ' + EX_CITY_NAMES[exCity];
+    exUpdatePills();
   }
   document.addEventListener('DOMContentLoaded', exApplyFilters);
 
