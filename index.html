@@ -286,6 +286,40 @@
   #page-extras .act-link { font-size: 12px; font-weight: 600; color: #c45c1a; text-decoration: none; margin-left: 4px; }
   #page-extras .ctab.on-research { background: #E8F1FB; color: #1a5298; border-color: #1a5298; }
 
+
+  /* ── DRIVER CARD, LOCKED-IN STRIP, CONFIRMATIONS ── */
+  .drv { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; margin: 0 0 16px; }
+  .drv summary { cursor: pointer; padding: 12px 16px; font-size: 14px; font-weight: 700; color: #444; list-style: none; }
+  .drv summary::-webkit-details-marker { display: none; }
+  .drv[open] summary { border-bottom: 1px solid #f0efe9; }
+  .drv-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-top: 1px solid #f4f3f0; }
+  .drv-row:first-of-type { border-top: none; }
+  .drv-cn { font-size: 20px; font-weight: 600; line-height: 1.3; color: #1a1a1a; }
+  .drv-en { font-size: 13px; color: #777; }
+  .drv-addr { font-size: 13px; color: #444; margin-top: 2px; }
+  .drv-links { display: flex; gap: 6px; flex-shrink: 0; }
+  .drv-links a { font-size: 12px; font-weight: 600; color: #c45c1a; text-decoration: none; border: 1px solid #ecd9c9; border-radius: 99px; padding: 4px 10px; white-space: nowrap; }
+  .today-strip { background: #eaf6ee; border: 1px solid #b9dfc6; border-left: 6px solid #2d7a4f; border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; }
+  .today-strip .ts-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #1a5a35; margin-bottom: 6px; }
+  .today-strip .ts-row { display: flex; gap: 12px; padding: 4px 0; font-size: 14px; line-height: 1.4; }
+  .today-strip .ts-time { font-weight: 700; color: #1a5a35; min-width: 64px; font-variant-numeric: tabular-nums; }
+  .today-strip .ts-name { font-weight: 600; color: #222; }
+  .today-strip .ts-meet { color: #555; font-size: 13px; }
+  .cf-alert { background: #fff6e8; border: 1px solid #f0b866; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #7a4e08; margin-bottom: 8px; line-height: 1.5; }
+  .cf-date { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #999; margin: 22px 0 8px; }
+  .cf-card { background: #fff; border: 1px solid #e8e8e8; border-left: 5px solid #2d7a4f; border-radius: 12px; padding: 12px 16px; margin-bottom: 8px; }
+  .cf-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+  .cf-when { font-size: 14px; font-weight: 700; color: #1a5a35; min-width: 60px; }
+  .cf-title { font-size: 15px; font-weight: 600; flex: 1; min-width: 160px; }
+  .cf-ref { font-size: 12px; font-weight: 600; color: #666; background: #f4f3f0; border-radius: 99px; padding: 2px 9px; font-variant-numeric: tabular-nums; }
+  .cf-row { display: grid; grid-template-columns: 92px 1fr; gap: 10px; padding: 2px 0; font-size: 13.5px; line-height: 1.45; }
+  .cf-k { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #8a8a84; padding-top: 2px; }
+  .cf-v { color: #333; }
+  .cf-foot { display: flex; gap: 10px; align-items: center; margin-top: 6px; }
+  .cf-cancel { font-size: 11px; font-weight: 700; background: #e6f4ea; color: #1a6632; padding: 2px 9px; border-radius: 99px; }
+  .cf-day { margin-left: auto; font-size: 12px; font-weight: 600; color: #c45c1a; text-decoration: none; }
+  @media (max-width: 640px) { .cf-row { grid-template-columns: 1fr; gap: 0; } .drv-row { flex-direction: column; align-items: flex-start; } }
+
   /* ── BOOKING CHECKLIST ── */
   .bk-card {
     background: #fff;
@@ -627,6 +661,7 @@
   <div class="sidebar-header">
     <div class="sidebar-title">China 2026</div>
     <div class="sidebar-sub">Family trip · Oct 13–29</div>
+    <button class="sidebar-bookings-btn" id="today-btn" onclick="goToday()" style="margin-top:10px;display:none;"></button>
   </div>
   <div class="sidebar-nav">
     <div class="nav-section-label">Overview</div>
@@ -698,6 +733,9 @@
     </button>
     <button class="sidebar-bookings-btn" id="nav-extras" onclick="show('extras')" style="margin-top:8px;">
       ⭐ Extra Activities
+    </button>
+    <button class="sidebar-bookings-btn" id="nav-confirmations" onclick="show('confirmations')" style="margin-top:8px;">
+      🧾 Confirmations
     </button>
     <button class="sidebar-bookings-btn" id="nav-accommodation" onclick="show('accommodation')" style="margin-top:8px;">
       🏨 Accommodation
@@ -823,12 +861,8 @@
         <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">11:15</div><div class="lk-name">Auckland → Hong Kong</div><div class="lk-dur">⏱ ~11h 30m</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Flight</dt><dd>CX7402 · operated by Air New Zealand</dd></div><div><dt>Aircraft</dt><dd>Boeing 787-9</dd></div><div><dt>Arrives</dt><dd>Hong Kong 17:45</dd></div></dl><div class="bk-desc"><p>Tight 1h15m connection in Hong Kong — no time to leave the terminal.</p></div></div></li>
         <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">19:00</div><div class="lk-name">Hong Kong → Beijing</div><div class="lk-dur">⏱ ~3h 25m</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Flight</dt><dd>CX344 · Airbus A330-300</dd></div><div><dt>Arrives</dt><dd>Beijing Capital 22:25</dd></div></dl><div class="bk-desc"><p>Late-night arrival — straight to the hotel and check in.</p></div></div></li>
         </ul>
-      <div class="tag-row">
-        <span class="flight-pill">CX7402 AKL→HKG 11:15</span>
-        <span class="flight-pill">CX344 HKG→PEK 19:00</span>
-        <span class="tip-pill">📌 Allow time — tight HKG connection</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 2 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">北京首都国际机场</div><div class="drv-en">Beijing Capital Airport</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%8C%97%E4%BA%AC%E9%A6%96%E9%83%BD%E5%9B%BD%E9%99%85%E6%9C%BA%E5%9C%BA" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8C%97%E4%BA%AC%E9%A6%96%E9%83%BD%E5%9B%BD%E9%99%85%E6%9C%BA%E5%9C%BA" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">北京崇文門飯店</div><div class="drv-en">Chongwenmen Hotel (Beijing)</div><div class="drv-addr">崇文門西大街2號, 東城區, 北京, 100062</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%8C%97%E4%BA%AC%E5%B4%87%E6%96%87%E9%96%80%E9%A3%AF%E5%BA%97" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8C%97%E4%BA%AC%E5%B4%87%E6%96%87%E9%96%80%E9%A3%AF%E5%BA%97" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer transit">🏨 <strong>Chongwenmen Hotel, Beijing</strong> — late night arrival</div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('overview')">← Overview</button>
@@ -869,17 +903,8 @@
         <li>Dinner after the show nearby, then a taxi or DiDi back to the hotel to settle in</li>
         </ul>
       </div>
-      <div class="tag-row">
-        <span class="act-pill">Summer Palace boat ride (~¥10–15 / ~NZ$2.5–3.8 pp)</span>
-        <span class="act-pill">Kunming Lake</span>
-        <span class="act-pill">Wangfujing Street</span>
-        <span class="act-pill">🎭 Red Theatre Acrobatics (eve)</span>
-        <span class="tip-pill">📌 DiDi from Capital Airport to hotel</span>
-        <span class="tip-pill">📌 Red Theatre: meet at venue 17:40 — rows 14–16 confirmed ✓</span>
-        <span class="tip-pill">📌 Summer Palace: afternoon guided tour confirmed ✓ — cancel by 17:00 13 Oct</span>
-        <span class="tip-pill">📌 Jeremy checks in separately (arriving from Sydney)</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 4 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">颐和园东宫门</div><div class="drv-en">Summer Palace — East Palace Gate</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E9%A2%90%E5%92%8C%E5%9B%AD%E4%B8%9C%E5%AE%AB%E9%97%A8" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E9%A2%90%E5%92%8C%E5%9B%AD%E4%B8%9C%E5%AE%AB%E9%97%A8" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">红剧场</div><div class="drv-en">Red Theatre</div><div class="drv-addr">东城区幸福大街44号</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E7%BA%A2%E5%89%A7%E5%9C%BA" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E7%BA%A2%E5%89%A7%E5%9C%BA" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">王府井步行街</div><div class="drv-en">Wangfujing pedestrian street</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E7%8E%8B%E5%BA%9C%E4%BA%95%E6%AD%A5%E8%A1%8C%E8%A1%97" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E7%8E%8B%E5%BA%9C%E4%BA%95%E6%AD%A5%E8%A1%8C%E8%A1%97" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">北京崇文門飯店</div><div class="drv-en">Chongwenmen Hotel (Beijing)</div><div class="drv-addr">崇文門西大街2號, 東城區, 北京, 100062</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%8C%97%E4%BA%AC%E5%B4%87%E6%96%87%E9%96%80%E9%A3%AF%E5%BA%97" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8C%97%E4%BA%AC%E5%B4%87%E6%96%87%E9%96%80%E9%A3%AF%E5%BA%97" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer beijing">🏨 <strong>Chongwenmen Hotel, Beijing</strong></div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d1')">← Day 1</button>
@@ -918,16 +943,8 @@
         <li>Early night — Day 4 starts early at Tiananmen Square</li>
         </ul>
       </div>
-      <div class="tag-row">
-        <span class="act-pill">Mutianyu Great Wall</span>
-        <span class="act-pill">Cable car up</span>
-        <span class="act-pill">Autumn foliage</span>
-        <span class="act-pill">Ridge walk</span>
-        <span class="act-pill">Toboggan (optional)</span>
-        <span class="act-pill">Olympic Park at dusk (suggested)</span>
-        <span class="tip-pill">📌 Booked ✓ (Trip.com) · free cancel by 18:00 14 Oct</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 4 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">宣武门地铁站G口</div><div class="drv-en">Xuanwumen subway station, Exit G (coach meeting point)</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%AE%A3%E6%AD%A6%E9%97%A8%E5%9C%B0%E9%93%81%E7%AB%99G%E5%8F%A3" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%AE%A3%E6%AD%A6%E9%97%A8%E5%9C%B0%E9%93%81%E7%AB%99G%E5%8F%A3" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">慕田峪长城</div><div class="drv-en">Mutianyu Great Wall</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E6%85%95%E7%94%B0%E5%B3%AA%E9%95%BF%E5%9F%8E" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%85%95%E7%94%B0%E5%B3%AA%E9%95%BF%E5%9F%8E" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">国家体育场（鸟巢）</div><div class="drv-en">Bird&#x27;s Nest (coach drop-off, Olympic Park)</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%9B%BD%E5%AE%B6%E4%BD%93%E8%82%B2%E5%9C%BA%EF%BC%88%E9%B8%9F%E5%B7%A2%EF%BC%89" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%9B%BD%E5%AE%B6%E4%BD%93%E8%82%B2%E5%9C%BA%EF%BC%88%E9%B8%9F%E5%B7%A2%EF%BC%89" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">北京崇文門飯店</div><div class="drv-en">Chongwenmen Hotel (Beijing)</div><div class="drv-addr">崇文門西大街2號, 東城區, 北京, 100062</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%8C%97%E4%BA%AC%E5%B4%87%E6%96%87%E9%96%80%E9%A3%AF%E5%BA%97" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8C%97%E4%BA%AC%E5%B4%87%E6%96%87%E9%96%80%E9%A3%AF%E5%BA%97" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer beijing">🏨 <strong>Chongwenmen Hotel, Beijing</strong></div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d2')">← Day 2</button>
@@ -968,15 +985,8 @@
         <li>Nanluoguxiang hutong wander after dinner — lantern-lit alley lined with indie shops, bars, and snack stalls; one of the most atmospheric old streets in Beijing</li>
         </ul>
       </div>
-      <div class="tag-row">
-        <span class="act-pill">Tiananmen Square</span>
-        <span class="act-pill">Forbidden City</span>
-        <span class="act-pill">Jingshan Park views</span>
-        <span class="act-pill">Peking duck dinner</span>
-        <span class="act-pill">Nanluoguxiang hutong (eve)</span>
-        <span class="tip-pill">📌 Guided tour booked ✓ (Trip.com) — bring passports</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 6 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">故宫博物院午门</div><div class="drv-en">Forbidden City — Meridian Gate</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E6%95%85%E5%AE%AB%E5%8D%9A%E7%89%A9%E9%99%A2%E5%8D%88%E9%97%A8" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%95%85%E5%AE%AB%E5%8D%9A%E7%89%A9%E9%99%A2%E5%8D%88%E9%97%A8" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">天安门广场</div><div class="drv-en">Tiananmen Square</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%A4%A9%E5%AE%89%E9%97%A8%E5%B9%BF%E5%9C%BA" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%A4%A9%E5%AE%89%E9%97%A8%E5%B9%BF%E5%9C%BA" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">景山公园</div><div class="drv-en">Jingshan Park</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E6%99%AF%E5%B1%B1%E5%85%AC%E5%9B%AD" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%99%AF%E5%B1%B1%E5%85%AC%E5%9B%AD" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">南锣鼓巷</div><div class="drv-en">Nanluoguxiang</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%8D%97%E9%94%A3%E9%BC%93%E5%B7%B7" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8D%97%E9%94%A3%E9%BC%93%E5%B7%B7" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">王府井步行街</div><div class="drv-en">Wangfujing (dinner)</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E7%8E%8B%E5%BA%9C%E4%BA%95%E6%AD%A5%E8%A1%8C%E8%A1%97" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E7%8E%8B%E5%BA%9C%E4%BA%95%E6%AD%A5%E8%A1%8C%E8%A1%97" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">北京崇文門飯店</div><div class="drv-en">Chongwenmen Hotel (Beijing)</div><div class="drv-addr">崇文門西大街2號, 東城區, 北京, 100062</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%8C%97%E4%BA%AC%E5%B4%87%E6%96%87%E9%96%80%E9%A3%AF%E5%BA%97" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8C%97%E4%BA%AC%E5%B4%87%E6%96%87%E9%96%80%E9%A3%AF%E5%BA%97" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer beijing">🏨 <strong>Chongwenmen Hotel, Beijing</strong></div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d3')">← Day 3</button>
@@ -1018,17 +1028,8 @@
         <li>Optional late night: Guijie Ghost Street hotpot — restaurants open until 3am, zero tourists</li>
         </ul>
       </div>
-      <div class="tag-row">
-        <span class="act-pill">Temple of Heaven dawn</span>
-        <span class="act-pill">🍜 Hand-Pulled Noodles class (The Hutong)</span>
-        <span class="act-pill">Zhongguancun electronics</span>
-        <span class="act-pill">798 Art District</span>
-        <span class="act-pill">🎴 Pokémon TCG Gym (Xidan)</span>
-        <span class="act-pill">Ghost Street hotpot (optional)</span>
-        <span class="tip-pill">📌 Noodle class booked and paid ✓ · 10:30–13:00</span>
-        <span class="tip-pill">📌 iPhone battery repair: Zhongguancun stalls, ¥120–200 / ~NZ$30–50, same day</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 7 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">天坛公园</div><div class="drv-en">Temple of Heaven</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%A4%A9%E5%9D%9B%E5%85%AC%E5%9B%AD" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%A4%A9%E5%9D%9B%E5%85%AC%E5%9B%AD" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">东城区九道湾中巷1号</div><div class="drv-en">The Hutong (noodle class)</div><div class="drv-addr">东城区九道湾中巷1号</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E4%B8%9C%E5%9F%8E%E5%8C%BA%E4%B9%9D%E9%81%93%E6%B9%BE%E4%B8%AD%E5%B7%B71%E5%8F%B7" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E4%B8%9C%E5%9F%8E%E5%8C%BA%E4%B9%9D%E9%81%93%E6%B9%BE%E4%B8%AD%E5%B7%B71%E5%8F%B7" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">中关村</div><div class="drv-en">Zhongguancun electronics district</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E4%B8%AD%E5%85%B3%E6%9D%91" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E4%B8%AD%E5%85%B3%E6%9D%91" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">798艺术区</div><div class="drv-en">798 Art District</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=798%E8%89%BA%E6%9C%AF%E5%8C%BA" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=798%E8%89%BA%E6%9C%AF%E5%8C%BA" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">西单大悦城</div><div class="drv-en">Xidan Joy City (Pokémon gym)</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E8%A5%BF%E5%8D%95%E5%A4%A7%E6%82%A6%E5%9F%8E" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%A5%BF%E5%8D%95%E5%A4%A7%E6%82%A6%E5%9F%8E" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">簋街</div><div class="drv-en">Guijie (Ghost Street) hotpot</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E7%B0%8B%E8%A1%97" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E7%B0%8B%E8%A1%97" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">北京崇文門飯店</div><div class="drv-en">Chongwenmen Hotel (Beijing)</div><div class="drv-addr">崇文門西大街2號, 東城區, 北京, 100062</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%8C%97%E4%BA%AC%E5%B4%87%E6%96%87%E9%96%80%E9%A3%AF%E5%BA%97" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8C%97%E4%BA%AC%E5%B4%87%E6%96%87%E9%96%80%E9%A3%AF%E5%BA%97" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer beijing">🏨 <strong>Chongwenmen Hotel, Beijing</strong></div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d4')">← Day 4</button>
@@ -1061,12 +1062,8 @@
         <li>Panjiayuan antique and craft market — Sunday is the best day; thousands of stalls selling everything from antique furniture to embroidery, ceramics and jade; great for Mum and Sharon (southwest Beijing, reasonable from Daxing via ring road)</li>
         </ul>
       </div>
-      <div class="tag-row">
-        <span class="act-pill">🐼 Wildlife Park (Daxing)</span>
-        <span class="act-pill">Panjiayuan market</span>
-        <span class="tip-pill">📌 Wildlife Park: subway Line 4 + bus, ~50 min</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 3 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">北京野生动物园</div><div class="drv-en">Beijing Wildlife Park</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%8C%97%E4%BA%AC%E9%87%8E%E7%94%9F%E5%8A%A8%E7%89%A9%E5%9B%AD" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8C%97%E4%BA%AC%E9%87%8E%E7%94%9F%E5%8A%A8%E7%89%A9%E5%9B%AD" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">潘家园旧货市场</div><div class="drv-en">Panjiayuan market</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E6%BD%98%E5%AE%B6%E5%9B%AD%E6%97%A7%E8%B4%A7%E5%B8%82%E5%9C%BA" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%BD%98%E5%AE%B6%E5%9B%AD%E6%97%A7%E8%B4%A7%E5%B8%82%E5%9C%BA" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">北京崇文門飯店</div><div class="drv-en">Chongwenmen Hotel (Beijing)</div><div class="drv-addr">崇文門西大街2號, 東城區, 北京, 100062</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%8C%97%E4%BA%AC%E5%B4%87%E6%96%87%E9%96%80%E9%A3%AF%E5%BA%97" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8C%97%E4%BA%AC%E5%B4%87%E6%96%87%E9%96%80%E9%A3%AF%E5%BA%97" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer beijing">🏨 <strong>Chongwenmen Hotel, Beijing</strong> — last night</div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d5')">← Day 5</button>
@@ -1093,16 +1090,8 @@
         <li class="note">Evening: Muslim Quarter for dinner and street food — lanterns, steam from food stalls, red-lit alleyways</li>
         <li class="note">Excellent night photography — Jeremy, Vincent, and Dad bring cameras</li>
       </ul>
-      <div class="tag-row">
-        <span class="flight-pill">🚄 G365 Beijing West→Xi'an North 09:55–14:05</span>
-        <span class="act-pill">Shaanxi History Museum (afternoon)</span>
-        <span class="act-pill">City Wall first look</span>
-        <span class="act-pill">Muslim Quarter dinner</span>
-        <span class="act-pill">Night street photography</span>
-        <span class="tip-pill">📌 Train booked ✓ (Trip.com)</span>
-        <span class="tip-pill">📌 Shaanxi Museum — free, book online, closes 17:00</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 6 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">北京西站</div><div class="drv-en">Beijing West Station</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%8C%97%E4%BA%AC%E8%A5%BF%E7%AB%99" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8C%97%E4%BA%AC%E8%A5%BF%E7%AB%99" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">西安北站</div><div class="drv-en">Xi&#x27;an North Station</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E8%A5%BF%E5%AE%89%E5%8C%97%E7%AB%99" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%A5%BF%E5%AE%89%E5%8C%97%E7%AB%99" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">陕西历史博物馆</div><div class="drv-en">Shaanxi History Museum</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E9%99%95%E8%A5%BF%E5%8E%86%E5%8F%B2%E5%8D%9A%E7%89%A9%E9%A6%86" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E9%99%95%E8%A5%BF%E5%8E%86%E5%8F%B2%E5%8D%9A%E7%89%A9%E9%A6%86" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">西安城墙</div><div class="drv-en">Xi&#x27;an City Wall</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E8%A5%BF%E5%AE%89%E5%9F%8E%E5%A2%99" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%A5%BF%E5%AE%89%E5%9F%8E%E5%A2%99" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">回民街</div><div class="drv-en">Muslim Quarter</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%9B%9E%E6%B0%91%E8%A1%97" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%9B%9E%E6%B0%91%E8%A1%97" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">艾豪森酒店（西安回民街鐘樓地鐵站店）</div><div class="drv-en">AHS-Park Hotel (Xi&#x27;an, Bell Tower)</div><div class="drv-addr">東大街351號, 碑林區, 西安</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E8%89%BE%E8%B1%AA%E6%A3%AE%E9%85%92%E5%BA%97%EF%BC%88%E8%A5%BF%E5%AE%89%E5%9B%9E%E6%B0%91%E8%A1%97%E9%90%98%E6%A8%93%E5%9C%B0%E9%90%B5%E7%AB%99%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%89%BE%E8%B1%AA%E6%A3%AE%E9%85%92%E5%BA%97%EF%BC%88%E8%A5%BF%E5%AE%89%E5%9B%9E%E6%B0%91%E8%A1%97%E9%90%98%E6%A8%93%E5%9C%B0%E9%90%B5%E7%AB%99%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer xian">🏨 <strong>AHS-Park Hotel, Xi'an</strong> — first night</div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d6')">← Day 6</button>
@@ -1140,14 +1129,8 @@
         <li>Dinner: fresh biang biang noodles at a local canteen — watch the cook hand-pull the noodles from a single lump of dough</li>
         </ul>
       </div>
-      <div class="tag-row">
-        <span class="act-pill">Terracotta Warriors</span>
-        <span class="act-pill">All three pits</span>
-        <span class="act-pill">Bronze chariot museum</span>
-        <span class="act-pill">English guide (carpool tour)</span>
-        <span class="tip-pill">📌 Booked ✓ — pick-up 07:40 · free cancel by 22:00 19 Oct</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 3 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">秦始皇兵马俑博物馆</div><div class="drv-en">Terracotta Army Museum</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E7%A7%A6%E5%A7%8B%E7%9A%87%E5%85%B5%E9%A9%AC%E4%BF%91%E5%8D%9A%E7%89%A9%E9%A6%86" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E7%A7%A6%E5%A7%8B%E7%9A%87%E5%85%B5%E9%A9%AC%E4%BF%91%E5%8D%9A%E7%89%A9%E9%A6%86" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">回民街</div><div class="drv-en">Muslim Quarter (dinner)</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%9B%9E%E6%B0%91%E8%A1%97" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%9B%9E%E6%B0%91%E8%A1%97" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">艾豪森酒店（西安回民街鐘樓地鐵站店）</div><div class="drv-en">AHS-Park Hotel (Xi&#x27;an, Bell Tower)</div><div class="drv-addr">東大街351號, 碑林區, 西安</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E8%89%BE%E8%B1%AA%E6%A3%AE%E9%85%92%E5%BA%97%EF%BC%88%E8%A5%BF%E5%AE%89%E5%9B%9E%E6%B0%91%E8%A1%97%E9%90%98%E6%A8%93%E5%9C%B0%E9%90%B5%E7%AB%99%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%89%BE%E8%B1%AA%E6%A3%AE%E9%85%92%E5%BA%97%EF%BC%88%E8%A5%BF%E5%AE%89%E5%9B%9E%E6%B0%91%E8%A1%97%E9%90%98%E6%A8%93%E5%9C%B0%E9%90%B5%E7%AB%99%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer xian">🏨 <strong>AHS-Park Hotel, Xi'an</strong></div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d7')">← Day 7</button>
@@ -1190,16 +1173,8 @@
         <li>Dinner in the Muslim Quarter: lamb skewers, persimmon cakes, biangbiang noodles</li>
         </ul>
       </div>
-      <div class="tag-row">
-        <span class="act-pill">Mount Huashan</span>
-        <span class="act-pill">Cable car + admission included</span>
-        <span class="act-pill">West Peak → South Peak</span>
-        <span class="act-pill">South Peak 2,154m</span>
-        <span class="act-pill">Plank Walk (optional, ¥30 / ~NZ$7.5)</span>
-        <span class="act-pill">City Wall bike ride if back by ~3pm (¥45 / ~NZ$11 pp)</span>
-        <span class="tip-pill">📌 Group tour booked ✓ — 07:00 pick-up · bring passports</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 4 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">石家街地铁站C口</div><div class="drv-en">Shijiajie subway station, Exit C1 (Mount Hua coach meeting point)</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E7%9F%B3%E5%AE%B6%E8%A1%97%E5%9C%B0%E9%93%81%E7%AB%99C%E5%8F%A3" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E7%9F%B3%E5%AE%B6%E8%A1%97%E5%9C%B0%E9%93%81%E7%AB%99C%E5%8F%A3" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">华山</div><div class="drv-en">Mount Hua</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%8D%8E%E5%B1%B1" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8D%8E%E5%B1%B1" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">西安城墙</div><div class="drv-en">Xi&#x27;an City Wall (bike hire)</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E8%A5%BF%E5%AE%89%E5%9F%8E%E5%A2%99" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%A5%BF%E5%AE%89%E5%9F%8E%E5%A2%99" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">艾豪森酒店（西安回民街鐘樓地鐵站店）</div><div class="drv-en">AHS-Park Hotel (Xi&#x27;an, Bell Tower)</div><div class="drv-addr">東大街351號, 碑林區, 西安</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E8%89%BE%E8%B1%AA%E6%A3%AE%E9%85%92%E5%BA%97%EF%BC%88%E8%A5%BF%E5%AE%89%E5%9B%9E%E6%B0%91%E8%A1%97%E9%90%98%E6%A8%93%E5%9C%B0%E9%90%B5%E7%AB%99%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%89%BE%E8%B1%AA%E6%A3%AE%E9%85%92%E5%BA%97%EF%BC%88%E8%A5%BF%E5%AE%89%E5%9B%9E%E6%B0%91%E8%A1%97%E9%90%98%E6%A8%93%E5%9C%B0%E9%90%B5%E7%AB%99%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer xian">🏨 <strong>AHS-Park Hotel, Xi'an</strong></div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d8')">← Day 8</button>
@@ -1243,16 +1218,8 @@
         <li>Final Xi'an dinner before or after in the Muslim Quarter — spiced lamb skewers, rose jelly (méiguī bīng fěn), persimmon cakes</li>
         </ul>
       </div>
-      <div class="tag-row">
-        <span class="act-pill">City Wall bike ride (morning option)</span>
-        <span class="act-pill">Big Wild Goose Pagoda (optional)</span>
-        <span class="act-pill">Tang Paradise (¥120 / ~NZ$30 pp)</span>
-        <span class="act-pill">Main show 20:30 — free with entry</span>
-        <span class="act-pill">Muslim Quarter farewell dinner</span>
-        <span class="tip-pill">📌 Arrive Tang Paradise ~19:00 for best experience</span>
-        <span class="tip-pill">📌 Optional indoor show 17:00 — separate ticket</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 5 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">大唐芙蓉园</div><div class="drv-en">Tang Paradise</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%A4%A7%E5%94%90%E8%8A%99%E8%93%89%E5%9B%AD" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%A4%A7%E5%94%90%E8%8A%99%E8%93%89%E5%9B%AD" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">大雁塔</div><div class="drv-en">Big Wild Goose Pagoda</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%A4%A7%E9%9B%81%E5%A1%94" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%A4%A7%E9%9B%81%E5%A1%94" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">西安城墙</div><div class="drv-en">Xi&#x27;an City Wall</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E8%A5%BF%E5%AE%89%E5%9F%8E%E5%A2%99" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%A5%BF%E5%AE%89%E5%9F%8E%E5%A2%99" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">回民街</div><div class="drv-en">Muslim Quarter</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%9B%9E%E6%B0%91%E8%A1%97" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%9B%9E%E6%B0%91%E8%A1%97" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">艾豪森酒店（西安回民街鐘樓地鐵站店）</div><div class="drv-en">AHS-Park Hotel (Xi&#x27;an, Bell Tower)</div><div class="drv-addr">東大街351號, 碑林區, 西安</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E8%89%BE%E8%B1%AA%E6%A3%AE%E9%85%92%E5%BA%97%EF%BC%88%E8%A5%BF%E5%AE%89%E5%9B%9E%E6%B0%91%E8%A1%97%E9%90%98%E6%A8%93%E5%9C%B0%E9%90%B5%E7%AB%99%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%89%BE%E8%B1%AA%E6%A3%AE%E9%85%92%E5%BA%97%EF%BC%88%E8%A5%BF%E5%AE%89%E5%9B%9E%E6%B0%91%E8%A1%97%E9%90%98%E6%A8%93%E5%9C%B0%E9%90%B5%E7%AB%99%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer xian">🏨 <strong>AHS-Park Hotel, Xi'an</strong> — last night</div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d9')">← Day 9</button>
@@ -1280,15 +1247,8 @@
         <li class="note">Evening: rooftop bar (Bar Rouge, New Heights, or Flair) for blue hour — the towers light up as the sky darkens</li>
         <li class="note">Jeremy, Vincent, and Dad: this is the iconic Bund dusk shot — bring cameras</li>
       </ul>
-      <div class="tag-row">
-        <span class="flight-pill">✈️ HU7845 XIY→PVG 08:30–11:00</span>
-        <span class="act-pill">Binjiang Park panoramic view (Pudong)</span>
-        <span class="act-pill">Bund walk</span>
-        <span class="act-pill">Rooftop bar at dusk</span>
-        <span class="tip-pill">📌 Flight booked ✓ — lands Pudong, not Hongqiao</span>
-        <span class="tip-pill">📌 Binjiang Park — free, Metro Line 2 to Lujiazui</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 5 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">西安咸阳国际机场T3航站楼</div><div class="drv-en">Xi&#x27;an Xianyang Airport, Terminal 3</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E8%A5%BF%E5%AE%89%E5%92%B8%E9%98%B3%E5%9B%BD%E9%99%85%E6%9C%BA%E5%9C%BAT3%E8%88%AA%E7%AB%99%E6%A5%BC" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%A5%BF%E5%AE%89%E5%92%B8%E9%98%B3%E5%9B%BD%E9%99%85%E6%9C%BA%E5%9C%BAT3%E8%88%AA%E7%AB%99%E6%A5%BC" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">上海浦东国际机场T2航站楼</div><div class="drv-en">Shanghai Pudong Airport, Terminal 2</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E4%B8%8A%E6%B5%B7%E6%B5%A6%E4%B8%9C%E5%9B%BD%E9%99%85%E6%9C%BA%E5%9C%BAT2%E8%88%AA%E7%AB%99%E6%A5%BC" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E4%B8%8A%E6%B5%B7%E6%B5%A6%E4%B8%9C%E5%9B%BD%E9%99%85%E6%9C%BA%E5%9C%BAT2%E8%88%AA%E7%AB%99%E6%A5%BC" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">滨江大道</div><div class="drv-en">Binjiang Park (Pudong riverside)</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E6%BB%A8%E6%B1%9F%E5%A4%A7%E9%81%93" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%BB%A8%E6%B1%9F%E5%A4%A7%E9%81%93" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">外滩</div><div class="drv-en">The Bund</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%A4%96%E6%BB%A9" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%A4%96%E6%BB%A9" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">全季酒店（上海外灘四川中路店）</div><div class="drv-en">JI Hotel The Bund (Shanghai)</div><div class="drv-addr">四川中路607號, 黃浦區, 上海</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%85%A8%E5%AD%A3%E9%85%92%E5%BA%97%EF%BC%88%E4%B8%8A%E6%B5%B7%E5%A4%96%E7%81%98%E5%9B%9B%E5%B7%9D%E4%B8%AD%E8%B7%AF%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%85%A8%E5%AD%A3%E9%85%92%E5%BA%97%EF%BC%88%E4%B8%8A%E6%B5%B7%E5%A4%96%E7%81%98%E5%9B%9B%E5%B7%9D%E4%B8%AD%E8%B7%AF%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer shanghai">🏨 <strong>JI Hotel The Bund, Shanghai</strong> — first night</div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d10')">← Day 10</button>
@@ -1333,18 +1293,8 @@
         <li>Free evening — dinner wherever looks good; nothing booked</li>
         </ul>
       </div>
-      <div class="tag-row">
-        <span class="act-pill">Dawn Bund photography</span>
-        <span class="act-pill">French Concession</span>
-        <span class="act-pill">Xintiandi lunch</span>
-        <span class="act-pill">💄 HARMAY beauty store (Sharon)</span>
-        <span class="act-pill">Tianzifang alleys</span>
-        <span class="act-pill">Baisihao electronics (V/J — Xujiahui)</span>
-        <span class="act-pill">🎴 Pokémon TCG Gym (Cloud Nine)</span>
-        <span class="act-pill">🎴 Cramorant Gym (Dragon's Dream)</span>
-        <span class="act-pill">M50 art district (Vincent/Sharon)</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 8 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">外滩</div><div class="drv-en">The Bund</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%A4%96%E6%BB%A9" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%A4%96%E6%BB%A9" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">新天地</div><div class="drv-en">Xintiandi</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E6%96%B0%E5%A4%A9%E5%9C%B0" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%96%B0%E5%A4%A9%E5%9C%B0" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">话梅 HARMAY 新天地</div><div class="drv-en">HARMAY beauty store, Xintiandi</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E8%AF%9D%E6%A2%85%20HARMAY%20%E6%96%B0%E5%A4%A9%E5%9C%B0" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%AF%9D%E6%A2%85%20HARMAY%20%E6%96%B0%E5%A4%A9%E5%9C%B0" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">田子坊</div><div class="drv-en">Tianzifang</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E7%94%B0%E5%AD%90%E5%9D%8A" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E7%94%B0%E5%AD%90%E5%9D%8A" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">龙之梦购物中心</div><div class="drv-en">Longemont mall (Cloud Nine gym), Zhongshan Park</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E9%BE%99%E4%B9%8B%E6%A2%A6%E8%B4%AD%E7%89%A9%E4%B8%AD%E5%BF%83" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E9%BE%99%E4%B9%8B%E6%A2%A6%E8%B4%AD%E7%89%A9%E4%B8%AD%E5%BF%83" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">古月鸟</div><div class="drv-en">Cramorant Gym (Dragon&#x27;s Dream, Zhongshan Park)</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%8F%A4%E6%9C%88%E9%B8%9F" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8F%A4%E6%9C%88%E9%B8%9F" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">M50创意园</div><div class="drv-en">M50 art district</div><div class="drv-addr">普陀区莫干山路50号</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=M50%E5%88%9B%E6%84%8F%E5%9B%AD" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=M50%E5%88%9B%E6%84%8F%E5%9B%AD" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">全季酒店（上海外灘四川中路店）</div><div class="drv-en">JI Hotel The Bund (Shanghai)</div><div class="drv-addr">四川中路607號, 黃浦區, 上海</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%85%A8%E5%AD%A3%E9%85%92%E5%BA%97%EF%BC%88%E4%B8%8A%E6%B5%B7%E5%A4%96%E7%81%98%E5%9B%9B%E5%B7%9D%E4%B8%AD%E8%B7%AF%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%85%A8%E5%AD%A3%E9%85%92%E5%BA%97%EF%BC%88%E4%B8%8A%E6%B5%B7%E5%A4%96%E7%81%98%E5%9B%9B%E5%B7%9D%E4%B8%AD%E8%B7%AF%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer shanghai">🏨 <strong>JI Hotel The Bund, Shanghai</strong></div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d11')">← Day 11</button>
@@ -1388,17 +1338,8 @@
         <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">21:59</div><div class="lk-name">G1785 Nanjing South → Shanghai Hongqiao</div><div class="lk-dur">⏱ 1h 31m</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Who</dt><dd>All six · 2nd class</dd></div><div><dt>Arrive</dt><dd>Hongqiao 23:30</dd></div><div><dt>Gate</dt><dd>Nanjing South ticket gate A12 (can change). Leave the Qinhuai area by about 20:45 to be at the station an hour early</dd></div><div><dt>Seats</dt><dd>Car-seat: Vincent 05-004D · Tom 05-005D · Sharon 05-004B · Dad 05-004F · Mum 05-005B · Jeremy 05-005A</dd></div><div><dt>Cost</dt><dd>CNY 942 / ~NZ$236 for 6 (incl. booking fee) — ¥157 / ~NZ$39 pp</dd></div><div><dt>Booking</dt><dd>#1486592527656735</dd></div></dl><div class="bk-desc"><p>Gets you to Hongqiao at 23:30, roughly 45 minutes from the hotel by taxi, so a very late night before Disney the next morning.</p></div></div></li>
         </ul>
       </div>
-      <div class="tag-row">
-        <span class="act-pill">Sun Yat-sen Mausoleum</span>
-        <span class="act-pill">Ming Xiaoling Sacred Way</span>
-        <span class="act-pill">Nanjing City Wall</span>
-        <span class="act-pill">Zhonghua Gate fortress</span>
-        <span class="act-pill">Qinhuai River at night</span>
-        <span class="act-pill">Confucius Temple food street</span>
-        <span class="tip-pill">📌 Trains booked ✓ — G452 07:55 out, G1785 21:59 back</span>
-        <span class="tip-pill">📌 Stay for evening — Qinhuai after dark is the highlight</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 7 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">上海虹桥站</div><div class="drv-en">Shanghai Hongqiao Railway Station</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E4%B8%8A%E6%B5%B7%E8%99%B9%E6%A1%A5%E7%AB%99" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E4%B8%8A%E6%B5%B7%E8%99%B9%E6%A1%A5%E7%AB%99" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">南京南站</div><div class="drv-en">Nanjing South Railway Station</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%8D%97%E4%BA%AC%E5%8D%97%E7%AB%99" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8D%97%E4%BA%AC%E5%8D%97%E7%AB%99" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">中山陵</div><div class="drv-en">Sun Yat-sen Mausoleum</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E4%B8%AD%E5%B1%B1%E9%99%B5" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E4%B8%AD%E5%B1%B1%E9%99%B5" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">明孝陵</div><div class="drv-en">Ming Xiaoling Mausoleum</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E6%98%8E%E5%AD%9D%E9%99%B5" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%98%8E%E5%AD%9D%E9%99%B5" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">中华门</div><div class="drv-en">Zhonghua Gate</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E4%B8%AD%E5%8D%8E%E9%97%A8" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E4%B8%AD%E5%8D%8E%E9%97%A8" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">夫子庙</div><div class="drv-en">Confucius Temple / Qinhuai River</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%A4%AB%E5%AD%90%E5%BA%99" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%A4%AB%E5%AD%90%E5%BA%99" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">全季酒店（上海外灘四川中路店）</div><div class="drv-en">JI Hotel The Bund (Shanghai)</div><div class="drv-addr">四川中路607號, 黃浦區, 上海</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%85%A8%E5%AD%A3%E9%85%92%E5%BA%97%EF%BC%88%E4%B8%8A%E6%B5%B7%E5%A4%96%E7%81%98%E5%9B%9B%E5%B7%9D%E4%B8%AD%E8%B7%AF%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%85%A8%E5%AD%A3%E9%85%92%E5%BA%97%EF%BC%88%E4%B8%8A%E6%B5%B7%E5%A4%96%E7%81%98%E5%9B%9B%E5%B7%9D%E4%B8%AD%E8%B7%AF%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer shanghai">🏨 <strong>JI Hotel The Bund, Shanghai</strong></div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d12')">← Day 12</button>
@@ -1434,14 +1375,8 @@
         <li>Stay for the castle nighttime spectacular, fireworks, and final parade — the park comes alive after dark</li>
         </ul>
       </div>
-      <div class="tag-row">
-        <span class="act-pill">Zootopia: Hot Pursuit</span>
-        <span class="act-pill">TRON Lightcycle</span>
-        <span class="act-pill">Pirates of the Caribbean</span>
-        <span class="act-pill">Castle</span>
-        <span class="tip-pill">📌 ¥499 / ~NZ$125 pp on 26 Oct — 3 tickets, book online</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 2 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">上海迪士尼乐园</div><div class="drv-en">Shanghai Disneyland</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E4%B8%8A%E6%B5%B7%E8%BF%AA%E5%A3%AB%E5%B0%BC%E4%B9%90%E5%9B%AD" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E4%B8%8A%E6%B5%B7%E8%BF%AA%E5%A3%AB%E5%B0%BC%E4%B9%90%E5%9B%AD" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">全季酒店（上海外灘四川中路店）</div><div class="drv-en">JI Hotel The Bund (Shanghai)</div><div class="drv-addr">四川中路607號, 黃浦區, 上海</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%85%A8%E5%AD%A3%E9%85%92%E5%BA%97%EF%BC%88%E4%B8%8A%E6%B5%B7%E5%A4%96%E7%81%98%E5%9B%9B%E5%B7%9D%E4%B8%AD%E8%B7%AF%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%85%A8%E5%AD%A3%E9%85%92%E5%BA%97%EF%BC%88%E4%B8%8A%E6%B5%B7%E5%A4%96%E7%81%98%E5%9B%9B%E5%B7%9D%E4%B8%AD%E8%B7%AF%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer shanghai">🏨 <strong>JI Hotel The Bund, Shanghai</strong></div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d13')">← Day 13</button>
@@ -1484,20 +1419,8 @@
         <li class="lk-li"><div class="bk-act bk-act-todo"><div class="lk"><div class="lk-time">20:20</div><div class="lk-name">AURORA escape room (Mr. &amp; Mrs. Jawn)</div><div class="lk-dur">⏱ 115 min</div><span class="lk-pill">Need to book</span></div><dl class="bk-facts"><div><dt>Suggested</dt><dd>Tue 27 Oct, 20:20–22:15 — after the final dinner, then back to the hotel around 23:00. Alternatives: 19:15–21:10 or 21:25–23:20 (all CNY 288 / ~NZ$72 pp)</dd></div><div><dt>Who</dt><dd>Vincent, Sharon, Tom (3 players) — the room is 4–7, so <strong>email first</strong> to hold a table: xingkuan50@gmail.com</dd></div><div><dt>Where</dt><dd>屋有岛 (ARK新华店) · 5F Huaning Hongji Life Plaza, No. 300 Xuanhua Road, Changning District — about 25–30 min from the hotel by taxi</dd></div><div><dt>Room</dt><dd>AURORA (Chapter One) · English edition · non-horror</dd></div><div><dt>Cost</dt><dd>CNY 288 / ~NZ$72 pp (CNY 864 / ~NZ$216 for 3) — no deposit, pay by Alipay QR or cash on arrival</dd></div><div><dt>Book</dt><dd><a href="https://mrandmrsjawn.com/book" target="_blank" rel="noopener">mrandmrsjawn.com/book</a> → Shanghai, English, 27 Oct (3 players needs an email to the studio first). Confirmation email with booking code within 24 hrs</dd></div><div><dt>Cancel</dt><dd>Free 48+ hrs before · 50% refund 24–48 hrs · none inside 24 hrs</dd></div><div><dt>Wear</dt><dd>Sports shoes and trousers (light climbing and reaching); lockers available</dd></div><div><dt>Next day</dt><dd>Flight CX349 leaves Hongqiao at 13:35 — check out by late morning</dd></div></dl><div class="bk-desc"><p>A big mechanical fantasy room — a sword that has waited a thousand years and a sleeping dragon — with anime-style visuals and effects (2023 EGA Shanghai Triple Gold winner). A fantastic finale for the last night; Jeremy, Dad and Mum have a relaxed final evening.</p></div></div></li>
         </ul>
       </div>
-      <div class="tag-row">
-        <span class="act-pill">Yu Garden / Old Town (8:30am)</span>
-        <span class="act-pill">🎴 JE宝可梦卡牌 (Japanese singles)</span>
-        <span class="act-pill">AP Xinyang electronics (V/J)</span>
-        <span class="act-pill">Bargain shopping (Mum/Sharon)</span>
-        <span class="act-pill">Hairy crab lunch</span>
-        <span class="act-pill">Shanghai Science Museum (¥45 / ~NZ$11)</span>
-        <span class="act-pill">AURORA escape room (20:20)</span>
-        <span class="tip-pill">📌 Yu Garden — ¥40 / ~NZ$10 pp, go early</span>
-        <span class="tip-pill">📌 Book crab restaurant ahead</span>
-        <span class="tip-pill">📌 Science Museum closed Mondays — open Tue ✓</span>
-        <span class="tip-pill">📌 Book AURORA — 20:20, 3 players (email first)</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 6 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">豫园</div><div class="drv-en">Yu Garden</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E8%B1%AB%E5%9B%AD" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%B1%AB%E5%9B%AD" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">JE宝可梦卡牌</div><div class="drv-en">JE Pokémon cards (Guangxi North Road)</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=JE%E5%AE%9D%E5%8F%AF%E6%A2%A6%E5%8D%A1%E7%89%8C" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=JE%E5%AE%9D%E5%8F%AF%E6%A2%A6%E5%8D%A1%E7%89%8C" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">上海科技馆</div><div class="drv-en">Shanghai Science and Technology Museum</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E4%B8%8A%E6%B5%B7%E7%A7%91%E6%8A%80%E9%A6%86" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E4%B8%8A%E6%B5%B7%E7%A7%91%E6%8A%80%E9%A6%86" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">南外滩轻纺面料市场</div><div class="drv-en">South Bund Fabric Market</div><div class="drv-addr">陆家浜路399号</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%8D%97%E5%A4%96%E6%BB%A9%E8%BD%BB%E7%BA%BA%E9%9D%A2%E6%96%99%E5%B8%82%E5%9C%BA" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8D%97%E5%A4%96%E6%BB%A9%E8%BD%BB%E7%BA%BA%E9%9D%A2%E6%96%99%E5%B8%82%E5%9C%BA" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">屋有岛（ARK新华店）</div><div class="drv-en">AURORA escape room</div><div class="drv-addr">长宁区宣化路300号华宁宏基生活广场5楼</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%B1%8B%E6%9C%89%E5%B2%9B%EF%BC%88ARK%E6%96%B0%E5%8D%8E%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%B1%8B%E6%9C%89%E5%B2%9B%EF%BC%88ARK%E6%96%B0%E5%8D%8E%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">全季酒店（上海外灘四川中路店）</div><div class="drv-en">JI Hotel The Bund (Shanghai)</div><div class="drv-addr">四川中路607號, 黃浦區, 上海</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%85%A8%E5%AD%A3%E9%85%92%E5%BA%97%EF%BC%88%E4%B8%8A%E6%B5%B7%E5%A4%96%E7%81%98%E5%9B%9B%E5%B7%9D%E4%B8%AD%E8%B7%AF%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%85%A8%E5%AD%A3%E9%85%92%E5%BA%97%EF%BC%88%E4%B8%8A%E6%B5%B7%E5%A4%96%E7%81%98%E5%9B%9B%E5%B7%9D%E4%B8%AD%E8%B7%AF%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer shanghai">🏨 <strong>JI Hotel The Bund, Shanghai</strong> — last night</div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d14')">← Day 14</button>
@@ -1522,12 +1445,8 @@
         <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">13:35</div><div class="lk-name">Shanghai Hongqiao → Hong Kong</div><div class="lk-dur">⏱ 2h 45m</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Flight</dt><dd>CX349 · Airbus A330-300</dd></div><div><dt>Airport</dt><dd>Hongqiao (SHA), not Pudong (PVG) — allow time to get there</dd></div></dl><div class="bk-desc"><p>Arrive Hong Kong 16:20 — 5h15m layover, airside only, no sightseeing.</p></div></div></li>
         <li class="lk-li"><div class="bk-act bk-act-booked"><div class="lk"><div class="lk-time">21:35</div><div class="lk-name">Hong Kong → Auckland</div><div class="lk-dur">⏱ ~10h 50m</div><span class="lk-pill">✓ Booked</span></div><dl class="bk-facts"><div><dt>Flight</dt><dd>CX113 · Airbus A350-900</dd></div><div><dt>Arrives</dt><dd>Auckland 13:25, Thursday 29 October</dd></div></dl><div class="bk-desc"><p>Home.</p></div></div></li>
         </ul>
-      <div class="tag-row">
-        <span class="flight-pill">CX349 SHA→HKG 13:35</span>
-        <span class="flight-pill">CX113 HKG→AKL 21:35</span>
-        <span class="tip-pill">📌 SHA = Hongqiao, not Pudong</span>
-      </div>
     </div>
+    <details class="drv"><summary>📍 Show your driver — 2 places</summary><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">上海虹桥国际机场T2航站楼</div><div class="drv-en">Shanghai Hongqiao Airport, Terminal 2</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E4%B8%8A%E6%B5%B7%E8%99%B9%E6%A1%A5%E5%9B%BD%E9%99%85%E6%9C%BA%E5%9C%BAT2%E8%88%AA%E7%AB%99%E6%A5%BC" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E4%B8%8A%E6%B5%B7%E8%99%B9%E6%A1%A5%E5%9B%BD%E9%99%85%E6%9C%BA%E5%9C%BAT2%E8%88%AA%E7%AB%99%E6%A5%BC" target="_blank" rel="noopener">Amap</a></div></div><div class="drv-row"><div class="drv-main"><div class="drv-cn" lang="zh">全季酒店（上海外灘四川中路店）</div><div class="drv-en">JI Hotel The Bund (Shanghai)</div><div class="drv-addr">四川中路607號, 黃浦區, 上海</div></div><div class="drv-links"><a href="https://maps.apple.com/?q=%E5%85%A8%E5%AD%A3%E9%85%92%E5%BA%97%EF%BC%88%E4%B8%8A%E6%B5%B7%E5%A4%96%E7%81%98%E5%9B%9B%E5%B7%9D%E4%B8%AD%E8%B7%AF%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%85%A8%E5%AD%A3%E9%85%92%E5%BA%97%EF%BC%88%E4%B8%8A%E6%B5%B7%E5%A4%96%E7%81%98%E5%9B%9B%E5%B7%9D%E4%B8%AD%E8%B7%AF%E5%BA%97%EF%BC%89" target="_blank" rel="noopener">Amap</a></div></div></details>
     <div class="sleep-footer transit">🏠 <strong>Home — Auckland</strong> Thu 29 Oct 13:25</div>
     <div class="day-nav-btns">
       <button class="day-nav-btn" onclick="show('d15')">← Day 15</button>
@@ -2127,6 +2046,42 @@
   <div id="ex-no-results" class="no-results" style="display:none;">No activities match this combination — try adjusting the filters above.</div>
   </div>
 
+  <!-- ═══ CONFIRMATIONS ═══ -->
+  <div class="page" id="page-confirmations">
+    <p style="font-size:12px;color:#aaa;margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">China 2026</p>
+    <h1 class="ov-title">Confirmations</h1>
+    <p class="ov-sub" style="margin-bottom:12px;">Everything that's booked, in date order, with booking numbers, meeting points, contacts and cancellation deadlines. Booking PINs and passport numbers aren't stored here — they're in the confirmation emails.</p>
+    <div class="cf-alert"><strong>Coming up:</strong> Summer Palace free cancellation ends 17:00 on 13 Oct · Mutianyu 18:00 on 14 Oct · Terracotta tour 22:00 on 19 Oct (all Beijing time).</div>
+<div class="cf-date">Tue 13 Oct</div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">11:15</span><span class="cf-title">CX7402 Auckland → Hong Kong</span></div><div class="cf-row"><span class="cf-k">Details</span><span class="cf-v">Cathay Pacific / Air NZ · arrives 17:45</span></div><div class="cf-row"><span class="cf-k">Then</span><span class="cf-v">CX344 Hong Kong → Beijing 19:00, arrives 22:25</span></div><div class="cf-foot"><a class="cf-day" href="javascript:show('d1')">Day 1 →</a></div></div>
+<div class="cf-date">Wed 14 Oct</div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">Afternoon</span><span class="cf-title">Summer Palace guided tour</span><span class="cf-ref">#1486591927947958</span></div><div class="cf-row"><span class="cf-k">Details</span><span class="cf-v">English guide · East Palace Gate · cruise included · exact start time TBC</span></div><div class="cf-row"><span class="cf-k">People</span><span class="cf-v">4 adults + 2 seniors</span></div><div class="cf-foot"><span class="cf-cancel">Free cancel until 17:00, 13 Oct</span><a class="cf-day" href="javascript:show('d2')">Day 2 →</a></div></div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">17:40</span><span class="cf-title">Red Theatre acrobatic show</span><span class="cf-ref">#1486591927971168</span></div><div class="cf-row"><span class="cf-k">Tickets</span><span class="cf-v">6 · Green section, mid rows 14–16</span></div><div class="cf-row"><span class="cf-k">Collect</span><span class="cf-v">Front desk in the Main Hall — show the confirmation message</span></div><div class="cf-row"><span class="cf-k">Where</span><span class="cf-v">No. 44 Xingfu Street, Dongcheng District (Line 5 to Temple of Heaven East Gate, exit B)</span></div><div class="cf-row"><span class="cf-k">Contact</span><span class="cf-v">+86 186 0020 8126 · WeChat lucy18600208126</span></div><div class="cf-foot"><a class="cf-day" href="javascript:show('d2')">Day 2 →</a></div></div>
+<div class="cf-date">Thu 15 Oct</div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">08:30</span><span class="cf-title">Mutianyu Great Wall (ticket, cable car, coach)</span><span class="cf-ref">#1486591928109095</span></div><div class="cf-row"><span class="cf-k">Meet</span><span class="cf-v">Xuanwumen Subway Station Exit G (also lists 08:00 at Zhushikou Exit D — check the travel notification)</span></div><div class="cf-row"><span class="cf-k">Bring</span><span class="cf-v">Passports — ID required</span></div><div class="cf-row"><span class="cf-k">People</span><span class="cf-v">6 tickets</span></div><div class="cf-foot"><span class="cf-cancel">Free cancel until 18:00, 14 Oct</span><a class="cf-day" href="javascript:show('d3')">Day 3 →</a></div></div>
+<div class="cf-date">Fri 16 Oct</div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">10:00</span><span class="cf-title">Forbidden City small-group tour</span><span class="cf-ref">#1486591937937097</span></div><div class="cf-row"><span class="cf-k">Tour</span><span class="cf-v">Treasure Hall + Clock Hall · English guide · tickets included</span></div><div class="cf-row"><span class="cf-k">Meet</span><span class="cf-v">Meridian Gate ticket gate · entry window 08:30–09:00 (12:30–13:30 also listed) — the guide contacts you the day before</span></div><div class="cf-row"><span class="cf-k">Bring</span><span class="cf-v">Passports (the ID used for booking)</span></div><div class="cf-row"><span class="cf-k">People</span><span class="cf-v">4 adults + 2 seniors</span></div><div class="cf-row"><span class="cf-k">Support</span><span class="cf-v">WeChat 18510913636</span></div><div class="cf-foot"><a class="cf-day" href="javascript:show('d4')">Day 4 →</a></div></div>
+<div class="cf-date">Sat 17 Oct</div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">10:30</span><span class="cf-title">Hand-Pulled Noodles class (The Hutong)</span><span class="cf-ref">#31610091176251</span></div><div class="cf-row"><span class="cf-k">Where</span><span class="cf-v">东城区九道湾中巷1号, Beijing 100007</span></div><div class="cf-row"><span class="cf-k">People</span><span class="cf-v">Vincent, Sharon, Jeremy, Tom</span></div><div class="cf-row"><span class="cf-k">Paid</span><span class="cf-v">CNY 1,400 — paid in full</span></div><div class="cf-row"><span class="cf-k">Contact</span><span class="cf-v">+86 159 0104 6127 · WeChat TheHutongEducation · events@thehutong.com</span></div><div class="cf-foot"><a class="cf-day" href="javascript:show('d5')">Day 5 →</a></div></div>
+<div class="cf-date">Mon 19 Oct</div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">09:55</span><span class="cf-title">G365 Beijing West → Xi&#x27;an North</span></div><div class="cf-row"><span class="cf-k">Arrives</span><span class="cf-v">14:05</span></div><div class="cf-row"><span class="cf-k">Booked via</span><span class="cf-v">Trip.com — booking number not recorded here, check the app</span></div><div class="cf-foot"><a class="cf-day" href="javascript:show('d7')">Day 7 →</a></div></div>
+<div class="cf-date">Tue 20 Oct</div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">07:40</span><span class="cf-title">Terracotta Warriors English-guided tour</span><span class="cf-ref">#1486591928609715</span></div><div class="cf-row"><span class="cf-k">Pick-up</span><span class="cf-v">07:40 at the hotel — times can change, check the travel notification</span></div><div class="cf-row"><span class="cf-k">People</span><span class="cf-v">6 adults</span></div><div class="cf-foot"><span class="cf-cancel">Free cancel until 22:00, 19 Oct</span><a class="cf-day" href="javascript:show('d8')">Day 8 →</a></div></div>
+<div class="cf-date">Wed 21 Oct</div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">07:00</span><span class="cf-title">Mount Hua group tour</span><span class="cf-ref">#1486592033825069</span></div><div class="cf-row"><span class="cf-k">Pick-up</span><span class="cf-v">06:50–07:30 (senior 07:00–07:20) inside Xi'an's second ring road, or Shijiajie station (Line 3) exit C1 at 07:45–08:00</span></div><div class="cf-row"><span class="cf-k">Included</span><span class="cf-v">Admission, round-trip cable car, coach</span></div><div class="cf-row"><span class="cf-k">Bring</span><span class="cf-v">Passports — real-name entry check</span></div><div class="cf-row"><span class="cf-k">People</span><span class="cf-v">Vincent, Jeremy, Sharon, Tom + Dad (senior)</span></div><div class="cf-row"><span class="cf-k">Contact</span><span class="cf-v">Supplier 029-82498353 / 029-89284460</span></div><div class="cf-foot"><a class="cf-day" href="javascript:show('d9')">Day 9 →</a></div></div>
+<div class="cf-date">Fri 23 Oct</div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">08:30</span><span class="cf-title">HU7845 Xi&#x27;an → Shanghai Pudong</span><span class="cf-ref">#1486591468940666</span></div><div class="cf-row"><span class="cf-k">Flight</span><span class="cf-v">Hainan Airlines · Xianyang T3 → Pudong T2 · lands 11:00</span></div><div class="cf-row"><span class="cf-k">Airline ref</span><span class="cf-v">NV485F</span></div><div class="cf-row"><span class="cf-k">Leave hotel</span><span class="cf-v">By about 05:45</span></div><div class="cf-foot"><a class="cf-day" href="javascript:show('d11')">Day 11 →</a></div></div>
+<div class="cf-date">Sun 25 Oct</div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">07:55</span><span class="cf-title">G452 Shanghai Hongqiao → Nanjing South</span><span class="cf-ref">#1486592527640427</span></div><div class="cf-row"><span class="cf-k">Arrives</span><span class="cf-v">08:56 · gate 16A/16B (can change)</span></div><div class="cf-row"><span class="cf-k">Seats</span><span class="cf-v">Car-seat: Vincent 13-003F · Tom 13-002D · Sharon 13-002C · Dad 13-003A · Mum 11-010D · Jeremy 12-015F</span></div><div class="cf-row"><span class="cf-k">Arrive early</span><span class="cf-v">At the station at least 60 minutes before</span></div><div class="cf-foot"><a class="cf-day" href="javascript:show('d13')">Day 13 →</a></div></div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">21:59</span><span class="cf-title">G1785 Nanjing South → Shanghai Hongqiao</span><span class="cf-ref">#1486592527656735</span></div><div class="cf-row"><span class="cf-k">Arrives</span><span class="cf-v">23:30 · gate A12 (can change)</span></div><div class="cf-row"><span class="cf-k">Seats</span><span class="cf-v">Car-seat: Vincent 05-004D · Tom 05-005D · Sharon 05-004B · Dad 05-004F · Mum 05-005B · Jeremy 05-005A</span></div><div class="cf-foot"><a class="cf-day" href="javascript:show('d13')">Day 13 →</a></div></div>
+<div class="cf-date">Wed 28 Oct</div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">13:35</span><span class="cf-title">CX349 Shanghai Hongqiao → Hong Kong</span></div><div class="cf-row"><span class="cf-k">Details</span><span class="cf-v">Departs from Hongqiao (SHA), not Pudong · arrives 16:20</span></div><div class="cf-row"><span class="cf-k">Then</span><span class="cf-v">CX113 Hong Kong → Auckland 21:35, arrives Thu 29 Oct 13:25</span></div><div class="cf-foot"><a class="cf-day" href="javascript:show('d16')">Day 16 →</a></div></div>
+<div class="cf-date">Hotels</div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">13–19 Oct</span><span class="cf-title">Chongwenmen Hotel, Beijing</span></div><div class="cf-row"><span class="cf-k">Address</span><span class="cf-v">北京崇文門飯店 · No. 2 Chongwenmen West Street, Dongcheng District, Beijing 100062</span></div><div class="cf-row"><span class="cf-k">Phone</span><span class="cf-v">+86-10-65122211-0</span></div><div class="cf-foot"></div></div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">19–23 Oct</span><span class="cf-title">AHS-Park Hotel, Xi&#x27;an (Bell Tower)</span></div><div class="cf-row"><span class="cf-k">Address</span><span class="cf-v">艾豪森酒店（西安回民街鐘樓地鐵站店） · No. 351 East Street, Beilin District</span></div><div class="cf-row"><span class="cf-k">Phone</span><span class="cf-v">+86-18909238389 · +86-29-87369055</span></div><div class="cf-foot"></div></div>
+<div class="cf-card"><div class="cf-top"><span class="cf-when">23–28 Oct</span><span class="cf-title">JI Hotel The Bund, Shanghai</span></div><div class="cf-row"><span class="cf-k">Address</span><span class="cf-v">全季酒店（上海外灘四川中路店） · No. 607 Sichuan Middle Road, Huangpu District</span></div><div class="cf-row"><span class="cf-k">Phone</span><span class="cf-v">+86-21-63215050</span></div><div class="cf-foot"></div></div>
+  </div>
+
 </main>
 
 <script id="leaflet-script" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -2146,6 +2101,7 @@
     window.scrollTo(0, 0);
     // Close mobile sidebar
     document.getElementById('sidebar').classList.remove('open');
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
     // Init map lazily
     maybeInitMap(id);
   }
@@ -2262,6 +2218,61 @@
     exUpdatePills();
   }
   document.addEventListener('DOMContentLoaded', exApplyFilters);
+
+
+  /* ── Today view, locked-in strips, deep links ── */
+  const TRIP_START = new Date(2026, 9, 13); // Tue 13 Oct = Day 1
+  function tripDayNumber() {
+    const t = new Date();
+    const d0 = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+    return Math.round((d0 - TRIP_START) / 86400000) + 1;
+  }
+  function goToday() {
+    const n = tripDayNumber();
+    show(n >= 1 && n <= 16 ? 'd' + n : (n < 1 ? 'd1' : 'overview'));
+  }
+  function setupToday() {
+    const n = tripDayNumber(), btn = document.getElementById('today-btn');
+    if (!btn) return;
+    if (n >= 1 && n <= 16) { btn.textContent = '📍 Today — Day ' + n; btn.style.display = ''; }
+    else if (n < 1) { btn.textContent = '📍 Day 1 — Tue 13 Oct'; btn.style.display = ''; }
+  }
+  function buildLockedStrips() {
+    const keys = ['Meet', 'Pick-up', 'Where', 'Gate', 'Collect'];
+    document.querySelectorAll('.page[id^="page-d"]').forEach(pg => {
+      const rows = [];
+      pg.querySelectorAll('.bk-act-booked').forEach(b => {
+        const time = b.querySelector('.lk-time')?.textContent.trim() || '';
+        const name = b.querySelector('.lk-name')?.textContent.trim() || '';
+        let meet = '';
+        b.querySelectorAll('.bk-facts > div').forEach(f => {
+          const dt = f.querySelector('dt')?.textContent.trim();
+          if (!meet && keys.includes(dt)) meet = f.querySelector('dd').textContent.trim();
+        });
+        if (meet.length > 150) meet = meet.slice(0, meet.lastIndexOf(' ', 150)) + '…';
+        rows.push({ time, name, meet });
+      });
+      if (!rows.length) return;
+      const div = document.createElement('div');
+      div.className = 'today-strip';
+      div.innerHTML = '<div class="ts-title">Locked in</div>' + rows.map(r =>
+        '<div class="ts-row"><span class="ts-time"></span><div><div class="ts-name"></div><div class="ts-meet"></div></div></div>').join('');
+      div.querySelectorAll('.ts-row').forEach((el, i) => {
+        el.querySelector('.ts-time').textContent = rows[i].time;
+        el.querySelector('.ts-name').textContent = rows[i].name;
+        const m = el.querySelector('.ts-meet'); if (rows[i].meet) m.textContent = rows[i].meet; else m.remove();
+      });
+      const hdr = pg.querySelector('.day-header');
+      if (hdr) hdr.insertAdjacentElement('afterend', div);
+    });
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    buildLockedStrips();
+    setupToday();
+    const h = location.hash.replace('#', '');
+    if (h && document.getElementById('page-' + h)) show(h);
+    else { const n = tripDayNumber(); if (n >= 1 && n <= 16) show('d' + n); }
+  });
 
   function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
