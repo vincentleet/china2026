@@ -2308,6 +2308,9 @@
     document.getElementById('sidebar').classList.toggle('open');
   }
 
+  /* ── Offline copy (see sw.js) ── */
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+
   /* ── DAY MAPS (Leaflet + OpenStreetMap) ── */
   const DAY_PINS = {
     d2: [['Capital Airport (arrive)', 40.0799, 116.5875, '✈️'], ['Summer Palace', 39.9999, 116.2755, '🏯'], ['Wangfujing', 39.9168, 116.4075, '🛍️'], ['Red Theatre', 39.8948, 116.4179, '🎭']],
