@@ -2,7 +2,7 @@
   "name": "China 2026",
   "short_name": "China 2026",
   "description": "Family trip itinerary — Beijing, Xi'an, Shanghai",
-  "start_url": "./",
+  "start_url": "index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#c1201a",

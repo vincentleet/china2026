@@ -1,7 +1,7 @@
 // Offline-first cache for the itinerary. GitHub Pages is slow/unreliable from
 // China, so serve the saved copy immediately and refresh it in the background.
-const CACHE = 'china2026-v1';
-const PAGE = new URL('./', self.registration.scope).href;
+const CACHE = 'china2026-v2';
+const PAGE = new URL('index.html', self.registration.scope).href;
 const ASSETS = ['manifest.webmanifest', 'apple-touch-icon.png', 'icon-192.png'];
 
 self.addEventListener('install', e => {

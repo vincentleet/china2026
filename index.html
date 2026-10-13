@@ -8,11 +8,15 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#c1201a">
+<meta name="color-scheme" content="light dark">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="China 2026">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" media="print" onload="this.media='all'">
+<script>
+  try { const t = localStorage.getItem('china2026_theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -34,8 +38,8 @@
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #f8f7f4;
-    color: #1a1a1a;
+    background: var(--bg-f8f7f4);
+    color: var(--tx-1a1a1a);
     display: flex;
     min-height: 100vh;
   }
@@ -44,8 +48,8 @@
   .sidebar {
     width: var(--sidebar-w);
     flex-shrink: 0;
-    background: #fff;
-    border-right: 1px solid #e8e8e8;
+    background: var(--bg-ffffff);
+    border-right: 1px solid var(--bd-e8e8e8);
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -56,14 +60,14 @@
 
   .sidebar-header {
     padding: 20px 18px 16px;
-    border-bottom: 1px solid #f0efe9;
+    border-bottom: 1px solid var(--bd-f0efe9);
   }
-  .sidebar-title { font-size: 16px; font-weight: 700; color: #1a1a1a; line-height: 1.3; }
-  .sidebar-sub { font-size: 13px; color: #aaa; margin-top: 2px; }
+  .sidebar-title { font-size: 16px; font-weight: 700; color: var(--tx-1a1a1a); line-height: 1.3; }
+  .sidebar-sub { font-size: 13px; color: var(--tx-aaaaaa); margin-top: 2px; }
 
   .sidebar-footer {
     padding: 12px 10px;
-    border-top: 1px solid #f0efe9;
+    border-top: 1px solid var(--bd-f0efe9);
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
@@ -76,15 +80,15 @@
     gap: 7px;
     width: 100%;
     padding: 9px 14px;
-    background: #1a1a1a;
-    color: #fff;
+    background: var(--bg-1a1a1a);
+    color: var(--tx-ffffff);
     font-size: 13px;
     font-weight: 600;
     border-radius: 8px;
     text-decoration: none;
     transition: background 0.15s;
   }
-  .sidebar-add-btn:hover { background: #333; }
+  .sidebar-add-btn:hover { background: var(--bg-333333); }
   .sidebar-bookings-btn {
     display: flex;
     align-items: center;
@@ -93,24 +97,24 @@
     width: 100%;
     padding: 9px 14px;
     background: transparent;
-    color: #555;
+    color: var(--tx-555555);
     font-size: 13px;
     font-weight: 600;
     border-radius: 8px;
     text-decoration: none;
-    border: 1.5px solid #e4e0d9;
+    border: 1.5px solid var(--bd-e4e0d9);
     cursor: pointer;
     transition: background 0.15s, border-color 0.15s;
   }
-  .sidebar-bookings-btn:hover { background: #f8f7f4; border-color: #ccc; color: #1a1a1a; }
-  .sidebar-bookings-btn.active { background: #c45c1a; border-color: #c45c1a; color: #fff; }
+  .sidebar-bookings-btn:hover { background: var(--bg-f8f7f4); border-color: var(--bd-cccccc); color: var(--tx-1a1a1a); }
+  .sidebar-bookings-btn.active { background: var(--bg-c45c1a); border-color: var(--bd-c45c1a); color: var(--tx-ffffff); }
 
   .sidebar-nav { padding: 12px 8px; flex: 1; }
 
   .nav-section-label {
     font-size: 12px;
     font-weight: 700;
-    color: #ccc;
+    color: var(--tx-cccccc);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     padding: 12px 8px 4px;
@@ -124,7 +128,7 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    color: #666;
+    color: var(--tx-666666);
     line-height: 1.3;
     transition: background 0.1s;
     border: none;
@@ -132,9 +136,9 @@
     width: 100%;
     text-align: left;
   }
-  .nav-item:hover { background: #f8f7f4; color: #1a1a1a; }
-  .nav-item.active { background: #1a1a1a; color: #fff; }
-  .nav-item.active .nav-badge { background: rgba(255,255,255,0.2); color: #fff; }
+  .nav-item:hover { background: var(--bg-f8f7f4); color: var(--tx-1a1a1a); }
+  .nav-item.active { background: var(--bg-1a1a1a); color: var(--tx-ffffff); }
+  .nav-item.active .nav-badge { background: rgba(255,255,255,0.2); color: var(--tx-ffffff); }
 
   .nav-day-num {
     font-size: 12px;
@@ -162,7 +166,7 @@
   .nav-item.active.city-beijing { background: var(--c-beijing); }
   .nav-item.active.city-xian { background: var(--c-xian); }
   .nav-item.active.city-shanghai { background: var(--c-shanghai); }
-  .nav-item.active.city-transit { background: #555; }
+  .nav-item.active.city-transit { background: var(--bg-555555); }
 
   /* ── MAIN ── */
   .main {
@@ -181,49 +185,49 @@
 
   /* ── ACCOMMODATION PAGE ── */
   #page-accommodation .flights-section { margin-bottom: 36px; }
-  #page-accommodation .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #999; margin-bottom: 12px; }
+  #page-accommodation .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--tx-999999); margin-bottom: 12px; }
   #page-accommodation .flight-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  #page-accommodation .flight-table th { text-align: left; padding: 6px 10px; font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #e8e8e8; }
-  #page-accommodation .flight-table td { padding: 8px 10px; border-bottom: 1px solid #f4f3f0; color: #444; vertical-align: top; line-height: 1.4; }
+  #page-accommodation .flight-table th { text-align: left; padding: 6px 10px; font-size: 11px; font-weight: 700; color: var(--tx-999999); text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--bd-e8e8e8); }
+  #page-accommodation .flight-table td { padding: 8px 10px; border-bottom: 1px solid var(--bd-f4f3f0); color: var(--tx-444444); vertical-align: top; line-height: 1.4; }
   #page-accommodation .flight-table tr:last-child td { border-bottom: none; }
-  #page-accommodation .fn { font-weight: 700; color: #1a1a1a; }
-  #page-accommodation .fc { color: #888; font-size: 12px; }
+  #page-accommodation .fn { font-weight: 700; color: var(--tx-1a1a1a); }
+  #page-accommodation .fc { color: var(--tx-888888); font-size: 12px; }
   #page-accommodation .overview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 36px; }
   #page-accommodation .overview-card { border-radius: 10px; padding: 16px; }
-  #page-accommodation .ov-beijing { background: #E6F1FB; border: 1px solid #C5DCEF; }
-  #page-accommodation .ov-xian { background: #FAEEDA; border: 1px solid #EDD9A8; }
-  #page-accommodation .ov-shanghai { background: #E1F5EE; border: 1px solid #A8DECE; }
+  #page-accommodation .ov-beijing { background: var(--bg-e6f1fb); border: 1px solid var(--bd-c5dcef); }
+  #page-accommodation .ov-xian { background: var(--bg-faeeda); border: 1px solid var(--bd-edd9a8); }
+  #page-accommodation .ov-shanghai { background: var(--bg-e1f5ee); border: 1px solid var(--bd-a8dece); }
   #page-accommodation .ov-city { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
-  #page-accommodation .ov-beijing .ov-city { color: #0C447C; }
-  #page-accommodation .ov-xian .ov-city { color: #633806; }
-  #page-accommodation .ov-shanghai .ov-city { color: #085041; }
-  #page-accommodation .ov-dates { font-size: 12px; color: #666; margin-bottom: 8px; }
+  #page-accommodation .ov-beijing .ov-city { color: var(--tx-0c447c); }
+  #page-accommodation .ov-xian .ov-city { color: var(--tx-633806); }
+  #page-accommodation .ov-shanghai .ov-city { color: var(--tx-085041); }
+  #page-accommodation .ov-dates { font-size: 12px; color: var(--tx-666666); margin-bottom: 8px; }
   #page-accommodation .ov-nights { font-size: 28px; font-weight: 700; }
-  #page-accommodation .ov-beijing .ov-nights { color: #0C447C; }
-  #page-accommodation .ov-xian .ov-nights { color: #633806; }
-  #page-accommodation .ov-shanghai .ov-nights { color: #085041; }
-  #page-accommodation .ov-nights-lbl { font-size: 11px; color: #888; margin-top: 1px; }
-  #page-accommodation .ov-checkin { font-size: 11px; color: #666; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.08); line-height: 1.5; }
-  #page-accommodation .ov-hotel { font-size: 11px; font-weight: 700; color: #444; margin-top: 6px; }
+  #page-accommodation .ov-beijing .ov-nights { color: var(--tx-0c447c); }
+  #page-accommodation .ov-xian .ov-nights { color: var(--tx-633806); }
+  #page-accommodation .ov-shanghai .ov-nights { color: var(--tx-085041); }
+  #page-accommodation .ov-nights-lbl { font-size: 11px; color: var(--tx-888888); margin-top: 1px; }
+  #page-accommodation .ov-checkin { font-size: 11px; color: var(--tx-666666); margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.08); line-height: 1.5; }
+  #page-accommodation .ov-hotel { font-size: 11px; font-weight: 700; color: var(--tx-444444); margin-top: 6px; }
   #page-accommodation .city-section { margin-bottom: 40px; page-break-inside: avoid; }
   #page-accommodation .city-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; padding-bottom: 10px; border-bottom: 2px solid; }
-  #page-accommodation .city-header.beijing { border-color: #378ADD; }
-  #page-accommodation .city-header.xian { border-color: #EF9F27; }
-  #page-accommodation .city-header.shanghai { border-color: #1D9E75; }
+  #page-accommodation .city-header.beijing { border-color: var(--bd-378add); }
+  #page-accommodation .city-header.xian { border-color: var(--bd-ef9f27); }
+  #page-accommodation .city-header.shanghai { border-color: var(--bd-1d9e75); }
   #page-accommodation .city-name { font-size: 22px; font-weight: 700; }
-  #page-accommodation .city-header.beijing .city-name { color: #0C447C; }
-  #page-accommodation .city-header.xian .city-name { color: #633806; }
-  #page-accommodation .city-header.shanghai .city-name { color: #085041; }
-  #page-accommodation .city-meta { font-size: 13px; color: #888; }
-  #page-accommodation .hotel-box { background: #f8f7f4; border-radius: 8px; padding: 12px 14px; margin: 10px 0 14px; font-size: 12px; color: #555; line-height: 1.6; }
-  #page-accommodation .hotel-box strong { color: #1a1a1a; font-size: 13px; }
-  #page-accommodation .hotel-rooms { margin-top: 8px; padding-top: 8px; border-top: 1px solid #ebebeb; }
+  #page-accommodation .city-header.beijing .city-name { color: var(--tx-0c447c); }
+  #page-accommodation .city-header.xian .city-name { color: var(--tx-633806); }
+  #page-accommodation .city-header.shanghai .city-name { color: var(--tx-085041); }
+  #page-accommodation .city-meta { font-size: 13px; color: var(--tx-888888); }
+  #page-accommodation .hotel-box { background: var(--bg-f8f7f4); border-radius: 8px; padding: 12px 14px; margin: 10px 0 14px; font-size: 12px; color: var(--tx-555555); line-height: 1.6; }
+  #page-accommodation .hotel-box strong { color: var(--tx-1a1a1a); font-size: 13px; }
+  #page-accommodation .hotel-rooms { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--bd-ebebeb); }
   #page-accommodation .hotel-room-row { display: flex; gap: 8px; padding: 3px 0; }
-  #page-accommodation .room-label { font-weight: 600; color: #888; min-width: 60px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; padding-top: 1px; }
-  #page-accommodation .room-detail { color: #444; font-size: 12px; }
-  #page-accommodation .hotel-cn { color: #1a1a1a; font-size: 13px; }
-  #page-accommodation .note-box { background: #f8f7f4; border-left: 3px solid #ddd; border-radius: 0 6px 6px 0; padding: 10px 14px; margin-top: 12px; font-size: 12px; color: #666; line-height: 1.6; }
-  #page-accommodation .note-box strong { color: #1a1a1a; }
+  #page-accommodation .room-label { font-weight: 600; color: var(--tx-888888); min-width: 60px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; padding-top: 1px; }
+  #page-accommodation .room-detail { color: var(--tx-444444); font-size: 12px; }
+  #page-accommodation .hotel-cn { color: var(--tx-1a1a1a); font-size: 13px; }
+  #page-accommodation .note-box { background: var(--bg-f8f7f4); border-left: 3px solid var(--bd-dddddd); border-radius: 0 6px 6px 0; padding: 10px 14px; margin-top: 12px; font-size: 12px; color: var(--tx-666666); line-height: 1.6; }
+  #page-accommodation .note-box strong { color: var(--tx-1a1a1a); }
   #page-accommodation .city-section { page-break-inside: avoid; }
   #page-accommodation .overview-grid { page-break-inside: avoid; }
   #page-accommodation .city-section { page-break-inside: avoid; }
@@ -235,99 +239,99 @@
 
   /* ── EXTRA ACTIVITIES PAGE ── */
   #page-extras .filter-section { margin-bottom: 8px; }
-  #page-extras .filter-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  #page-extras .filter-label { font-size: 11px; font-weight: 700; color: var(--tx-999999); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
   #page-extras .city-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
-  #page-extras .ctab { padding: 8px 18px; border-radius: 8px; border: 1px solid #ddd; background: #fff; font-size: 13px; font-weight: 500; cursor: pointer; color: #666; }
-  #page-extras .ctab.on-hk { background: #EEEDFE; color: #3C3489; border-color: #7F77DD; }
-  #page-extras .ctab.on-beijing { background: #E6F1FB; color: #0C447C; border-color: #378ADD; }
-  #page-extras .ctab.on-xian { background: #FAEEDA; color: #633806; border-color: #EF9F27; }
-  #page-extras .ctab.on-shanghai { background: #E1F5EE; color: #085041; border-color: #1D9E75; }
+  #page-extras .ctab { padding: 8px 18px; border-radius: 8px; border: 1px solid var(--bd-dddddd); background: var(--bg-ffffff); font-size: 13px; font-weight: 500; cursor: pointer; color: var(--tx-666666); }
+  #page-extras .ctab.on-hk { background: var(--bg-eeedfe); color: var(--tx-3c3489); border-color: var(--bd-7f77dd); }
+  #page-extras .ctab.on-beijing { background: var(--bg-e6f1fb); color: var(--tx-0c447c); border-color: var(--bd-378add); }
+  #page-extras .ctab.on-xian { background: var(--bg-faeeda); color: var(--tx-633806); border-color: var(--bd-ef9f27); }
+  #page-extras .ctab.on-shanghai { background: var(--bg-e1f5ee); color: var(--tx-085041); border-color: var(--bd-1d9e75); }
   #page-extras .person-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-  #page-extras .ptab { padding: 5px 13px; border-radius: 99px; border: 1px solid #ddd; background: #fff; font-size: 12px; cursor: pointer; color: #666; }
-  #page-extras .ptab.on { background: #1a1a1a; color: #fff; border-color: #1a1a1a; font-weight: 500; }
+  #page-extras .ptab { padding: 5px 13px; border-radius: 99px; border: 1px solid var(--bd-dddddd); background: var(--bg-ffffff); font-size: 12px; cursor: pointer; color: var(--tx-666666); }
+  #page-extras .ptab.on { background: var(--bg-1a1a1a); color: var(--tx-ffffff); border-color: var(--bd-1a1a1a); font-weight: 500; }
   #page-extras .type-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-  #page-extras .ttab { padding: 5px 13px; border-radius: 99px; border: 1px solid #ddd; background: #fff; font-size: 12px; cursor: pointer; color: #666; }
-  #page-extras .ttab.on { background: #1a1a1a; color: #fff; border-color: #1a1a1a; font-weight: 500; }
+  #page-extras .ttab { padding: 5px 13px; border-radius: 99px; border: 1px solid var(--bd-dddddd); background: var(--bg-ffffff); font-size: 12px; cursor: pointer; color: var(--tx-666666); }
+  #page-extras .ttab.on { background: var(--bg-1a1a1a); color: var(--tx-ffffff); border-color: var(--bd-1a1a1a); font-weight: 500; }
   #page-extras .lang-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
-  #page-extras .ltab { padding: 5px 13px; border-radius: 99px; border: 1px solid #ddd; background: #fff; font-size: 12px; cursor: pointer; color: #666; }
-  #page-extras .ltab.on-all { background: #1a1a1a; color: #fff; border-color: #1a1a1a; font-weight: 500; }
-  #page-extras .ltab.on-easy { background: #EAF3DE; color: #27500A; border-color: #639922; font-weight: 500; }
-  #page-extras .ltab.on-operator { background: #FFF8E6; color: #854F0B; border-color: #EF9F27; font-weight: 500; }
-  #page-extras .lang-legend { display: flex; gap: 16px; flex-wrap: wrap; background: #f0efe9; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #555; }
-  #page-extras .lang-legend strong { color: #1a1a1a; }
-  #page-extras .results-count { font-size: 12px; color: #999; margin-bottom: 12px; height: 16px; }
+  #page-extras .ltab { padding: 5px 13px; border-radius: 99px; border: 1px solid var(--bd-dddddd); background: var(--bg-ffffff); font-size: 12px; cursor: pointer; color: var(--tx-666666); }
+  #page-extras .ltab.on-all { background: var(--bg-1a1a1a); color: var(--tx-ffffff); border-color: var(--bd-1a1a1a); font-weight: 500; }
+  #page-extras .ltab.on-easy { background: var(--bg-eaf3de); color: var(--tx-27500a); border-color: var(--bd-639922); font-weight: 500; }
+  #page-extras .ltab.on-operator { background: var(--bg-fff8e6); color: var(--tx-854f0b); border-color: var(--bd-ef9f27); font-weight: 500; }
+  #page-extras .lang-legend { display: flex; gap: 16px; flex-wrap: wrap; background: var(--bg-f0efe9); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: var(--tx-555555); }
+  #page-extras .lang-legend strong { color: var(--tx-1a1a1a); }
+  #page-extras .results-count { font-size: 12px; color: var(--tx-999999); margin-bottom: 12px; height: 16px; }
   #page-extras .panel { display: none; }
   #page-extras .panel.active { display: block; }
   #page-extras .cat-divider { display: flex; align-items: center; gap: 10px; margin: 18px 0 12px; }
-  #page-extras .cat-line { flex: 1; height: 1px; background: #eee; }
-  #page-extras .cat-label { font-size: 11px; font-weight: 700; color: #bbb; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
-  #page-extras .act-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; }
+  #page-extras .cat-line { flex: 1; height: 1px; background: var(--bg-eeeeee); }
+  #page-extras .cat-label { font-size: 11px; font-weight: 700; color: var(--tx-bbbbbb); text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
+  #page-extras .act-card { background: var(--bg-ffffff); border: 1px solid var(--bd-e8e8e8); border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; }
   #page-extras .act-card.hidden { display: none; }
   #page-extras .act-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
   #page-extras .act-icon { font-size: 22px; flex-shrink: 0; line-height: 1.3; }
-  #page-extras .act-name { font-size: 15px; font-weight: 600; color: #1a1a1a; line-height: 1.3; }
-  #page-extras .act-desc { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 10px; }
+  #page-extras .act-name { font-size: 15px; font-weight: 600; color: var(--tx-1a1a1a); line-height: 1.3; }
+  #page-extras .act-desc { font-size: 13px; color: var(--tx-555555); line-height: 1.6; margin-bottom: 10px; }
   #page-extras .tag-row { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
   #page-extras .pill { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; }
-  #page-extras .p-vincent { background: #EEEDFE; color: #3C3489; }
-  #page-extras .p-jeremy { background: #E6F1FB; color: #0C447C; }
-  #page-extras .p-sharon { background: #FBEAF0; color: #72243E; }
-  #page-extras .p-tom { background: #FAEEDA; color: #633806; }
-  #page-extras .p-dad { background: #EAF3DE; color: #27500A; }
-  #page-extras .p-mum { background: #FAECE7; color: #993C1D; }
-  #page-extras .p-group { background: #F1EFE8; color: #444441; }
-  #page-extras .lang-easy { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: #EAF3DE; color: #27500A; }
-  #page-extras .lang-operator { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: #FFF8E6; color: #854F0B; border: 1px solid #EF9F27; }
-  #page-extras .tip { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
-  #page-extras .badge-disney { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px; background: #E6F1FB; color: #0C447C; border: 1px solid #85B7EB; }
-  #page-extras .badge-shopping { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px; background: #FAECE7; color: #993C1D; border: 1px solid #F0997B; }
-  #page-extras .no-results { font-size: 13px; color: #888; padding: 30px 0; text-align: center; }
+  #page-extras .p-vincent { background: var(--bg-eeedfe); color: var(--tx-3c3489); }
+  #page-extras .p-jeremy { background: var(--bg-e6f1fb); color: var(--tx-0c447c); }
+  #page-extras .p-sharon { background: var(--bg-fbeaf0); color: var(--tx-72243e); }
+  #page-extras .p-tom { background: var(--bg-faeeda); color: var(--tx-633806); }
+  #page-extras .p-dad { background: var(--bg-eaf3de); color: var(--tx-27500a); }
+  #page-extras .p-mum { background: var(--bg-faece7); color: var(--tx-993c1d); }
+  #page-extras .p-group { background: var(--bg-f1efe8); color: var(--tx-444441); }
+  #page-extras .lang-easy { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: var(--bg-eaf3de); color: var(--tx-27500a); }
+  #page-extras .lang-operator { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: var(--bg-fff8e6); color: var(--tx-854f0b); border: 1px solid var(--bd-ef9f27); }
+  #page-extras .tip { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: var(--bg-fff3cd); color: var(--tx-856404); border: 1px solid var(--bd-ffc107); }
+  #page-extras .badge-disney { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px; background: var(--bg-e6f1fb); color: var(--tx-0c447c); border: 1px solid var(--bd-85b7eb); }
+  #page-extras .badge-shopping { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px; background: var(--bg-faece7); color: var(--tx-993c1d); border: 1px solid var(--bd-f0997b); }
+  #page-extras .no-results { font-size: 13px; color: var(--tx-888888); padding: 30px 0; text-align: center; }
   #page-extras .tag-row { padding: 0; background: none; border-radius: 0; }
-  #page-extras .act-link { font-size: 12px; font-weight: 600; color: #c45c1a; text-decoration: none; margin-left: 4px; }
-  #page-extras .ctab.on-research { background: #E8F1FB; color: #1a5298; border-color: #1a5298; }
+  #page-extras .act-link { font-size: 12px; font-weight: 600; color: var(--tx-c45c1a); text-decoration: none; margin-left: 4px; }
+  #page-extras .ctab.on-research { background: var(--bg-e8f1fb); color: var(--tx-1a5298); border-color: var(--bd-1a5298); }
 
 
   /* ── DRIVER CARD, LOCKED-IN STRIP, CONFIRMATIONS ── */
-  .drv-group { margin: 6px 0 2px; padding: 8px 12px 6px; background: #faf8f4; border: 1px dashed #d8d3c8; border-radius: 10px; }
-  .drv-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #8a8a84; margin-bottom: 4px; }
-  .drv-one { border-top: 1px solid #ece8de; }
+  .drv-group { margin: 6px 0 2px; padding: 8px 12px 6px; background: var(--bg-faf8f4); border: 1px dashed var(--bd-d8d3c8); border-radius: 10px; }
+  .drv-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--tx-8a8a84); margin-bottom: 4px; }
+  .drv-one { border-top: 1px solid var(--bd-ece8de); }
   .drv-one:first-of-type { border-top: none; }
-  .drv-one summary { cursor: pointer; padding: 8px 0; font-size: 14px; font-weight: 600; color: #444; list-style: none; }
+  .drv-one summary { cursor: pointer; padding: 8px 0; font-size: 14px; font-weight: 600; color: var(--tx-444444); list-style: none; }
   .drv-one summary::-webkit-details-marker { display: none; }
-  .drv-one summary::before { content: '▸ '; color: #c45c1a; }
+  .drv-one summary::before { content: '▸ '; color: var(--tx-c45c1a); }
   .drv-one[open] summary::before { content: '▾ '; }
   .drv-body { padding: 4px 0 12px; }
   .drv-body .drv-links { margin-top: 8px; }
-  .drv-cn { font-size: 26px; font-weight: 600; line-height: 1.3; color: #1a1a1a; }
-  .drv-en { font-size: 13px; color: #777; }
-  .drv-addr { font-size: 13px; color: #444; margin-top: 2px; }
+  .drv-cn { font-size: 26px; font-weight: 600; line-height: 1.3; color: var(--tx-1a1a1a); }
+  .drv-en { font-size: 13px; color: var(--tx-777777); }
+  .drv-addr { font-size: 13px; color: var(--tx-444444); margin-top: 2px; }
   .drv-links { display: flex; gap: 6px; flex-shrink: 0; }
-  .drv-links a { font-size: 12px; font-weight: 600; color: #c45c1a; text-decoration: none; border: 1px solid #ecd9c9; border-radius: 99px; padding: 4px 10px; white-space: nowrap; }
-  .today-strip { background: #eaf6ee; border: 1px solid #b9dfc6; border-left: 6px solid #2d7a4f; border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; }
-  .today-strip .ts-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #1a5a35; margin-bottom: 6px; }
+  .drv-links a { font-size: 12px; font-weight: 600; color: var(--tx-c45c1a); text-decoration: none; border: 1px solid var(--bd-ecd9c9); border-radius: 99px; padding: 4px 10px; white-space: nowrap; }
+  .today-strip { background: var(--bg-eaf6ee); border: 1px solid var(--bd-b9dfc6); border-left: 6px solid var(--bd-2d7a4f); border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; }
+  .today-strip .ts-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--tx-1a5a35); margin-bottom: 6px; }
   .today-strip .ts-row { display: flex; gap: 12px; padding: 4px 0; font-size: 14px; line-height: 1.4; }
-  .today-strip .ts-time { font-weight: 700; color: #1a5a35; min-width: 64px; font-variant-numeric: tabular-nums; }
-  .today-strip .ts-name { font-weight: 600; color: #222; }
-  .today-strip .ts-meet { color: #555; font-size: 13px; }
-  .cf-alert { background: #fff6e8; border: 1px solid #f0b866; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #7a4e08; margin-bottom: 8px; line-height: 1.5; }
-  .cf-date { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #999; margin: 22px 0 8px; }
-  .cf-card { background: #fff; border: 1px solid #e8e8e8; border-left: 5px solid #2d7a4f; border-radius: 12px; padding: 12px 16px; margin-bottom: 8px; }
+  .today-strip .ts-time { font-weight: 700; color: var(--tx-1a5a35); min-width: 64px; font-variant-numeric: tabular-nums; }
+  .today-strip .ts-name { font-weight: 600; color: var(--tx-222222); }
+  .today-strip .ts-meet { color: var(--tx-555555); font-size: 13px; }
+  .cf-alert { background: var(--bg-fff6e8); border: 1px solid var(--bd-f0b866); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--tx-7a4e08); margin-bottom: 8px; line-height: 1.5; }
+  .cf-date { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--tx-999999); margin: 22px 0 8px; }
+  .cf-card { background: var(--bg-ffffff); border: 1px solid var(--bd-e8e8e8); border-left: 5px solid var(--bd-2d7a4f); border-radius: 12px; padding: 12px 16px; margin-bottom: 8px; }
   .cf-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
-  .cf-when { font-size: 14px; font-weight: 700; color: #1a5a35; min-width: 60px; }
+  .cf-when { font-size: 14px; font-weight: 700; color: var(--tx-1a5a35); min-width: 60px; }
   .cf-title { font-size: 15px; font-weight: 600; flex: 1; min-width: 160px; }
-  .cf-ref { font-size: 12px; font-weight: 600; color: #666; background: #f4f3f0; border-radius: 99px; padding: 2px 9px; font-variant-numeric: tabular-nums; }
+  .cf-ref { font-size: 12px; font-weight: 600; color: var(--tx-666666); background: var(--bg-f4f3f0); border-radius: 99px; padding: 2px 9px; font-variant-numeric: tabular-nums; }
   .cf-row { display: grid; grid-template-columns: 92px 1fr; gap: 10px; padding: 2px 0; font-size: 13.5px; line-height: 1.45; }
-  .cf-k { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #8a8a84; padding-top: 2px; }
-  .cf-v { color: #333; }
+  .cf-k { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--tx-8a8a84); padding-top: 2px; }
+  .cf-v { color: var(--tx-333333); }
   .cf-foot { display: flex; gap: 10px; align-items: center; margin-top: 6px; }
-  .cf-cancel { font-size: 11px; font-weight: 700; background: #e6f4ea; color: #1a6632; padding: 2px 9px; border-radius: 99px; }
-  .cf-day { margin-left: auto; font-size: 12px; font-weight: 600; color: #c45c1a; text-decoration: none; }
+  .cf-cancel { font-size: 11px; font-weight: 700; background: var(--bg-e6f4ea); color: var(--tx-1a6632); padding: 2px 9px; border-radius: 99px; }
+  .cf-day { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--tx-c45c1a); text-decoration: none; }
   @media (max-width: 640px) { .cf-row { grid-template-columns: 1fr; gap: 0; } .drv-row { flex-direction: column; align-items: flex-start; } }
 
   /* ── BOOKING CHECKLIST ── */
   .bk-card {
-    background: #fff;
-    border: 1px solid #e8e8e8;
+    background: var(--bg-ffffff);
+    border: 1px solid var(--bd-e8e8e8);
     border-radius: 12px;
     padding: 14px 16px;
     margin-bottom: 8px;
@@ -337,23 +341,23 @@
     cursor: pointer;
     transition: border-color .15s;
   }
-  .bk-card:hover { border-color: #c45c1a; }
+  .bk-card:hover { border-color: var(--bd-c45c1a); }
   .bk-card.bk-done { opacity: .5; }
-  .bk-card.bk-done .bk-name { text-decoration: line-through; color: #999; }
+  .bk-card.bk-done .bk-name { text-decoration: line-through; color: var(--tx-999999); }
   .bk-cb {
     width: 19px; height: 19px;
     border-radius: 5px;
-    border: 2px solid #ddd;
+    border: 2px solid var(--bd-dddddd);
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
     margin-top: 2px;
     transition: background .15s, border-color .15s;
   }
-  .bk-card.bk-done .bk-cb, .bk-card.bk-locked .bk-cb { background: #2d7a4f; border-color: #2d7a4f; }
-  .bk-ck { opacity: 0; font-size: 10px; color: #fff; font-weight: 700; }
+  .bk-card.bk-done .bk-cb, .bk-card.bk-locked .bk-cb { background: var(--bg-2d7a4f); border-color: var(--bd-2d7a4f); }
+  .bk-ck { opacity: 0; font-size: 10px; color: var(--tx-ffffff); font-weight: 700; }
   .bk-card.bk-done .bk-ck, .bk-card.bk-locked .bk-ck { opacity: 1; }
   .bk-card.bk-locked { cursor: default; }
-  .bk-card.bk-locked:hover { border-color: #e8e8e8; }
+  .bk-card.bk-locked:hover { border-color: var(--bd-e8e8e8); }
   .bk-body { min-width: 0; }
   .bk-top { display: flex; align-items: flex-start; gap: 7px; flex-wrap: wrap; margin-bottom: 4px; }
   .bk-name { font-size: 14px; font-weight: 600; flex: 1; min-width: 100px; }
@@ -362,11 +366,11 @@
     padding: 2px 7px; border-radius: 99px;
     white-space: nowrap; flex-shrink: 0;
   }
-  .bk-now  { background: #fde8e6; color: #a02020; }
-  .bk-soon { background: #fdf0d8; color: #7a4e08; }
-  .bk-confirmed { background: #e6f4ea; color: #1a6632; }
-  .bk-flex { background: #e3f5eb; color: #1e6b3e; }
-  .bk-info { background: #e8f1fb; color: #1a5298; }
+  .bk-now  { background: var(--bg-fde8e6); color: var(--tx-a02020); }
+  .bk-soon { background: var(--bg-fdf0d8); color: var(--tx-7a4e08); }
+  .bk-confirmed { background: var(--bg-e6f4ea); color: var(--tx-1a6632); }
+  .bk-flex { background: var(--bg-e3f5eb); color: var(--tx-1e6b3e); }
+  .bk-info { background: var(--bg-e8f1fb); color: var(--tx-1a5298); }
   .bk-city {
     font-size: 10px; font-weight: 700;
     padding: 2px 7px; border-radius: 99px;
@@ -375,87 +379,87 @@
   .bk-bjs { background: var(--c-beijing-bg); color: var(--c-beijing); }
   .bk-xiy { background: var(--c-xian-bg); color: var(--c-xian); }
   .bk-sha { background: var(--c-shanghai-bg); color: var(--c-shanghai); }
-  .bk-nan { background: #e8e4f5; color: #3a2c80; }
+  .bk-nan { background: var(--bg-e8e4f5); color: var(--tx-3a2c80); }
   .bk-meta {
-    font-size: 12px; color: #888; margin-bottom: 5px;
+    font-size: 12px; color: var(--tx-888888); margin-bottom: 5px;
     display: flex; flex-wrap: wrap; gap: 3px 12px;
   }
-  .bk-note { font-size: 13px; color: #555; line-height: 1.5; }
-  .bk-note strong { color: #1a1a1a; }
+  .bk-note { font-size: 13px; color: var(--tx-555555); line-height: 1.5; }
+  .bk-note strong { color: var(--tx-1a1a1a); }
   .bk-link {
     display: inline-flex; align-items: center; gap: 3px;
     margin-top: 7px; font-size: 12px; font-weight: 600;
-    color: #c45c1a; text-decoration: none;
-    background: #faf7f4; padding: 3px 9px; border-radius: 5px;
+    color: var(--tx-c45c1a); text-decoration: none;
+    background: var(--bg-faf7f4); padding: 3px 9px; border-radius: 5px;
   }
   .bk-link:hover { opacity: .75; }
 
   /* ── OVERVIEW PAGE ── */
   .ov-title { font-size: 30px; font-weight: 700; margin-bottom: 4px; }
-  .ov-sub { font-size: 16px; color: #888; margin-bottom: 20px; }
+  .ov-sub { font-size: 16px; color: var(--tx-888888); margin-bottom: 20px; }
 
   .stats-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px; }
-  .stat { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 14px; text-align: center; }
+  .stat { background: var(--bg-ffffff); border: 1px solid var(--bd-e8e8e8); border-radius: 12px; padding: 14px; text-align: center; }
   .stat-n { font-size: 20px; font-weight: 700; }
-  .stat-l { font-size: 13px; color: #888; margin-top: 2px; }
+  .stat-l { font-size: 13px; color: var(--tx-888888); margin-top: 2px; }
 
   .people-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 26px; }
   .person-pill { font-size: 14px; font-weight: 600; padding: 4px 14px; border-radius: 99px; }
-  .pp-vincent { background: #EEEDFE; color: #3C3489; }
-  .pp-jeremy { background: #E6F1FB; color: #0C447C; }
-  .pp-sharon { background: #FBEAF0; color: #72243E; }
-  .pp-tom { background: #FAEEDA; color: #633806; }
+  .pp-vincent { background: var(--bg-eeedfe); color: var(--tx-3c3489); }
+  .pp-jeremy { background: var(--bg-e6f1fb); color: var(--tx-0c447c); }
+  .pp-sharon { background: var(--bg-fbeaf0); color: var(--tx-72243e); }
+  .pp-tom { background: var(--bg-faeeda); color: var(--tx-633806); }
 
   /* Inline "requested by" attribution tags */
   .req-pill { font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 99px; opacity: 0.85; vertical-align: middle; margin-left: 5px; white-space: nowrap; }
-  .req-vincent { background: #EEEDFE; color: #3C3489; border: 1px solid #cac6f7; }
-  .req-jeremy  { background: #E6F1FB; color: #0C447C; border: 1px solid #85B7EB; }
-  .req-sharon  { background: #FBEAF0; color: #72243E; border: 1px solid #e8a8be; }
-  .req-tom     { background: #FAEEDA; color: #633806; border: 1px solid #EF9F27; }
+  .req-vincent { background: var(--bg-eeedfe); color: var(--tx-3c3489); border: 1px solid var(--bd-cac6f7); }
+  .req-jeremy  { background: var(--bg-e6f1fb); color: var(--tx-0c447c); border: 1px solid var(--bd-85b7eb); }
+  .req-sharon  { background: var(--bg-fbeaf0); color: var(--tx-72243e); border: 1px solid var(--bd-e8a8be); }
+  .req-tom     { background: var(--bg-faeeda); color: var(--tx-633806); border: 1px solid var(--bd-ef9f27); }
 
   /* Requested activity list items — subtle left accent to distinguish from AI suggestions */
   .bullet-list li.is-requested {
-    border-left: 2px solid #cac6f7;
+    border-left: 2px solid var(--bd-cac6f7);
     margin-left: -18px;
     padding-left: 16px;
-    background: #faf9ff;
+    background: var(--bg-faf9ff);
     border-radius: 0 5px 5px 0;
   }
-  .pp-dad { background: #EAF3DE; color: #27500A; }
-  .pp-mum { background: #FAECE7; color: #993C1D; }
+  .pp-dad { background: var(--bg-eaf3de); color: var(--tx-27500a); }
+  .pp-mum { background: var(--bg-faece7); color: var(--tx-993c1d); }
 
-  .flight-box { background: #fff; border: 1px solid #e8e8e8; border-radius: 14px; padding: 18px 20px; margin-bottom: 20px; }
-  .box-title { font-size: 14px; font-weight: 700; color: #1a1a1a; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
-  .flight-row { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; border-top: 1px solid #f0efe9; font-size: 15px; }
+  .flight-box { background: var(--bg-ffffff); border: 1px solid var(--bd-e8e8e8); border-radius: 14px; padding: 18px 20px; margin-bottom: 20px; }
+  .box-title { font-size: 14px; font-weight: 700; color: var(--tx-1a1a1a); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .flight-row { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; border-top: 1px solid var(--bd-f0efe9); font-size: 15px; }
   .flight-row:first-of-type { border-top: none; }
   .flight-time { font-weight: 700; min-width: 48px; flex-shrink: 0; }
-  .flight-info { color: #555; flex: 1; line-height: 1.4; }
-  .flight-num { font-size: 13px; color: #aaa; display: block; margin-top: 1px; }
+  .flight-info { color: var(--tx-555555); flex: 1; line-height: 1.4; }
+  .flight-num { font-size: 13px; color: var(--tx-aaaaaa); display: block; margin-top: 1px; }
 
   .city-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
   .city-card { border-radius: 14px; padding: 18px; cursor: pointer; transition: opacity 0.1s; }
   .city-card:hover { opacity: 0.85; }
-  .city-card.cc-beijing { background: var(--c-beijing-bg); border: 1px solid #C5DCEF; }
-  .city-card.cc-xian { background: var(--c-xian-bg); border: 1px solid #EDD9A8; }
-  .city-card.cc-shanghai { background: var(--c-shanghai-bg); border: 1px solid #A8DECE; }
+  .city-card.cc-beijing { background: var(--c-beijing-bg); border: 1px solid var(--bd-c5dcef); }
+  .city-card.cc-xian { background: var(--c-xian-bg); border: 1px solid var(--bd-edd9a8); }
+  .city-card.cc-shanghai { background: var(--c-shanghai-bg); border: 1px solid var(--bd-a8dece); }
   .cc-name { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
   .cc-beijing .cc-name { color: var(--c-beijing); }
   .cc-xian .cc-name { color: var(--c-xian); }
   .cc-shanghai .cc-name { color: var(--c-shanghai); }
-  .cc-dates { font-size: 13px; color: #888; margin-bottom: 6px; }
+  .cc-dates { font-size: 13px; color: var(--tx-888888); margin-bottom: 6px; }
   .cc-nights { font-size: 24px; font-weight: 700; }
   .cc-beijing .cc-nights { color: var(--c-beijing); }
   .cc-xian .cc-nights { color: var(--c-xian); }
   .cc-shanghai .cc-nights { color: var(--c-shanghai); }
-  .cc-nl { font-size: 13px; color: #888; }
+  .cc-nl { font-size: 13px; color: var(--tx-888888); }
 
   .bookings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .booking-item { font-size: 14px; color: #555; padding: 8px 12px; background: #f8f7f4; border-radius: 8px; line-height: 1.4; }
+  .booking-item { font-size: 14px; color: var(--tx-555555); padding: 8px 12px; background: var(--bg-f8f7f4); border-radius: 8px; line-height: 1.4; }
 
   /* ── DAY PAGE ── */
-  .day-header { margin-bottom: 26px; padding-bottom: 18px; border-bottom: 1px solid #ededeb; }
+  .day-header { margin-bottom: 26px; padding-bottom: 18px; border-bottom: 1px solid var(--bd-ededeb); }
   .day-header-top { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
-  .day-label { font-size: 14px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.08em; }
+  .day-label { font-size: 14px; font-weight: 700; color: var(--tx-aaaaaa); text-transform: uppercase; letter-spacing: 0.08em; }
   .day-main-title { font-size: 24px; font-weight: 700; line-height: 1.3; margin-bottom: 8px; }
   .day-meta-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .day-city-badge { font-size: 13px; font-weight: 700; padding: 3px 12px; border-radius: 99px; }
@@ -463,44 +467,44 @@
   .dcb-xian { background: var(--c-xian-bg); color: var(--c-xian); border: 1px solid var(--c-xian-bd); }
   .dcb-shanghai { background: var(--c-shanghai-bg); color: var(--c-shanghai); border: 1px solid var(--c-shanghai-bd); }
   .dcb-transit { background: var(--c-transit-bg); color: var(--c-transit); border: 1px solid var(--c-transit-bd); }
-  .day-sleep { font-size: 14px; color: #888; display: flex; align-items: center; gap: 5px; }
+  .day-sleep { font-size: 14px; color: var(--tx-888888); display: flex; align-items: center; gap: 5px; }
 
   .day-nav-btns { display: flex; gap: 8px; margin-top: 18px; }
   .day-nav-btn {
     font-size: 14px; font-weight: 600; padding: 6px 16px; border-radius: 8px;
-    border: 1px solid #e0ddd8; background: #fff; color: #666; cursor: pointer;
+    border: 1px solid var(--bd-e0ddd8); background: var(--bg-ffffff); color: var(--tx-666666); cursor: pointer;
     transition: background 0.1s;
   }
-  .day-nav-btn:hover { background: #f4f3f0; }
+  .day-nav-btn:hover { background: var(--bg-f4f3f0); }
 
-  .content-card { background: #eeece8; border: 1px solid #dddad4; border-radius: 14px; overflow: hidden; margin-bottom: 16px; padding: 6px; display: flex; flex-direction: column; gap: 6px; }
-  .content-card.is-transit { background: #f1efe9; border-color: #d8d5ce; padding: 0; }
+  .content-card { background: var(--bg-eeece8); border: 1px solid var(--bd-dddad4); border-radius: 14px; overflow: hidden; margin-bottom: 16px; padding: 6px; display: flex; flex-direction: column; gap: 6px; }
+  .content-card.is-transit { background: var(--bg-f1efe9); border-color: var(--bd-d8d5ce); padding: 0; }
 
   /* ── BOOKING CARD (booking facts on top, description below) ── */
   .bullet-list li.lk-li, .transit-list li.lk-li { padding: 6px 0; border-top: none; }
   .bullet-list li.lk-li::before, .transit-list li.lk-li::before { content: none; }
-  .bk-act { border-radius: 12px; overflow: hidden; border: 1px solid; border-left-width: 6px; background: #fff; }
-  .bk-act-booked { border-color: #b9dfc6; border-left-color: #2d7a4f; }
-  .bk-act-todo { border-color: #f0b866; border-left-color: #e8820c; border-style: dashed; border-left-style: solid; }
+  .bk-act { border-radius: 12px; overflow: hidden; border: 1px solid; border-left-width: 6px; background: var(--bg-ffffff); }
+  .bk-act-booked { border-color: var(--bd-b9dfc6); border-left-color: var(--bd-2d7a4f); }
+  .bk-act-todo { border-color: var(--bd-f0b866); border-left-color: var(--bd-e8820c); border-style: dashed; border-left-style: solid; }
   .lk { display: grid; grid-template-columns: 84px 1fr auto auto; align-items: center; gap: 4px 14px; padding: 12px 16px 12px 14px; }
-  .bk-act-booked .lk { background: #eaf6ee; }
-  .bk-act-todo .lk { background: #fff1dc; }
+  .bk-act-booked .lk { background: var(--bg-eaf6ee); }
+  .bk-act-todo .lk { background: var(--bg-fff1dc); }
   .lk-time { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; }
-  .bk-act-booked .lk-time { color: #1a5a35; }
-  .bk-act-todo .lk-time { color: #9a4a00; }
-  .lk-name { font-size: 16px; font-weight: 700; color: #222; line-height: 1.35; }
-  .lk-dur { font-size: 13px; font-weight: 600; color: #555; white-space: nowrap; }
+  .bk-act-booked .lk-time { color: var(--tx-1a5a35); }
+  .bk-act-todo .lk-time { color: var(--tx-9a4a00); }
+  .lk-name { font-size: 16px; font-weight: 700; color: var(--tx-222222); line-height: 1.35; }
+  .lk-dur { font-size: 13px; font-weight: 600; color: var(--tx-555555); white-space: nowrap; }
   .lk-pill { font-size: 12px; font-weight: 700; padding: 4px 11px; border-radius: 99px; white-space: nowrap; }
-  .bk-act-booked .lk-pill { background: #2d7a4f; color: #fff; }
-  .bk-act-todo .lk-pill { background: #e8820c; color: #fff; }
+  .bk-act-booked .lk-pill { background: var(--bg-2d7a4f); color: var(--tx-ffffff); }
+  .bk-act-todo .lk-pill { background: var(--bg-e8820c); color: var(--tx-ffffff); }
   .bk-facts { margin: 0; padding: 8px 16px 8px 14px; }
-  .bk-act-booked .bk-facts { background: #f5fbf7; }
-  .bk-act-todo .bk-facts { background: #fffaf2; }
+  .bk-act-booked .bk-facts { background: var(--bg-f5fbf7); }
+  .bk-act-todo .bk-facts { background: var(--bg-fffaf2); }
   .bk-facts > div { display: grid; grid-template-columns: 78px 1fr; gap: 10px; padding: 3px 0; font-size: 14px; line-height: 1.45; }
-  .bk-facts dt { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #8a8a84; padding-top: 2px; }
-  .bk-facts dd { margin: 0; color: #333; }
-  .bk-facts a { color: #c45c1a; font-weight: 600; text-decoration: none; }
-  .bk-desc { padding: 10px 16px 12px 14px; font-size: 15px; line-height: 1.6; color: #555; background: #fff; border-top: 1px solid #ecebe6; }
+  .bk-facts dt { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--tx-8a8a84); padding-top: 2px; }
+  .bk-facts dd { margin: 0; color: var(--tx-333333); }
+  .bk-facts a { color: var(--tx-c45c1a); font-weight: 600; text-decoration: none; }
+  .bk-desc { padding: 10px 16px 12px 14px; font-size: 15px; line-height: 1.6; color: var(--tx-555555); background: var(--bg-ffffff); border-top: 1px solid var(--bd-ecebe6); }
   .bk-desc p { margin: 0; }
   @media (max-width: 640px) {
     .lk { grid-template-columns: 70px 1fr; }
@@ -509,22 +513,22 @@
   }
 
   .card-section-label {
-    font-size: 12px; font-weight: 700; color: #bbb; text-transform: uppercase;
+    font-size: 12px; font-weight: 700; color: var(--tx-bbbbbb); text-transform: uppercase;
     letter-spacing: 0.08em; padding: 14px 18px 0;
   }
 
   .bullet-list { list-style: none; padding: 12px 16px; margin: 0; }
   .bullet-list li {
-    font-size: 15px; color: #555; line-height: 1.6;
+    font-size: 15px; color: var(--tx-555555); line-height: 1.6;
     padding: 4px 0 4px 20px; position: relative;
   }
-  .bullet-list li::before { content: '·'; position: absolute; left: 5px; color: #bbb; font-size: 20px; line-height: 1.2; }
+  .bullet-list li::before { content: '·'; position: absolute; left: 5px; color: var(--tx-bbbbbb); font-size: 20px; line-height: 1.2; }
 
-  .transit-list { list-style: none; padding: 14px 18px 14px; margin: 0; background: #fff; }
+  .transit-list { list-style: none; padding: 14px 18px 14px; margin: 0; background: var(--bg-ffffff); }
   .transit-list li {
-    font-size: 15px; color: #666; line-height: 1.6;
+    font-size: 15px; color: var(--tx-666666); line-height: 1.6;
     padding: 5px 0 5px 26px; position: relative;
-    border-top: 1px solid #f0efe9;
+    border-top: 1px solid var(--bd-f0efe9);
   }
   .transit-list li:first-child { border-top: none; }
   .transit-list li::before { content: '✈'; position: absolute; left: 0; font-size: 15px; }
@@ -535,29 +539,29 @@
   .tag-row {
     display: flex; gap: 5px; flex-wrap: wrap;
     padding: 10px 16px 12px;
-    background: #fff;
+    background: var(--bg-ffffff);
     border-radius: 10px;
   }
-  .act-pill { font-size: 13px; padding: 3px 9px; border-radius: 99px; background: #f4f3f0; color: #555; border: 1px solid #e8e8e8; }
-  .tip-pill { font-size: 13px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
-  .flight-pill { font-size: 13px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: var(--c-beijing-bg); color: var(--c-beijing); border: 1px solid #85B7EB; }
+  .act-pill { font-size: 13px; padding: 3px 9px; border-radius: 99px; background: var(--bg-f4f3f0); color: var(--tx-555555); border: 1px solid var(--bd-e8e8e8); }
+  .tip-pill { font-size: 13px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: var(--bg-fff3cd); color: var(--tx-856404); border: 1px solid var(--bd-ffc107); }
+  .flight-pill { font-size: 13px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: var(--c-beijing-bg); color: var(--c-beijing); border: 1px solid var(--bd-85b7eb); }
 
   .sleep-footer {
     display: flex; align-items: center; gap: 8px;
-    padding: 9px 18px; font-size: 14px; color: #888;
-    border-top: 1px solid #f0efe9;
+    padding: 9px 18px; font-size: 14px; color: var(--tx-888888);
+    border-top: 1px solid var(--bd-f0efe9);
   }
   .sleep-footer.beijing { border-left: 3px solid var(--c-beijing-bd); }
   .sleep-footer.xian { border-left: 3px solid var(--c-xian-bd); }
   .sleep-footer.shanghai { border-left: 3px solid var(--c-shanghai-bd); }
   .sleep-footer.transit { border-left: 3px solid var(--c-transit-bd); }
-  .sleep-footer strong { color: #555; }
+  .sleep-footer strong { color: var(--tx-555555); }
 
   /* ── MOBILE ── */
   .mob-nav-toggle {
     display: none;
     position: fixed; top: 14px; left: 14px; z-index: 100;
-    background: #1a1a1a; color: #fff; border: none;
+    background: var(--bg-1a1a1a); color: var(--tx-ffffff); border: none;
     border-radius: 8px; padding: 8px 14px; font-size: 15px; font-weight: 600; cursor: pointer;
   }
 
@@ -572,7 +576,7 @@
   }
 
   .time-block {
-    background: #fff;
+    background: var(--bg-ffffff);
     border-radius: 10px;
     overflow: hidden;
   }
@@ -584,10 +588,10 @@
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #999;
+    color: var(--tx-999999);
     padding: 9px 16px 7px;
-    border-bottom: 1px solid #f0efe9;
-    background: #faf9f7;
+    border-bottom: 1px solid var(--bd-f0efe9);
+    background: var(--bg-faf9f7);
   }
   .time-block .bullet-list { margin: 0; }
   .time-block .bullet-list li { margin-bottom: 4px; }
@@ -598,10 +602,10 @@
     width: 100%;
     height: 220px;
     border-radius: 12px;
-    border: 1px solid #e8e8e8;
+    border: 1px solid var(--bd-e8e8e8);
     margin: 12px 0 16px;
     overflow: hidden;
-    background: #eee;
+    background: var(--bg-eeeeee);
     position: relative;
     z-index: 0; /* contain Leaflet's internal z-indexes (up to 1000) so the sidebar/menu stays on top */
     isolation: isolate;
@@ -610,6 +614,378 @@
   /* Leaflet popup tweak */
   .leaflet-popup-content-wrapper { border-radius: 8px !important; box-shadow: 0 2px 8px rgba(0,0,0,.15) !important; }
   .leaflet-popup-content { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; margin: 8px 12px !important; }
+
+  /* ── THEME SWITCH ── */
+  .theme-switch { display: flex; gap: 2px; margin-top: 10px; padding: 2px; border: 1px solid var(--bd-e8e8e8); border-radius: 8px; }
+  .theme-switch button { flex: 1; padding: 5px 0; border: none; border-radius: 6px; background: transparent; color: var(--tx-888888); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .theme-switch button.on { background: var(--bg-1a1a1a); color: var(--tx-ffffff); }
+
+  /* ── COLOUR TOKENS (generated: light = original, dark = remapped) ── */
+  :root {
+    color-scheme: light dark;
+    --bd-1a1a1a: #1a1a1a;
+    --bd-1a5298: #1a5298;
+    --bd-1d9e75: #1d9e75;
+    --bd-2d7a4f: #2d7a4f;
+    --bd-378add: #378add;
+    --bd-639922: #639922;
+    --bd-7f77dd: #7f77dd;
+    --bd-85b7eb: #85b7eb;
+    --bd-a8dece: #a8dece;
+    --bd-b9dfc6: #b9dfc6;
+    --bd-c45c1a: #c45c1a;
+    --bd-c5dcef: #c5dcef;
+    --bd-cac6f7: #cac6f7;
+    --bd-cccccc: #cccccc;
+    --bd-d8d3c8: #d8d3c8;
+    --bd-d8d5ce: #d8d5ce;
+    --bd-dddad4: #dddad4;
+    --bd-dddddd: #dddddd;
+    --bd-e0ddd8: #e0ddd8;
+    --bd-e4e0d9: #e4e0d9;
+    --bd-e8820c: #e8820c;
+    --bd-e8a8be: #e8a8be;
+    --bd-e8e8e8: #e8e8e8;
+    --bd-ebebeb: #ebebeb;
+    --bd-ecd9c9: #ecd9c9;
+    --bd-ece8de: #ece8de;
+    --bd-ecebe6: #ecebe6;
+    --bd-edd9a8: #edd9a8;
+    --bd-ededeb: #ededeb;
+    --bd-ef9f27: #ef9f27;
+    --bd-f0997b: #f0997b;
+    --bd-f0b866: #f0b866;
+    --bd-f0efe9: #f0efe9;
+    --bd-f4f3f0: #f4f3f0;
+    --bd-ffc107: #ffc107;
+    --bg-1a1a1a: #1a1a1a;
+    --bg-2d7a4f: #2d7a4f;
+    --bg-333333: #333333;
+    --bg-555555: #555555;
+    --bg-c45c1a: #c45c1a;
+    --bg-e1f5ee: #e1f5ee;
+    --bg-e3f5eb: #e3f5eb;
+    --bg-e6f1fb: #e6f1fb;
+    --bg-e6f4ea: #e6f4ea;
+    --bg-e8820c: #e8820c;
+    --bg-e8e4f5: #e8e4f5;
+    --bg-e8e8e8: #e8e8e8;
+    --bg-e8e8f0: #e8e8f0;
+    --bg-e8f1fb: #e8f1fb;
+    --bg-eaf3de: #eaf3de;
+    --bg-eaf6ee: #eaf6ee;
+    --bg-eeece8: #eeece8;
+    --bg-eeedfe: #eeedfe;
+    --bg-eeeeee: #eeeeee;
+    --bg-f0efe9: #f0efe9;
+    --bg-f1efe8: #f1efe8;
+    --bg-f1efe9: #f1efe9;
+    --bg-f4f3f0: #f4f3f0;
+    --bg-f5fbf7: #f5fbf7;
+    --bg-f8f7f4: #f8f7f4;
+    --bg-faece7: #faece7;
+    --bg-faeeda: #faeeda;
+    --bg-faf7f4: #faf7f4;
+    --bg-faf8f4: #faf8f4;
+    --bg-faf9f7: #faf9f7;
+    --bg-faf9ff: #faf9ff;
+    --bg-fbeaf0: #fbeaf0;
+    --bg-fde8e6: #fde8e6;
+    --bg-fdf0d8: #fdf0d8;
+    --bg-fff1dc: #fff1dc;
+    --bg-fff3cd: #fff3cd;
+    --bg-fff6e8: #fff6e8;
+    --bg-fff8e6: #fff8e6;
+    --bg-fffaf2: #fffaf2;
+    --bg-ffffff: #ffffff;
+    --tx-085041: #085041;
+    --tx-0c447c: #0c447c;
+    --tx-1a1a1a: #1a1a1a;
+    --tx-1a5298: #1a5298;
+    --tx-1a5a35: #1a5a35;
+    --tx-1a6632: #1a6632;
+    --tx-1e6b3e: #1e6b3e;
+    --tx-222222: #222222;
+    --tx-27500a: #27500a;
+    --tx-333333: #333333;
+    --tx-3a2c80: #3a2c80;
+    --tx-3c3489: #3c3489;
+    --tx-444441: #444441;
+    --tx-444444: #444444;
+    --tx-555555: #555555;
+    --tx-633806: #633806;
+    --tx-666666: #666666;
+    --tx-72243e: #72243e;
+    --tx-777777: #777777;
+    --tx-7a4e08: #7a4e08;
+    --tx-854f0b: #854f0b;
+    --tx-856404: #856404;
+    --tx-888888: #888888;
+    --tx-8a8a84: #8a8a84;
+    --tx-993c1d: #993c1d;
+    --tx-999999: #999999;
+    --tx-9a4a00: #9a4a00;
+    --tx-a02020: #a02020;
+    --tx-aaaaaa: #aaaaaa;
+    --tx-bbbbbb: #bbbbbb;
+    --tx-c45c1a: #c45c1a;
+    --tx-cccccc: #cccccc;
+    --tx-ffffff: #ffffff;
+  }
+  .leaflet-bar a, .leaflet-control-attribution { background: var(--bg-ffffff) !important; color: var(--tx-555555) !important; border-color: var(--bd-e8e8e8) !important; }
+  .leaflet-control-attribution a { color: var(--tx-0c447c) !important; }
+  :root[data-theme="light"] { color-scheme: light; }
+  :root[data-theme="dark"] { color-scheme: dark; }
+  @media screen and (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+    --c-beijing: #a5ccfb;
+    --c-beijing-bg: #0e151c;
+    --c-beijing-bd: #116dbe;
+    --c-xian: #f1bd8f;
+    --c-xian-bg: #1b1305;
+    --c-xian-bd: #c07f1e;
+    --c-shanghai: #98d8c5;
+    --c-shanghai-bg: #091814;
+    --c-shanghai-bd: #167e5d;
+    --c-transit: #c9c9c5;
+    --c-transit-bg: #16140f;
+    --c-transit-bd: #6d6c65;
+    --bd-1a1a1a: #444444;
+    --bd-1a5298: #255ca3;
+    --bd-1d9e75: #167e5d;
+    --bd-2d7a4f: #0e633a;
+    --bd-378add: #116dbe;
+    --bd-639922: #4b7b05;
+    --bd-7f77dd: #655bbe;
+    --bd-85b7eb: #6293c5;
+    --bd-a8dece: #2c4b42;
+    --bd-b9dfc6: #304839;
+    --bd-c45c1a: #9d4913;
+    --bd-c5dcef: #2f4251;
+    --bd-cac6f7: #a29ecd;
+    --bd-cccccc: #a4a4a4;
+    --bd-d8d3c8: #464239;
+    --bd-d8d5ce: #43413b;
+    --bd-dddad4: #413f3a;
+    --bd-dddddd: #3d3d3d;
+    --bd-e0ddd8: #3f3d39;
+    --bd-e4e0d9: #3f3b36;
+    --bd-e8820c: #bb6809;
+    --bd-e8a8be: #c08399;
+    --bd-e8e8e8: #383838;
+    --bd-ebebeb: #373737;
+    --bd-ecd9c9: #493a2d;
+    --bd-ece8de: #3b3830;
+    --bd-ecebe6: #383733;
+    --bd-edd9a8: #473e26;
+    --bd-ededeb: #363635;
+    --bd-ef9f27: #c07f1e;
+    --bd-f0997b: #c97659;
+    --bd-f0b866: #c7913d;
+    --bd-f0efe9: #363531;
+    --bd-f4f3f0: #343331;
+    --bd-ffc107: #cd9b08;
+    --bg-1a1a1a: #444444;
+    --bg-2d7a4f: #0e633a;
+    --bg-333333: #4f4f4f;
+    --bg-555555: #5d5d5d;
+    --bg-c45c1a: #9d4913;
+    --bg-e1f5ee: #091814;
+    --bg-e3f5eb: #0b1812;
+    --bg-e6f1fb: #0e151c;
+    --bg-e6f4ea: #0e1811;
+    --bg-e8820c: #bb6809;
+    --bg-e8e4f5: #0f0c17;
+    --bg-e8e8e8: #0f0f0f;
+    --bg-e8e8f0: #0f0f14;
+    --bg-e8f1fb: #0f161c;
+    --bg-eaf3de: #111708;
+    --bg-eaf6ee: #111914;
+    --bg-eeece8: #13120f;
+    --bg-eeedfe: #14131e;
+    --bg-eeeeee: #131313;
+    --bg-f0efe9: #151410;
+    --bg-f1efe8: #16140f;
+    --bg-f1efe9: #161410;
+    --bg-f4f3f0: #181815;
+    --bg-f5fbf7: #1a1e1b;
+    --bg-f8f7f4: #1c1b19;
+    --bg-faece7: #1b120f;
+    --bg-faeeda: #1b1305;
+    --bg-faf7f4: #1d1b19;
+    --bg-faf8f4: #1d1c19;
+    --bg-faf9f7: #1d1c1b;
+    --bg-faf9ff: #1d1d21;
+    --bg-fbeaf0: #1c1115;
+    --bg-fde8e6: #1c0f0e;
+    --bg-fdf0d8: #1e1503;
+    --bg-fff1dc: #1f1606;
+    --bg-fff3cd: #1d1704;
+    --bg-fff6e8: #201a10;
+    --bg-fff8e6: #211b0e;
+    --bg-fffaf2: #211d18;
+    --bg-ffffff: #222222;
+    --tx-085041: #98d8c5;
+    --tx-0c447c: #a5ccfb;
+    --tx-1a1a1a: #e5e5e5;
+    --tx-1a5298: #95c2ff;
+    --tx-1a5a35: #95d5a9;
+    --tx-1a6632: #88d297;
+    --tx-1e6b3e: #83cd9a;
+    --tx-222222: #dfdfdf;
+    --tx-27500a: #a9d892;
+    --tx-333333: #d3d3d3;
+    --tx-3a2c80: #c6c6ff;
+    --tx-3c3489: #c0c3fb;
+    --tx-444441: #c9c9c5;
+    --tx-444444: #c8c8c8;
+    --tx-555555: #bebebe;
+    --tx-633806: #f1bd8f;
+    --tx-666666: #b0b0b0;
+    --tx-72243e: #fdaec2;
+    --tx-777777: #a3a3a3;
+    --tx-7a4e08: #e2b175;
+    --tx-854f0b: #e5a96f;
+    --tx-856404: #cca95a;
+    --tx-888888: #979797;
+    --tx-8a8a84: #979791;
+    --tx-993c1d: #fe9879;
+    --tx-999999: #8b8b8b;
+    --tx-9a4a00: #f29a61;
+    --tx-a02020: #ff9c92;
+    --tx-aaaaaa: #7e7e7e;
+    --tx-bbbbbb: #717171;
+    --tx-c45c1a: #df8353;
+    --tx-cccccc: #646464;
+    --tx-ffffff: #ffffff;
+    }
+    :root:not([data-theme="light"]) .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.9); }
+  }
+  @media screen {
+    :root[data-theme="dark"] {
+    --c-beijing: #a5ccfb;
+    --c-beijing-bg: #0e151c;
+    --c-beijing-bd: #116dbe;
+    --c-xian: #f1bd8f;
+    --c-xian-bg: #1b1305;
+    --c-xian-bd: #c07f1e;
+    --c-shanghai: #98d8c5;
+    --c-shanghai-bg: #091814;
+    --c-shanghai-bd: #167e5d;
+    --c-transit: #c9c9c5;
+    --c-transit-bg: #16140f;
+    --c-transit-bd: #6d6c65;
+    --bd-1a1a1a: #444444;
+    --bd-1a5298: #255ca3;
+    --bd-1d9e75: #167e5d;
+    --bd-2d7a4f: #0e633a;
+    --bd-378add: #116dbe;
+    --bd-639922: #4b7b05;
+    --bd-7f77dd: #655bbe;
+    --bd-85b7eb: #6293c5;
+    --bd-a8dece: #2c4b42;
+    --bd-b9dfc6: #304839;
+    --bd-c45c1a: #9d4913;
+    --bd-c5dcef: #2f4251;
+    --bd-cac6f7: #a29ecd;
+    --bd-cccccc: #a4a4a4;
+    --bd-d8d3c8: #464239;
+    --bd-d8d5ce: #43413b;
+    --bd-dddad4: #413f3a;
+    --bd-dddddd: #3d3d3d;
+    --bd-e0ddd8: #3f3d39;
+    --bd-e4e0d9: #3f3b36;
+    --bd-e8820c: #bb6809;
+    --bd-e8a8be: #c08399;
+    --bd-e8e8e8: #383838;
+    --bd-ebebeb: #373737;
+    --bd-ecd9c9: #493a2d;
+    --bd-ece8de: #3b3830;
+    --bd-ecebe6: #383733;
+    --bd-edd9a8: #473e26;
+    --bd-ededeb: #363635;
+    --bd-ef9f27: #c07f1e;
+    --bd-f0997b: #c97659;
+    --bd-f0b866: #c7913d;
+    --bd-f0efe9: #363531;
+    --bd-f4f3f0: #343331;
+    --bd-ffc107: #cd9b08;
+    --bg-1a1a1a: #444444;
+    --bg-2d7a4f: #0e633a;
+    --bg-333333: #4f4f4f;
+    --bg-555555: #5d5d5d;
+    --bg-c45c1a: #9d4913;
+    --bg-e1f5ee: #091814;
+    --bg-e3f5eb: #0b1812;
+    --bg-e6f1fb: #0e151c;
+    --bg-e6f4ea: #0e1811;
+    --bg-e8820c: #bb6809;
+    --bg-e8e4f5: #0f0c17;
+    --bg-e8e8e8: #0f0f0f;
+    --bg-e8e8f0: #0f0f14;
+    --bg-e8f1fb: #0f161c;
+    --bg-eaf3de: #111708;
+    --bg-eaf6ee: #111914;
+    --bg-eeece8: #13120f;
+    --bg-eeedfe: #14131e;
+    --bg-eeeeee: #131313;
+    --bg-f0efe9: #151410;
+    --bg-f1efe8: #16140f;
+    --bg-f1efe9: #161410;
+    --bg-f4f3f0: #181815;
+    --bg-f5fbf7: #1a1e1b;
+    --bg-f8f7f4: #1c1b19;
+    --bg-faece7: #1b120f;
+    --bg-faeeda: #1b1305;
+    --bg-faf7f4: #1d1b19;
+    --bg-faf8f4: #1d1c19;
+    --bg-faf9f7: #1d1c1b;
+    --bg-faf9ff: #1d1d21;
+    --bg-fbeaf0: #1c1115;
+    --bg-fde8e6: #1c0f0e;
+    --bg-fdf0d8: #1e1503;
+    --bg-fff1dc: #1f1606;
+    --bg-fff3cd: #1d1704;
+    --bg-fff6e8: #201a10;
+    --bg-fff8e6: #211b0e;
+    --bg-fffaf2: #211d18;
+    --bg-ffffff: #222222;
+    --tx-085041: #98d8c5;
+    --tx-0c447c: #a5ccfb;
+    --tx-1a1a1a: #e5e5e5;
+    --tx-1a5298: #95c2ff;
+    --tx-1a5a35: #95d5a9;
+    --tx-1a6632: #88d297;
+    --tx-1e6b3e: #83cd9a;
+    --tx-222222: #dfdfdf;
+    --tx-27500a: #a9d892;
+    --tx-333333: #d3d3d3;
+    --tx-3a2c80: #c6c6ff;
+    --tx-3c3489: #c0c3fb;
+    --tx-444441: #c9c9c5;
+    --tx-444444: #c8c8c8;
+    --tx-555555: #bebebe;
+    --tx-633806: #f1bd8f;
+    --tx-666666: #b0b0b0;
+    --tx-72243e: #fdaec2;
+    --tx-777777: #a3a3a3;
+    --tx-7a4e08: #e2b175;
+    --tx-854f0b: #e5a96f;
+    --tx-856404: #cca95a;
+    --tx-888888: #979797;
+    --tx-8a8a84: #979791;
+    --tx-993c1d: #fe9879;
+    --tx-999999: #8b8b8b;
+    --tx-9a4a00: #f29a61;
+    --tx-a02020: #ff9c92;
+    --tx-aaaaaa: #7e7e7e;
+    --tx-bbbbbb: #717171;
+    --tx-c45c1a: #df8353;
+    --tx-cccccc: #646464;
+    --tx-ffffff: #ffffff;
+    }
+    :root[data-theme="dark"] .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.9); }
+  }
 
   /* ── PRINT ── */
   @media print {
@@ -666,6 +1042,11 @@
     <div class="sidebar-title">China 2026</div>
     <div class="sidebar-sub">Family trip · Oct 13–29</div>
     <button class="sidebar-bookings-btn" id="today-btn" onclick="goToday()" style="margin-top:10px;display:none;"></button>
+    <div class="theme-switch" role="group" aria-label="Appearance">
+      <button data-theme-opt="auto" onclick="setTheme('auto')">Auto</button>
+      <button data-theme-opt="light" onclick="setTheme('light')">Light</button>
+      <button data-theme-opt="dark" onclick="setTheme('dark')">Dark</button>
+    </div>
   </div>
   <div class="sidebar-nav">
     <div class="nav-section-label">Overview</div>
@@ -755,10 +1136,10 @@
 
   <!-- ═══ OVERVIEW ═══ -->
   <div class="page active" id="page-overview">
-    <p style="font-size:12px;color:#aaa;margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">Family trip · October 2026</p>
+    <p style="font-size:12px;color:var(--tx-aaaaaa);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">Family trip · October 2026</p>
     <h1 class="ov-title">China — 16 days</h1>
     <p class="ov-sub">Auckland → Beijing → Xi'an → Shanghai → Auckland · via Hong Kong · Cathay Pacific</p>
-    <p style="font-size:12px;color:#999;margin:-6px 0 14px;">Prices are in CNY with approximate NZD alongside (about NZ$0.25 per ¥1, mid-market rate from August 2026 — real card and ATM rates will differ).</p>
+    <p style="font-size:12px;color:var(--tx-999999);margin:-6px 0 14px;">Prices are in CNY with approximate NZD alongside (about NZ$0.25 per ¥1, mid-market rate from August 2026 — real card and ATM rates will differ).</p>
 
     <div class="stats-row">
       <div class="stat"><div class="stat-n">16</div><div class="stat-l">days</div></div>
@@ -851,7 +1232,7 @@
     <div class="day-header">
       <div class="day-header-top">
         <span class="day-label">Day 1</span>
-        <span class="day-label" style="color:#ccc;">·</span>
+        <span class="day-label" style="color:var(--tx-cccccc);">·</span>
         <span class="day-label">Tue 13 Oct</span>
       </div>
       <h2 class="day-main-title">✈️ Depart Auckland</h2>
@@ -877,7 +1258,7 @@
   <!-- ═══ DAY 2 ═══ -->
   <div class="page" id="page-d2">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 2</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Wed 14 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 2</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Wed 14 Oct</span></div>
       <h2 class="day-main-title">Arrive Beijing — Summer Palace & soft landing</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-transit">Arrival</span>
@@ -920,7 +1301,7 @@
   <!-- ═══ DAY 3 ═══ -->
   <div class="page" id="page-d3">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 3</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Thu 15 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 3</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Thu 15 Oct</span></div>
       <h2 class="day-main-title">Great Wall at Mutianyu — full day</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-beijing">Beijing</span>
@@ -961,7 +1342,7 @@
   <!-- ═══ DAY 4 ═══ -->
   <div class="page" id="page-d4">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 4</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Fri 16 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 4</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Fri 16 Oct</span></div>
       <h2 class="day-main-title">Tiananmen Square, Forbidden City & Jingshan Park</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-beijing">Beijing</span>
@@ -1005,7 +1386,7 @@
   <!-- ═══ DAY 5 ═══ -->
   <div class="page" id="page-d5">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 5</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Sat 17 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 5</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Sat 17 Oct</span></div>
       <h2 class="day-main-title">Temple of Heaven, noodle class, Zhongguancun & 798 Art District</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-beijing">Beijing</span>
@@ -1050,7 +1431,7 @@
   <!-- ═══ DAY 6 ═══ -->
   <div class="page" id="page-d6">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 6</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Sun 18 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 6</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Sun 18 Oct</span></div>
       <h2 class="day-main-title">Beijing Wildlife Park & Panjiayuan market</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-beijing">Beijing</span>
@@ -1085,7 +1466,7 @@
   <!-- ═══ DAY 7 ═══ -->
   <div class="page" id="page-d7">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 7</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Mon 19 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 7</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Mon 19 Oct</span></div>
       <h2 class="day-main-title">🚄 Beijing → Xi'an by bullet train</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-transit">Transit</span>
@@ -1113,7 +1494,7 @@
   <!-- ═══ DAY 8 ═══ -->
   <div class="page" id="page-d8">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 8</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Tue 20 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 8</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Tue 20 Oct</span></div>
       <h2 class="day-main-title">Terracotta Warriors — English-guided morning tour</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-xian">Xi'an</span>
@@ -1153,7 +1534,7 @@
   <!-- ═══ DAY 9 ═══ -->
   <div class="page" id="page-d9">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 9</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Wed 21 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 9</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Wed 21 Oct</span></div>
       <h2 class="day-main-title">Mount Huashan — West Peak cable car & South Peak</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-xian">Xi'an</span>
@@ -1199,7 +1580,7 @@
   <!-- ═══ DAY 10 ═══ -->
   <div class="page" id="page-d10">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 10</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Thu 22 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 10</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Thu 22 Oct</span></div>
       <h2 class="day-main-title">Xi'an free day — City Wall, Tang Paradise & last night</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-xian">Xi'an</span>
@@ -1246,7 +1627,7 @@
   <!-- ═══ DAY 11 ═══ -->
   <div class="page" id="page-d11">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 11</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Fri 23 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 11</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Fri 23 Oct</span></div>
       <h2 class="day-main-title">✈️ Xi'an → Shanghai + Bund at dusk</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-transit">Transit</span>
@@ -1275,7 +1656,7 @@
   <!-- ═══ DAY 12 ═══ -->
   <div class="page" id="page-d12">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 12</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Sat 24 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 12</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Sat 24 Oct</span></div>
       <h2 class="day-main-title">Bund at dawn, French Concession &amp; west Puxi</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-shanghai">Shanghai</span>
@@ -1323,7 +1704,7 @@
   <!-- ═══ DAY 13 ═══ -->
   <div class="page" id="page-d13">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 13</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Sun 25 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 13</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Sun 25 Oct</span></div>
       <h2 class="day-main-title">Nanjing day trip — Ming tombs, city walls &amp; Qinhuai River at night</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-shanghai">Shanghai</span>
@@ -1370,7 +1751,7 @@
   <!-- ═══ DAY 14 ═══ -->
   <div class="page" id="page-d14">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 14</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Mon 26 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 14</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Mon 26 Oct</span></div>
       <h2 class="day-main-title">Shanghai Disneyland — full day</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-shanghai">Shanghai</span>
@@ -1408,7 +1789,7 @@
   <!-- ═══ DAY 15 ═══ -->
   <div class="page" id="page-d15">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 15</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Tue 27 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 15</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Tue 27 Oct</span></div>
       <h2 class="day-main-title">Old Town, hairy crab lunch, Science Museum &amp; escape room finale</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-shanghai">Shanghai</span>
@@ -1454,7 +1835,7 @@
   <!-- ═══ DAY 16 ═══ -->
   <div class="page" id="page-d16">
     <div class="day-header">
-      <div class="day-header-top"><span class="day-label">Day 16</span><span class="day-label" style="color:#ccc;">·</span><span class="day-label">Wed 28 Oct</span></div>
+      <div class="day-header-top"><span class="day-label">Day 16</span><span class="day-label" style="color:var(--tx-cccccc);">·</span><span class="day-label">Wed 28 Oct</span></div>
       <h2 class="day-main-title">✈️ Depart Shanghai → Auckland via Hong Kong</h2>
       <div class="day-meta-row">
         <span class="day-city-badge dcb-transit">Transit</span>
@@ -1479,14 +1860,14 @@
 
   <!-- ═══ BOOKINGS ═══ -->
   <div class="page" id="page-bookings">
-    <p style="font-size:12px;color:#aaa;margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">China 2026</p>
+    <p style="font-size:12px;color:var(--tx-aaaaaa);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">China 2026</p>
     <h1 class="ov-title">Booking checklist</h1>
     <p class="ov-sub" style="margin-bottom:20px;">Ordered by urgency — tick off as you go. State saves in your browser.</p>
 
-    <div style="background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:14px 18px;margin-bottom:24px;display:flex;align-items:center;gap:14px;">
-      <span style="font-size:13px;color:#888;white-space:nowrap;">Progress</span>
-      <div style="flex:1;height:7px;background:#eee;border-radius:99px;overflow:hidden;">
-        <div id="bk-bar" style="height:100%;background:#2d7a4f;border-radius:99px;width:0%;transition:width .4s ease;"></div>
+    <div style="background:var(--bg-ffffff);border:1px solid var(--bd-e8e8e8);border-radius:10px;padding:14px 18px;margin-bottom:24px;display:flex;align-items:center;gap:14px;">
+      <span style="font-size:13px;color:var(--tx-888888);white-space:nowrap;">Progress</span>
+      <div style="flex:1;height:7px;background:var(--bg-eeeeee);border-radius:99px;overflow:hidden;">
+        <div id="bk-bar" style="height:100%;background:var(--bg-2d7a4f);border-radius:99px;width:0%;transition:width .4s ease;"></div>
       </div>
       <span id="bk-count" style="font-size:13px;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums;">0 / 16 done</span>
     </div>
@@ -1494,8 +1875,8 @@
     <!-- BOOK NOW -->
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
       <span style="font-size:13px;">🔴</span>
-      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#aaa;">Book now — sells out weeks ahead</span>
-      <div style="flex:1;height:1px;background:#e8e8e8;"></div>
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-aaaaaa);">Book now — sells out weeks ahead</span>
+      <div style="flex:1;height:1px;background:var(--bg-e8e8e8);"></div>
     </div>
 
     <div class="bk-card" data-id="disneyland" onclick="bkToggle(this)">
@@ -1511,8 +1892,8 @@
     <!-- BOOK SOON -->
     <div style="display:flex;align-items:center;gap:10px;margin:24px 0 10px;">
       <span style="font-size:13px;">🟠</span>
-      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#aaa;">Book soon — 1–3 weeks ahead</span>
-      <div style="flex:1;height:1px;background:#e8e8e8;"></div>
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-aaaaaa);">Book soon — 1–3 weeks ahead</span>
+      <div style="flex:1;height:1px;background:var(--bg-e8e8e8);"></div>
     </div>
 
     <div class="bk-card" data-id="escape-room" onclick="bkToggle(this)">
@@ -1547,15 +1928,15 @@
     <!-- PLAN AHEAD -->
     <div style="display:flex;align-items:center;gap:10px;margin:24px 0 10px;">
       <span style="font-size:13px;">🟡</span>
-      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#aaa;">Arrange in advance — no strict window</span>
-      <div style="flex:1;height:1px;background:#e8e8e8;"></div>
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-aaaaaa);">Arrange in advance — no strict window</span>
+      <div style="flex:1;height:1px;background:var(--bg-e8e8e8);"></div>
     </div>
 
     <!-- FLEXIBLE -->
     <div style="display:flex;align-items:center;gap:10px;margin:24px 0 10px;">
       <span style="font-size:13px;">🟢</span>
-      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#aaa;">Flexible — walk-in or short notice fine</span>
-      <div style="flex:1;height:1px;background:#e8e8e8;"></div>
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-aaaaaa);">Flexible — walk-in or short notice fine</span>
+      <div style="flex:1;height:1px;background:var(--bg-e8e8e8);"></div>
     </div>
 
     <div class="bk-card" data-id="wildlife-park" onclick="bkToggle(this)">
@@ -1570,8 +1951,8 @@
     <!-- ALREADY BOOKED -->
     <div style="display:flex;align-items:center;gap:10px;margin:32px 0 10px;">
       <span style="font-size:13px;">✅</span>
-      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#aaa;">Already booked — nothing to do</span>
-      <div style="flex:1;height:1px;background:#e8e8e8;"></div>
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-aaaaaa);">Already booked — nothing to do</span>
+      <div style="flex:1;height:1px;background:var(--bg-e8e8e8);"></div>
     </div>
 
     <div class="bk-card bk-locked" data-id="noodles-class" style="opacity:0.55;">
@@ -1639,7 +2020,7 @@
     <div class="bk-card bk-locked" data-id="beijing-xian-train" style="opacity:0.55;">
       <div class="bk-cb"><span class="bk-ck">✓</span></div>
       <div class="bk-body">
-        <div class="bk-top"><span class="bk-name">Beijing → Xi'an bullet train (G365)</span><span class="bk-pill bk-confirmed">Confirmed ✓</span><span class="bk-city" style="background:#e8e8f0;color:#444441;">Transit · Day 7</span></div>
+        <div class="bk-top"><span class="bk-name">Beijing → Xi'an bullet train (G365)</span><span class="bk-pill bk-confirmed">Confirmed ✓</span><span class="bk-city" style="background:var(--bg-e8e8f0);color:var(--tx-444441);">Transit · Day 7</span></div>
         <div class="bk-meta"><span>📅 Mon 19 Oct · 09:55 → 14:05</span><span>🕗 Beijing West → Xi'an North · 4h10m</span><span>🎫 Booked via Trip.com</span></div>
         <p class="bk-note">G365 (China Rail). Arrives 14:05, so the Shaanxi History Museum visit that afternoon is tight (closes 17:00).</p>
       </div>
@@ -1657,7 +2038,7 @@
     <div class="bk-card bk-locked" data-id="xian-shanghai-flight" style="opacity:0.55;">
       <div class="bk-cb"><span class="bk-ck">✓</span></div>
       <div class="bk-body">
-        <div class="bk-top"><span class="bk-name">Xi'an → Shanghai flight (HU7845)</span><span class="bk-pill bk-confirmed">Confirmed ✓</span><span class="bk-city" style="background:#e8e8f0;color:#444441;">Transit · Day 11</span></div>
+        <div class="bk-top"><span class="bk-name">Xi'an → Shanghai flight (HU7845)</span><span class="bk-pill bk-confirmed">Confirmed ✓</span><span class="bk-city" style="background:var(--bg-e8e8f0);color:var(--tx-444441);">Transit · Day 11</span></div>
         <div class="bk-meta"><span>📅 Fri 23 Oct · 08:30 → 11:00</span><span>🕗 Xianyang T3 → Shanghai Pudong T2</span><span>🎫 Hainan Airlines · Economy · 6 pax</span></div>
         <p class="bk-note">Booking #1486591468940666, airline ref NV485F. Lands at Pudong (PVG), not Hongqiao — take Metro Line 2 to the hotel.</p>
       </div>
@@ -1667,7 +2048,7 @@
 
   <!-- ═══ ACCOMMODATION ═══ -->
   <div class="page" id="page-accommodation">
-    <p style="font-size:12px;color:#aaa;margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">China 2026</p>
+    <p style="font-size:12px;color:var(--tx-aaaaaa);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">China 2026</p>
     <h1 class="ov-title">Accommodation</h1>
     <p class="ov-sub" style="margin-bottom:20px;">Beijing · Xi'an · Shanghai — confirmed bookings via Trip.com: hotels, rooms, check-in and check-out dates, and confirmed flights. Chinese names and addresses are included to show taxi drivers.</p>
 
@@ -1839,7 +2220,7 @@
 
   <!-- ═══ EXTRA ACTIVITIES ═══ -->
   <div class="page" id="page-extras">
-    <p style="font-size:12px;color:#aaa;margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">China 2026</p>
+    <p style="font-size:12px;color:var(--tx-aaaaaa);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">China 2026</p>
     <h1 class="ov-title">Extra Activities</h1>
     <p class="ov-sub" style="margin-bottom:20px;">Off the tourist trail, matched to what everyone enjoys, plus ideas still to research. Filter by city, person, type, and language ease.</p>
 
@@ -2071,7 +2452,7 @@
 
   <!-- ═══ CONFIRMATIONS ═══ -->
   <div class="page" id="page-confirmations">
-    <p style="font-size:12px;color:#aaa;margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">China 2026</p>
+    <p style="font-size:12px;color:var(--tx-aaaaaa);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">China 2026</p>
     <h1 class="ov-title">Confirmations</h1>
     <p class="ov-sub" style="margin-bottom:12px;">Everything that's booked, in date order, with booking numbers, meeting points, contacts and cancellation deadlines. Booking PINs and passport numbers aren't stored here — they're in the confirmation emails.</p>
     <div class="cf-alert"><strong>Coming up:</strong> Summer Palace free cancellation ends 17:00 on 13 Oct · Mutianyu 18:00 on 14 Oct · Terracotta tour 22:00 on 19 Oct (all Beijing time).</div>
@@ -2308,6 +2689,15 @@
     document.getElementById('sidebar').classList.toggle('open');
   }
 
+  /* ── Appearance: auto (follow system) / light / dark ── */
+  function setTheme(t) {
+    if (t === 'auto') delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = t;
+    try { t === 'auto' ? localStorage.removeItem('china2026_theme') : localStorage.setItem('china2026_theme', t); } catch (e) {}
+    document.querySelectorAll('[data-theme-opt]').forEach(b => b.classList.toggle('on', b.dataset.themeOpt === t));
+  }
+  document.addEventListener('DOMContentLoaded', () => setTheme(document.documentElement.dataset.theme || 'auto'));
+
   /* ── Offline copy (see sw.js) ── */
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 
@@ -2347,8 +2737,9 @@
     pins.forEach(([name, lat, lng, emoji]) => {
       const icon = L.divIcon({
         className: '',
-        html: `<div style="background:#1a1a1a;color:#fff;font-size:11px;font-weight:700;padding:3px 7px;border-radius:99px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3);display:flex;align-items:center;gap:4px;"><span>${emoji}</span><span>${name}</span></div>`,
+        html: `<div style="background:var(--bg-1a1a1a);color:var(--tx-ffffff);font-size:11px;font-weight:700;padding:3px 7px;border-radius:99px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3);display:flex;align-items:center;gap:4px;"><span>${emoji}</span><span>${name}</span></div>`,
         iconAnchor: [0, 10],
+        iconSize: null, // size to the label, not Leaflet's default 12px box
       });
       L.marker([lat, lng], { icon }).addTo(map);
     });
