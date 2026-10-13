@@ -12,7 +12,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="China 2026">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" media="print" onload="this.media='all'">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -2107,7 +2107,7 @@
 
 </main>
 
-<script id="leaflet-script" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script id="leaflet-script" async src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
   function show(id) {
     // Hide all pages
