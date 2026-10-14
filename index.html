@@ -163,9 +163,10 @@
   .nb-shanghai { background: var(--c-shanghai-bg); color: var(--c-shanghai); }
   .nb-transit { background: var(--c-transit-bg); color: var(--c-transit); }
 
-  .nav-item.active.city-beijing { background: var(--c-beijing); }
-  .nav-item.active.city-xian { background: var(--c-xian); }
-  .nav-item.active.city-shanghai { background: var(--c-shanghai); }
+  /* Deep city colours in both themes: the --c-* text tokens turn light in dark mode. */
+  .nav-item.active.city-beijing { background: #0C447C; }
+  .nav-item.active.city-xian { background: #633806; }
+  .nav-item.active.city-shanghai { background: #085041; }
   .nav-item.active.city-transit { background: var(--bg-555555); }
 
   /* ── MAIN ── */
@@ -569,6 +570,7 @@
     .mob-nav-toggle { display: block; }
     .sidebar { transform: translateX(-100%); transition: transform 0.2s; }
     .sidebar.open { transform: translateX(0); }
+    .sidebar-header { padding-top: 62px; } /* clear the fixed ☰ Days button */
     .main { margin-left: 0; padding: 20px 18px; padding-top: 56px; }
     .stats-row { grid-template-columns: repeat(3, 1fr); }
     .city-cards { grid-template-columns: 1fr; }
