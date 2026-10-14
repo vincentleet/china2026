@@ -620,6 +620,28 @@
   .theme-switch button { flex: 1; padding: 5px 0; border: none; border-radius: 6px; background: transparent; color: var(--tx-888888); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
   .theme-switch button.on { background: var(--bg-1a1a1a); color: var(--tx-ffffff); }
 
+  /* ── SEARCH ── */
+  .search-box { position: relative; margin-top: 12px; }
+  .search-box input { width: 100%; padding: 8px 32px 8px 32px; border: 1px solid var(--bd-e8e8e8); border-radius: 8px; background: var(--bg-f8f7f4); color: var(--tx-1a1a1a); font: inherit; font-size: 16px; -webkit-appearance: none; appearance: none; }
+  .search-box input::-webkit-search-cancel-button { -webkit-appearance: none; }
+  .search-box input::placeholder { color: var(--tx-999999); }
+  .search-box input:focus { outline: none; border-color: var(--bd-378add); background: var(--bg-ffffff); }
+  .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 13px; opacity: 0.6; pointer-events: none; }
+  .search-clear { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); border: none; background: none; color: var(--tx-999999); font-size: 20px; line-height: 1; padding: 4px 8px; cursor: pointer; }
+  .sidebar.searching .sidebar-nav { display: none; }
+  .search-results { padding: 6px 10px 24px; }
+  .sr-count { font-size: 12px; color: var(--tx-888888); padding: 4px 8px 6px; }
+  .sr-group { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tx-999999); padding: 12px 8px 4px; }
+  .sr-item { display: block; width: 100%; text-align: left; border: none; background: none; padding: 7px 8px; border-radius: 8px; font: inherit; font-size: 13px; line-height: 1.45; color: var(--tx-555555); cursor: pointer; }
+  .sr-item:hover, .sr-item:focus-visible { background: var(--bg-f4f3f0); outline: none; }
+  .sr-item mark { background: var(--bg-fff3cd); color: var(--tx-1a1a1a); border-radius: 3px; padding: 0 1px; }
+  .sr-empty { font-size: 13px; color: var(--tx-888888); padding: 8px; }
+  .search-hit { animation: search-hit 2.4s ease-out; }
+  @keyframes search-hit { 0%, 40% { box-shadow: 0 0 0 3px var(--bd-ffc107); } 100% { box-shadow: 0 0 0 3px transparent; } }
+  ::highlight(search) { background-color: var(--bg-fff3cd); color: var(--tx-1a1a1a); }
+  .mob-search-toggle { display: none; position: fixed; top: 14px; right: 14px; z-index: 100; background: var(--bg-1a1a1a); color: var(--tx-ffffff); border: none; border-radius: 8px; padding: 8px 12px; font-size: 15px; cursor: pointer; }
+  @media (max-width: 700px) { .mob-search-toggle { display: block; } }
+
   /* ── COLOUR TOKENS (generated: light = original, dark = remapped) ── */
   :root {
     color-scheme: light dark;
@@ -991,7 +1013,7 @@
   @media print {
     /* Layout: no sidebar, full width, continuous flow */
     .sidebar { display: none !important; }
-    .mobile-bar { display: none !important; }
+    .mobile-bar, .mob-nav-toggle, .mob-search-toggle { display: none !important; }
     .main { margin-left: 0 !important; padding: 16mm 18mm !important; max-width: 100% !important; }
     body { background: #fff !important; display: block; font-size: 11pt; }
 
@@ -1035,12 +1057,18 @@
 <body>
 
 <button class="mob-nav-toggle" onclick="toggleSidebar()">☰ Days</button>
+<button class="mob-search-toggle" onclick="openSearch()" aria-label="Search">🔍</button>
 
 <!-- SIDEBAR -->
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div class="sidebar-title">China 2026</div>
     <div class="sidebar-sub">Family trip · Oct 13–29</div>
+    <div class="search-box" role="search">
+      <span class="search-icon" aria-hidden="true">🔍</span>
+      <input type="search" id="search-input" placeholder="Search the trip…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" aria-label="Search the itinerary" aria-controls="search-results" oninput="runSearch(this.value)" onkeydown="searchKey(event)">
+      <button class="search-clear" id="search-clear" onclick="clearSearch(true)" aria-label="Clear search" hidden>×</button>
+    </div>
     <button class="sidebar-bookings-btn" id="today-btn" onclick="goToday()" style="margin-top:10px;display:none;"></button>
     <div class="theme-switch" role="group" aria-label="Appearance">
       <button data-theme-opt="auto" onclick="setTheme('auto')">Auto</button>
@@ -1048,6 +1076,7 @@
       <button data-theme-opt="dark" onclick="setTheme('dark')">Dark</button>
     </div>
   </div>
+  <div class="search-results" id="search-results" aria-live="polite" hidden></div>
   <div class="sidebar-nav">
     <div class="nav-section-label">Overview</div>
     <button class="nav-item active" id="nav-overview" onclick="show('overview')">
@@ -2688,6 +2717,148 @@
   function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
   }
+
+  /* ── Search ── */
+  // A result is the nearest card if there is one, else the nearest text block.
+  const SEARCH_CARDS = '.act-card, .bk-card, .cf-card, details.drv-one, .lk-li, .flight-row, .city-card, .overview-card, .hotel-room-row, .booking-item, .note-box';
+  const SEARCH_BLOCKS = 'li, tr, .day-header, .sleep-footer, .stat, p, h1, h2, h3, h4, dd, dt';
+  const SEARCH_SKIP = 'script, style, button, .day-map, .day-nav-btns, .today-strip, .drv-label, .drv-links';
+  const SEARCH_MAX = 60;
+  let searchIndex = null, searchHits = [], searchTerms = [];
+
+  // Fold case and accents one character at a time so offsets still line up with the original text.
+  const foldText = s => [...s].map(c => {
+    const f = c.normalize('NFD').replace(/\p{M}+/gu, '').toLowerCase();
+    return f.length === c.length ? f : c;
+  }).join('');
+  const escHtml = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+  function pageTitle(id) {
+    const nav = document.getElementById('nav-' + id);
+    if (!nav) return id;
+    const parts = [];
+    const w = document.createTreeWalker(nav, NodeFilter.SHOW_TEXT);
+    for (let n; (n = w.nextNode());) if (n.data.trim() && !n.parentElement.closest('.nav-badge')) parts.push(n.data.trim());
+    return parts.join(' · ');
+  }
+
+  function buildSearchIndex() {
+    const units = new Map();
+    document.querySelectorAll('#main .page').forEach(page => {
+      const w = document.createTreeWalker(page, NodeFilter.SHOW_TEXT);
+      for (let n; (n = w.nextNode());) {
+        const parent = n.parentElement;
+        if (!n.data.trim() || parent.closest(SEARCH_SKIP)) continue;
+        const el = parent.closest(SEARCH_CARDS) || parent.closest(SEARCH_BLOCKS) || parent;
+        if (!page.contains(el)) continue;
+        if (!units.has(el)) units.set(el, { el, page: page.id.slice(5), parts: [] });
+        units.get(el).parts.push(n.data);
+      }
+    });
+    const titles = {};
+    searchIndex = [...units.values()].map(u => {
+      const text = u.parts.join(' ').replace(/\s+/g, ' ').trim();
+      titles[u.page] = titles[u.page] || pageTitle(u.page);
+      return { el: u.el, page: u.page, title: titles[u.page], text, folded: foldText(text) };
+    });
+  }
+
+  function findAll(hay, terms) {
+    const ranges = [];
+    terms.forEach(t => { for (let i = hay.indexOf(t); i > -1; i = hay.indexOf(t, i + t.length)) ranges.push([i, i + t.length]); });
+    ranges.sort((a, b) => a[0] - b[0]);
+    const merged = [];
+    ranges.forEach(r => { const last = merged[merged.length - 1]; if (last && r[0] <= last[1]) last[1] = Math.max(last[1], r[1]); else merged.push(r); });
+    return merged;
+  }
+
+  function searchSnippet(u) {
+    const first = Math.min(...searchTerms.map(t => u.folded.indexOf(t)).filter(i => i > -1));
+    let start = Math.max(0, first - 40), end = Math.min(u.text.length, first + 120);
+    if (start > 0) { const sp = u.text.indexOf(' ', start); if (sp > -1 && sp < first) start = sp + 1; }
+    if (end < u.text.length) { const sp = u.text.lastIndexOf(' ', end); if (sp > first) end = sp; }
+    const seg = u.text.slice(start, end);
+    let html = '', at = 0;
+    findAll(u.folded.slice(start, end), searchTerms).forEach(([a, b]) => {
+      html += escHtml(seg.slice(at, a)) + '<mark>' + escHtml(seg.slice(a, b)) + '</mark>';
+      at = b;
+    });
+    html += escHtml(seg.slice(at));
+    return (start > 0 ? '…' : '') + html + (end < u.text.length ? '…' : '');
+  }
+
+  function runSearch(q) {
+    const box = document.getElementById('search-results');
+    const sidebar = document.getElementById('sidebar');
+    document.getElementById('search-clear').hidden = !q;
+    searchTerms = foldText(q.trim()).split(/\s+/).filter(Boolean);
+    // One Latin letter matches almost everything; a single Chinese character is a real query.
+    if (!searchTerms.length || (searchTerms.join('').length < 2 && /^[\x00-\x7f]*$/.test(searchTerms[0]))) {
+      sidebar.classList.remove('searching');
+      box.hidden = true; box.innerHTML = ''; searchHits = [];
+      if (window.CSS && CSS.highlights) CSS.highlights.delete('search');
+      return;
+    }
+    if (!searchIndex) buildSearchIndex();
+    searchHits = searchIndex.filter(u => searchTerms.every(t => u.folded.includes(t)));
+    sidebar.classList.add('searching'); box.hidden = false;
+    if (!searchHits.length) { box.innerHTML = '<div class="sr-empty">No matches for “' + escHtml(q.trim()) + '”</div>'; return; }
+    const n = searchHits.length;
+    let html = '<div class="sr-count">' + n + (n === 1 ? ' match' : ' matches') + (n > SEARCH_MAX ? ' · showing first ' + SEARCH_MAX : '') + '</div>';
+    let lastPage = null;
+    searchHits.slice(0, SEARCH_MAX).forEach((u, i) => {
+      if (u.page !== lastPage) { html += '<div class="sr-group">' + escHtml(u.title) + '</div>'; lastPage = u.page; }
+      html += '<button class="sr-item" onclick="searchGo(' + i + ')">' + searchSnippet(u) + '</button>';
+    });
+    box.innerHTML = html;
+  }
+
+  function highlightTerms(el) {
+    if (!window.CSS || !CSS.highlights || typeof Highlight === 'undefined') return;
+    const ranges = [];
+    const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    for (let n; (n = w.nextNode());) {
+      findAll(foldText(n.data), searchTerms).forEach(([a, b]) => {
+        const r = new Range(); r.setStart(n, a); r.setEnd(n, b); ranges.push(r);
+      });
+    }
+    CSS.highlights.set('search', new Highlight(...ranges));
+  }
+
+  function searchGo(i) {
+    const u = searchHits[i];
+    if (!u) return;
+    // Extra Activities: switch to the right city and drop filters that could hide the card.
+    const panel = u.el.closest('[id^="ex-panel-"]');
+    if (panel) { exPerson = exType = exLang = 'all'; exShowCity(panel.id.slice('ex-panel-'.length)); }
+    show(u.page);
+    const det = u.el.closest('details');
+    if (det) det.open = true;
+    highlightTerms(u.el);
+    requestAnimationFrame(() => {
+      u.el.scrollIntoView({ block: 'center' });
+      u.el.classList.remove('search-hit'); void u.el.offsetWidth; u.el.classList.add('search-hit');
+    });
+  }
+
+  function searchKey(e) {
+    if (e.key === 'Enter') { e.preventDefault(); if (searchHits.length) { e.target.blur(); searchGo(0); } }
+    else if (e.key === 'Escape') { clearSearch(false); e.target.blur(); }
+  }
+  function clearSearch(refocus) {
+    const input = document.getElementById('search-input');
+    input.value = ''; runSearch('');
+    if (refocus) input.focus();
+  }
+  function openSearch() {
+    document.getElementById('sidebar').classList.add('open');
+    const input = document.getElementById('search-input');
+    input.focus(); input.select();
+  }
+  document.addEventListener('keydown', e => {
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || '');
+    if ((e.key === '/' && !typing) || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) { e.preventDefault(); openSearch(); }
+  });
 
   /* ── Appearance: auto (follow system) / light / dark ── */
   function setTheme(t) {
