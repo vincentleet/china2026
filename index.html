@@ -16,12 +16,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" media="print" onload="this.media='all'">
 <script>
   try { const t = localStorage.getItem('china2026_theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+  try { if (localStorage.getItem('china2026_hand') === 'left') document.documentElement.dataset.hand = 'left'; } catch (e) {}
 </script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --sidebar-w: 290px;
+    --sidebar-w: 300px;
     --c-beijing: #0C447C;
     --c-beijing-bg: #E6F1FB;
     --c-beijing-bd: #378ADD;
@@ -168,6 +169,77 @@
   .nav-item.active.city-xian { background: #633806; }
   .nav-item.active.city-shanghai { background: #085041; }
   .nav-item.active.city-transit { background: var(--bg-555555); }
+
+  /* ── SIDEBAR: today card, day tiles, quick links, settings ── */
+  .sidebar > * { flex-shrink: 0; } /* the sidebar scrolls; sections must not squash */
+  .now-card { margin: 12px 10px 2px; border: 1px solid var(--bd-ecebe6); border-radius: 12px; background: var(--bg-faf9f7); overflow: hidden; }
+  .now-main { display: block; width: 100%; text-align: left; border: none; background: none; padding: 12px 14px 10px; font: inherit; color: inherit; cursor: pointer; }
+  .now-main:hover { background: var(--bg-f4f3f0); }
+  .now-kicker { display: flex; justify-content: space-between; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tx-c45c1a); }
+  .now-kicker .now-date { color: var(--tx-999999); letter-spacing: 0.04em; }
+  .now-title { font-size: 17px; font-weight: 700; color: var(--tx-1a1a1a); margin-top: 3px; line-height: 1.25; }
+  .now-rows { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+  .now-row { display: flex; gap: 8px; font-size: 13px; line-height: 1.35; color: var(--tx-444444); }
+  .now-row .t { flex: 0 0 74px; white-space: nowrap; font-weight: 700; color: var(--tx-1a6632); font-variant-numeric: tabular-nums; }
+  .now-row.done { opacity: 0.45; }
+  .now-row.next { margin: 0 -6px; padding: 3px 6px; border-radius: 6px; background: var(--bg-fff1dc); }
+  .now-row.next .n { font-weight: 600; color: var(--tx-1a1a1a); }
+  .now-row.todo .t { color: var(--tx-9a4a00); }
+  .now-sleep { margin-top: 8px; font-size: 12.5px; color: var(--tx-777777); }
+  .now-next { display: flex; justify-content: space-between; width: 100%; border: none; border-top: 1px solid var(--bd-ecebe6); background: none; padding: 9px 14px; font: inherit; font-size: 13px; color: var(--tx-555555); text-align: left; cursor: pointer; }
+  .now-next:hover { background: var(--bg-f4f3f0); }
+  .now-next b { color: var(--tx-1a1a1a); font-weight: 600; }
+
+  .sidebar-nav { padding: 10px 10px 8px; }
+  .nav-section-label { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 4px 6px; }
+  .nsl-dates { font-size: 11px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--tx-aaaaaa); }
+  .ov-tile { flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 12px; border: 1px solid var(--bd-ecebe6); border-radius: 10px; }
+  .ov-tile .nav-title { font-size: 15px; font-weight: 600; color: var(--tx-1a1a1a); }
+  .ovt-sub { font-size: 12px; color: var(--tx-999999); }
+  .nav-item.active .nav-title, .nav-item.active .ovt-sub { color: var(--tx-ffffff); }
+
+  .day-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .day-tile { flex-direction: column; align-items: stretch; gap: 4px; min-height: 84px; padding: 9px 10px 8px; border: 1px solid var(--bd-ecebe6); border-left: 3px solid var(--c-transit-bd); border-radius: 10px; background: var(--bg-faf9f7); }
+  .day-tile.city-beijing { border-left-color: var(--c-beijing-bd); }
+  .day-tile.city-xian { border-left-color: var(--c-xian-bd); }
+  .day-tile.city-shanghai { border-left-color: var(--c-shanghai-bd); }
+  .dt-top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; font-size: 11px; }
+  .day-tile .nav-day-num { min-width: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .dt-date { color: var(--tx-999999); font-weight: 600; white-space: nowrap; }
+  .day-tile .nav-title { font-size: 14px; font-weight: 600; color: var(--tx-1a1a1a); line-height: 1.25; }
+  .dt-foot { display: flex; align-items: center; gap: 6px; margin-top: auto; flex-wrap: wrap; font-size: 11px; font-weight: 600; }
+  .day-tile .nav-badge { margin-left: 0; }
+  .dt-booked { color: var(--tx-1a6632); }
+  .dt-todo { color: var(--tx-9a4a00); }
+  .dt-booked:empty, .dt-todo:empty { display: none; }
+  .day-tile.is-today:not(.active) { box-shadow: 0 0 0 2px var(--bd-c45c1a); }
+  .day-tile.is-today .dt-date { color: var(--tx-c45c1a); text-transform: uppercase; letter-spacing: 0.04em; }
+  .day-tile.is-past:not(.active) { opacity: 0.55; }
+  .day-tile.active { border-color: transparent; }
+  .nav-item.active .dt-date, .nav-item.active .dt-booked, .nav-item.active .dt-todo { color: var(--tx-ffffff); opacity: 0.85; }
+
+  .sidebar-footer { border-top: none; padding: 8px 10px 12px; gap: 8px; }
+  .ql-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .ql { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-height: 72px; padding: 10px; border: 1.5px solid var(--bd-e4e0d9); border-radius: 10px; background: none; font: inherit; text-align: left; cursor: pointer; color: var(--tx-555555); }
+  .ql:hover { background: var(--bg-f8f7f4); }
+  .ql-ico { font-size: 16px; }
+  .ql-name { font-size: 13px; font-weight: 600; color: var(--tx-1a1a1a); line-height: 1.25; }
+  .ql-sub { font-size: 11.5px; color: var(--tx-888888); margin-top: auto; }
+  .ql.active { background: var(--bg-c45c1a); border-color: var(--bd-c45c1a); }
+  .ql.active .ql-name, .ql.active .ql-sub { color: var(--tx-ffffff); }
+
+  .sidebar-settings { padding: 12px 14px 18px; border-top: 1px solid var(--bd-f0efe9); display: flex; flex-direction: column; gap: 10px; }
+  .set-row { display: flex; flex-direction: column; gap: 4px; }
+  .set-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tx-aaaaaa); }
+  .set-row .theme-switch { margin-top: 0; }
+  .hand-row { display: none; }
+
+  /* Floating menu/search buttons (mobile only; shown in the mobile media query) */
+  .sidebar-backdrop, .fab-bar { display: none; }
+  .fab { min-height: 50px; padding: 0 20px; border: none; border-radius: 999px; background: var(--bg-1a1a1a); color: var(--tx-ffffff); font: inherit; font-size: 16px; font-weight: 600; box-shadow: 0 6px 18px rgba(0,0,0,0.28); cursor: pointer; }
+  .fab .when-open { display: none; }
+  .sidebar.open ~ .fab-bar .when-open { display: inline; }
+  .sidebar.open ~ .fab-bar .when-closed { display: none; }
 
   /* ── MAIN ── */
   .main {
@@ -559,19 +631,19 @@
   .sleep-footer strong { color: var(--tx-555555); }
 
   /* ── MOBILE ── */
-  .mob-nav-toggle {
-    display: none;
-    position: fixed; top: 14px; left: 14px; z-index: 100;
-    background: var(--bg-1a1a1a); color: var(--tx-ffffff); border: none;
-    border-radius: 8px; padding: 8px 14px; font-size: 15px; font-weight: 600; cursor: pointer;
-  }
 
   @media (max-width: 700px) {
-    .mob-nav-toggle { display: block; }
-    .sidebar { transform: translateX(-100%); transition: transform 0.2s; }
-    .sidebar.open { transform: translateX(0); }
-    .sidebar-header { padding-top: 62px; } /* clear the fixed ☰ Days button */
-    .main { margin-left: 0; padding: 20px 18px; padding-top: 56px; }
+    /* Drawer from the right (or left, for left-handed use), opened by the floating Days button */
+    .sidebar { left: auto; right: 0; width: min(340px, 88vw); border-right: none; border-left: 1px solid var(--bd-e8e8e8); transform: translateX(100%); transition: transform 0.25s ease, box-shadow 0.25s; padding-bottom: calc(88px + env(safe-area-inset-bottom)); overscroll-behavior: contain; }
+    .sidebar.open { transform: none; box-shadow: -10px 0 30px rgba(0,0,0,0.2); }
+    :root[data-hand="left"] .sidebar { right: auto; left: 0; border-left: none; border-right: 1px solid var(--bd-e8e8e8); transform: translateX(-100%); }
+    :root[data-hand="left"] .sidebar.open { transform: none; box-shadow: 10px 0 30px rgba(0,0,0,0.2); }
+    .sidebar-backdrop { display: block; position: fixed; inset: 0; z-index: 9; background: rgba(0,0,0,0.35); opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+    .sidebar.open ~ .sidebar-backdrop { opacity: 1; pointer-events: auto; }
+    .fab-bar { display: flex; position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 100; }
+    :root[data-hand="left"] .fab-bar { right: auto; left: 16px; }
+    .hand-row { display: flex; }
+    .main { margin-left: 0; padding: 20px 18px calc(96px + env(safe-area-inset-bottom)); }
     .stats-row { grid-template-columns: repeat(3, 1fr); }
     .city-cards { grid-template-columns: 1fr; }
     .bookings-grid { grid-template-columns: 1fr; }
@@ -630,7 +702,7 @@
   .search-box input:focus { outline: none; border-color: var(--bd-378add); background: var(--bg-ffffff); }
   .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 13px; opacity: 0.6; pointer-events: none; }
   .search-clear { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); border: none; background: none; color: var(--tx-999999); font-size: 20px; line-height: 1; padding: 4px 8px; cursor: pointer; }
-  .sidebar.searching .sidebar-nav { display: none; }
+  .sidebar.searching .sidebar-nav, .sidebar.searching .now-card, .sidebar.searching .sidebar-footer, .sidebar.searching .sidebar-settings { display: none; }
   .search-results { padding: 6px 10px 24px; }
   .sr-count { font-size: 12px; color: var(--tx-888888); padding: 4px 8px 6px; }
   .sr-group { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tx-999999); padding: 12px 8px 4px; }
@@ -641,8 +713,6 @@
   .search-hit { animation: search-hit 2.4s ease-out; }
   @keyframes search-hit { 0%, 40% { box-shadow: 0 0 0 3px var(--bd-ffc107); } 100% { box-shadow: 0 0 0 3px transparent; } }
   ::highlight(search) { background-color: var(--bg-fff3cd); color: var(--tx-1a1a1a); }
-  .mob-search-toggle { display: none; position: fixed; top: 14px; right: 14px; z-index: 100; background: var(--bg-1a1a1a); color: var(--tx-ffffff); border: none; border-radius: 8px; padding: 8px 12px; font-size: 15px; cursor: pointer; }
-  @media (max-width: 700px) { .mob-search-toggle { display: block; } }
 
   /* ── COLOUR TOKENS (generated: light = original, dark = remapped) ── */
   :root {
@@ -1015,7 +1085,7 @@
   @media print {
     /* Layout: no sidebar, full width, continuous flow */
     .sidebar { display: none !important; }
-    .mobile-bar, .mob-nav-toggle, .mob-search-toggle { display: none !important; }
+    .mobile-bar, .fab-bar, .sidebar-backdrop { display: none !important; }
     .main { margin-left: 0 !important; padding: 16mm 18mm !important; max-width: 100% !important; }
     body { background: #fff !important; display: block; font-size: 11pt; }
 
@@ -1058,8 +1128,6 @@
 </head>
 <body>
 
-<button class="mob-nav-toggle" onclick="toggleSidebar()">☰ Days</button>
-<button class="mob-search-toggle" onclick="openSearch()" aria-label="Search">🔍</button>
 
 <!-- SIDEBAR -->
 <nav class="sidebar" id="sidebar">
@@ -1071,96 +1139,142 @@
       <input type="search" id="search-input" placeholder="Search the trip…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" aria-label="Search the itinerary" aria-controls="search-results" oninput="runSearch(this.value)" onkeydown="searchKey(event)">
       <button class="search-clear" id="search-clear" onclick="clearSearch(true)" aria-label="Clear search" hidden>×</button>
     </div>
-    <button class="sidebar-bookings-btn" id="today-btn" onclick="goToday()" style="margin-top:10px;display:none;"></button>
-    <div class="theme-switch" role="group" aria-label="Appearance">
-      <button data-theme-opt="auto" onclick="setTheme('auto')">Auto</button>
-      <button data-theme-opt="light" onclick="setTheme('light')">Light</button>
-      <button data-theme-opt="dark" onclick="setTheme('dark')">Dark</button>
-    </div>
   </div>
   <div class="search-results" id="search-results" aria-live="polite" hidden></div>
+  <div class="now-card" id="now-card" hidden></div>
   <div class="sidebar-nav">
-    <div class="nav-section-label">Overview</div>
-    <button class="nav-item active" id="nav-overview" onclick="show('overview')">
-      🗺️ Trip overview
+    <button class="nav-item ov-tile active" id="nav-overview" onclick="show('overview')">
+      <span class="nav-title">🗺️ Trip overview</span><span class="ovt-sub">16 days · Beijing · Xi'an · Shanghai</span>
     </button>
-
-    <div class="nav-section-label" style="margin-top:6px;">Outbound</div>
-    <button class="nav-item city-transit" id="nav-d1" onclick="show('d1')">
-      <span class="nav-day-num">Day 1</span>Depart Auckland<span class="nav-badge nb-transit">✈️</span>
-    </button>
-
-    <div class="nav-section-label" style="margin-top:6px;">🏯 Beijing</div>
-    <button class="nav-item city-beijing" id="nav-d2" onclick="show('d2')">
-      <span class="nav-day-num">Day 2</span>Summer Palace<span class="nav-badge nb-beijing">BJS</span>
-    </button>
-    <button class="nav-item city-beijing" id="nav-d3" onclick="show('d3')">
-      <span class="nav-day-num">Day 3</span>Great Wall<span class="nav-badge nb-beijing">BJS</span>
-    </button>
-    <button class="nav-item city-beijing" id="nav-d4" onclick="show('d4')">
-      <span class="nav-day-num">Day 4</span>Forbidden City<span class="nav-badge nb-beijing">BJS</span>
-    </button>
-    <button class="nav-item city-beijing" id="nav-d5" onclick="show('d5')">
-      <span class="nav-day-num">Day 5</span>Temple + 798<span class="nav-badge nb-beijing">BJS</span>
-    </button>
-    <button class="nav-item city-beijing" id="nav-d6" onclick="show('d6')">
-      <span class="nav-day-num">Day 6</span>Wildlife Park<span class="nav-badge nb-beijing">BJS</span>
-    </button>
-
-    <div class="nav-section-label" style="margin-top:6px;">🐉 Xi'an</div>
-    <button class="nav-item city-transit" id="nav-d7" onclick="show('d7')">
-      <span class="nav-day-num">Day 7</span>Train to Xi'an<span class="nav-badge nb-transit">🚄</span>
-    </button>
-    <button class="nav-item city-xian" id="nav-d8" onclick="show('d8')">
-      <span class="nav-day-num">Day 8</span>Terracotta Warriors<span class="nav-badge nb-xian">XIY</span>
-    </button>
-    <button class="nav-item city-xian" id="nav-d9" onclick="show('d9')">
-      <span class="nav-day-num">Day 9</span>Mt Huashan<span class="nav-badge nb-xian">XIY</span>
-    </button>
-    <button class="nav-item city-xian" id="nav-d10" onclick="show('d10')">
-      <span class="nav-day-num">Day 10</span>Xi'an free day<span class="nav-badge nb-xian">XIY</span>
-    </button>
-
-    <div class="nav-section-label" style="margin-top:6px;">🏙️ Shanghai</div>
-    <button class="nav-item city-transit" id="nav-d11" onclick="show('d11')">
-      <span class="nav-day-num">Day 11</span>Fly to Shanghai<span class="nav-badge nb-transit">✈️</span>
-    </button>
-    <button class="nav-item city-shanghai" id="nav-d12" onclick="show('d12')">
-      <span class="nav-day-num">Day 12</span>Bund + French Conc.<span class="nav-badge nb-shanghai">SHA</span>
-    </button>
-    <button class="nav-item city-shanghai" id="nav-d13" onclick="show('d13')">
-      <span class="nav-day-num">Day 13</span>Nanjing<span class="nav-badge nb-shanghai">SHA</span>
-    </button>
-    <button class="nav-item city-shanghai" id="nav-d14" onclick="show('d14')">
-      <span class="nav-day-num">Day 14</span>Disneyland<span class="nav-badge nb-shanghai">SHA</span>
-    </button>
-    <button class="nav-item city-shanghai" id="nav-d15" onclick="show('d15')">
-      <span class="nav-day-num">Day 15</span>Old Town + escape room<span class="nav-badge nb-shanghai">SHA</span>
-    </button>
-
-    <div class="nav-section-label" style="margin-top:6px;">Return</div>
-    <button class="nav-item city-transit" id="nav-d16" onclick="show('d16')">
-      <span class="nav-day-num">Day 16</span>Depart Shanghai<span class="nav-badge nb-transit">✈️</span>
-    </button>
+    <div class="nav-section-label"><span>Outbound</span><span class="nsl-dates">13 Oct</span></div>
+    <div class="day-grid">
+      <button class="nav-item day-tile city-transit" id="nav-d1" onclick="show('d1')">
+        <span class="dt-top"><span class="nav-day-num">Day 1</span><span class="dt-date" data-date="Tue 13">Tue 13</span></span>
+        <span class="nav-title">Depart Auckland</span>
+        <span class="dt-foot"><span class="nav-badge nb-transit">✈️</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+    </div>
+    <div class="nav-section-label"><span>🏯 Beijing</span><span class="nsl-dates">14–18 Oct</span></div>
+    <div class="day-grid">
+      <button class="nav-item day-tile city-beijing" id="nav-d2" onclick="show('d2')">
+        <span class="dt-top"><span class="nav-day-num">Day 2</span><span class="dt-date" data-date="Wed 14">Wed 14</span></span>
+        <span class="nav-title">Summer Palace</span>
+        <span class="dt-foot"><span class="nav-badge nb-beijing">BJS</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+      <button class="nav-item day-tile city-beijing" id="nav-d3" onclick="show('d3')">
+        <span class="dt-top"><span class="nav-day-num">Day 3</span><span class="dt-date" data-date="Thu 15">Thu 15</span></span>
+        <span class="nav-title">Great Wall</span>
+        <span class="dt-foot"><span class="nav-badge nb-beijing">BJS</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+      <button class="nav-item day-tile city-beijing" id="nav-d4" onclick="show('d4')">
+        <span class="dt-top"><span class="nav-day-num">Day 4</span><span class="dt-date" data-date="Fri 16">Fri 16</span></span>
+        <span class="nav-title">Forbidden City</span>
+        <span class="dt-foot"><span class="nav-badge nb-beijing">BJS</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+      <button class="nav-item day-tile city-beijing" id="nav-d5" onclick="show('d5')">
+        <span class="dt-top"><span class="nav-day-num">Day 5</span><span class="dt-date" data-date="Sat 17">Sat 17</span></span>
+        <span class="nav-title">Temple + 798</span>
+        <span class="dt-foot"><span class="nav-badge nb-beijing">BJS</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+      <button class="nav-item day-tile city-beijing" id="nav-d6" onclick="show('d6')">
+        <span class="dt-top"><span class="nav-day-num">Day 6</span><span class="dt-date" data-date="Sun 18">Sun 18</span></span>
+        <span class="nav-title">Wildlife Park</span>
+        <span class="dt-foot"><span class="nav-badge nb-beijing">BJS</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+    </div>
+    <div class="nav-section-label"><span>🐉 Xi'an</span><span class="nsl-dates">19–22 Oct</span></div>
+    <div class="day-grid">
+      <button class="nav-item day-tile city-transit" id="nav-d7" onclick="show('d7')">
+        <span class="dt-top"><span class="nav-day-num">Day 7</span><span class="dt-date" data-date="Mon 19">Mon 19</span></span>
+        <span class="nav-title">Train to Xi'an</span>
+        <span class="dt-foot"><span class="nav-badge nb-transit">🚄</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+      <button class="nav-item day-tile city-xian" id="nav-d8" onclick="show('d8')">
+        <span class="dt-top"><span class="nav-day-num">Day 8</span><span class="dt-date" data-date="Tue 20">Tue 20</span></span>
+        <span class="nav-title">Terracotta Warriors</span>
+        <span class="dt-foot"><span class="nav-badge nb-xian">XIY</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+      <button class="nav-item day-tile city-xian" id="nav-d9" onclick="show('d9')">
+        <span class="dt-top"><span class="nav-day-num">Day 9</span><span class="dt-date" data-date="Wed 21">Wed 21</span></span>
+        <span class="nav-title">Mt Huashan</span>
+        <span class="dt-foot"><span class="nav-badge nb-xian">XIY</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+      <button class="nav-item day-tile city-xian" id="nav-d10" onclick="show('d10')">
+        <span class="dt-top"><span class="nav-day-num">Day 10</span><span class="dt-date" data-date="Thu 22">Thu 22</span></span>
+        <span class="nav-title">Xi'an free day</span>
+        <span class="dt-foot"><span class="nav-badge nb-xian">XIY</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+    </div>
+    <div class="nav-section-label"><span>🏙️ Shanghai</span><span class="nsl-dates">23–27 Oct</span></div>
+    <div class="day-grid">
+      <button class="nav-item day-tile city-transit" id="nav-d11" onclick="show('d11')">
+        <span class="dt-top"><span class="nav-day-num">Day 11</span><span class="dt-date" data-date="Fri 23">Fri 23</span></span>
+        <span class="nav-title">Fly to Shanghai</span>
+        <span class="dt-foot"><span class="nav-badge nb-transit">✈️</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+      <button class="nav-item day-tile city-shanghai" id="nav-d12" onclick="show('d12')">
+        <span class="dt-top"><span class="nav-day-num">Day 12</span><span class="dt-date" data-date="Sat 24">Sat 24</span></span>
+        <span class="nav-title">Bund + French Conc.</span>
+        <span class="dt-foot"><span class="nav-badge nb-shanghai">SHA</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+      <button class="nav-item day-tile city-shanghai" id="nav-d13" onclick="show('d13')">
+        <span class="dt-top"><span class="nav-day-num">Day 13</span><span class="dt-date" data-date="Sun 25">Sun 25</span></span>
+        <span class="nav-title">Nanjing</span>
+        <span class="dt-foot"><span class="nav-badge nb-shanghai">SHA</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+      <button class="nav-item day-tile city-shanghai" id="nav-d14" onclick="show('d14')">
+        <span class="dt-top"><span class="nav-day-num">Day 14</span><span class="dt-date" data-date="Mon 26">Mon 26</span></span>
+        <span class="nav-title">Disneyland</span>
+        <span class="dt-foot"><span class="nav-badge nb-shanghai">SHA</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+      <button class="nav-item day-tile city-shanghai" id="nav-d15" onclick="show('d15')">
+        <span class="dt-top"><span class="nav-day-num">Day 15</span><span class="dt-date" data-date="Tue 27">Tue 27</span></span>
+        <span class="nav-title">Old Town + escape room</span>
+        <span class="dt-foot"><span class="nav-badge nb-shanghai">SHA</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+    </div>
+    <div class="nav-section-label"><span>Return</span><span class="nsl-dates">28 Oct</span></div>
+    <div class="day-grid">
+      <button class="nav-item day-tile city-transit" id="nav-d16" onclick="show('d16')">
+        <span class="dt-top"><span class="nav-day-num">Day 16</span><span class="dt-date" data-date="Wed 28">Wed 28</span></span>
+        <span class="nav-title">Depart Shanghai</span>
+        <span class="dt-foot"><span class="nav-badge nb-transit">✈️</span><span class="dt-booked"></span><span class="dt-todo"></span></span>
+      </button>
+    </div>
   </div>
   <div class="sidebar-footer">
-    <button class="sidebar-bookings-btn" id="nav-bookings" onclick="show('bookings')">
-      ☑️ Booking checklist
-    </button>
-    <button class="sidebar-bookings-btn" id="nav-extras" onclick="show('extras')" style="margin-top:8px;">
-      ⭐ Extra Activities
-    </button>
-    <button class="sidebar-bookings-btn" id="nav-confirmations" onclick="show('confirmations')" style="margin-top:8px;">
-      🧾 Confirmations
-    </button>
-    <button class="sidebar-bookings-btn" id="nav-accommodation" onclick="show('accommodation')" style="margin-top:8px;">
-      🏨 Accommodation
-    </button>
+    <div class="ql-grid">
+      <button class="ql" id="nav-bookings" onclick="show('bookings')"><span class="ql-ico">☑️</span><span class="ql-name">Booking checklist</span><span class="ql-sub" id="ql-bookings"></span></button>
+      <button class="ql" id="nav-extras" onclick="show('extras')"><span class="ql-ico">⭐</span><span class="ql-name">Extra Activities</span><span class="ql-sub" id="ql-extras"></span></button>
+      <button class="ql" id="nav-confirmations" onclick="show('confirmations')"><span class="ql-ico">🧾</span><span class="ql-name">Confirmations</span><span class="ql-sub" id="ql-confirmations"></span></button>
+      <button class="ql" id="nav-accommodation" onclick="show('accommodation')"><span class="ql-ico">🏨</span><span class="ql-name">Accommodation</span><span class="ql-sub" id="ql-accommodation"></span></button>
+    </div>
     <a class="sidebar-add-btn" href="https://airtable.com/appD7Yi410DGznLPJ/pag5UZk1de5xRZ5fj/form" target="_blank" rel="noopener">
       ＋ Add to Itinerary
     </a>
   </div>
+  <div class="sidebar-settings">
+    <div class="set-row">
+      <span class="set-label">Appearance</span>
+      <div class="theme-switch" role="group" aria-label="Appearance">
+        <button data-theme-opt="auto" onclick="setTheme('auto')">Auto</button>
+        <button data-theme-opt="light" onclick="setTheme('light')">Light</button>
+        <button data-theme-opt="dark" onclick="setTheme('dark')">Dark</button>
+      </div>
+    </div>
+    <div class="set-row hand-row">
+      <span class="set-label">Menu button</span>
+      <div class="theme-switch" role="group" aria-label="Menu button side">
+        <button data-hand-opt="left" onclick="setHand('left')">Left</button>
+        <button data-hand-opt="right" onclick="setHand('right')">Right</button>
+      </div>
+    </div>
+  </div>
 </nav>
+<div class="sidebar-backdrop" onclick="toggleSidebar(false)"></div>
+<div class="fab-bar">
+  <button class="fab fab-days" onclick="toggleSidebar()" aria-label="Days menu"><span class="when-closed">☰ Days</span><span class="when-open">✕ Close</span></button>
+</div>
 
 <!-- MAIN CONTENT -->
 <main class="main" id="main">
@@ -2525,7 +2639,7 @@
     // Hide all pages
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.querySelectorAll('.sidebar-bookings-btn').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.sidebar-bookings-btn, .ql').forEach(n => n.classList.remove('active'));
     // Show target
     const page = document.getElementById('page-' + id);
     const nav = document.getElementById('nav-' + id);
@@ -2564,6 +2678,8 @@
     const cnt = document.getElementById('bk-count');
     if (bar) bar.style.width = pct + '%';
     if (cnt) cnt.textContent = done + ' / ' + total + ' done';
+    const ql = document.getElementById('ql-bookings');
+    if (ql) ql.textContent = done + ' / ' + total + ' done';
   }
   document.addEventListener('DOMContentLoaded', () => bkApply(bkLoad()));
 
@@ -2666,12 +2782,91 @@
     const n = tripDayNumber();
     show(n >= 1 && n <= 16 ? 'd' + n : (n < 1 ? 'd1' : 'overview'));
   }
-  function setupToday() {
-    const n = tripDayNumber(), btn = document.getElementById('today-btn');
-    if (!btn) return;
-    if (n >= 1 && n <= 16) { btn.textContent = '📍 Today — Day ' + n; btn.style.display = ''; }
-    else if (n < 1) { btn.textContent = '📍 Day 1 — Tue 13 Oct'; btn.style.display = ''; }
+  /* ── Sidebar: per-day counts, Today card, live refresh ── */
+  const DAY_COUNT = 16;
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  // Rough clock times for booked items that only say "Morning"/"Afternoon"/"Evening".
+  const SLOT_MINUTES = { morning: 9 * 60, afternoon: 13 * 60, evening: 18 * 60, night: 20 * 60 };
+  const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+  function dayInfo(n) {
+    const page = document.getElementById('page-d' + n), nav = document.getElementById('nav-d' + n);
+    const d = new Date(TRIP_START.getFullYear(), TRIP_START.getMonth(), TRIP_START.getDate() + n - 1);
+    const sleep = (page.querySelector('.day-sleep') || page.querySelector('.sleep-footer'))?.textContent.replace(/\s+/g, ' ').trim() || '';
+    const items = [...page.querySelectorAll('.bk-act')].map(b => ({
+      time: b.querySelector('.lk-time')?.textContent.trim() || '',
+      name: b.querySelector('.lk-name')?.textContent.trim() || '',
+      todo: b.classList.contains('bk-act-todo'),
+    }));
+    return { n, title: nav.querySelector('.nav-title').textContent.trim(), date: WEEKDAYS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()], sleep, items };
   }
+  function slotMinutes(t) {
+    const m = t.match(/(\d{1,2}):(\d{2})/);
+    if (m) return +m[1] * 60 + +m[2];
+    const k = Object.keys(SLOT_MINUTES).find(k => t.toLowerCase().includes(k));
+    return k ? SLOT_MINUTES[k] : null;
+  }
+
+  function initSidebar() {
+    for (let n = 1; n <= DAY_COUNT; n++) {
+      const { items } = dayInfo(n), tile = document.getElementById('nav-d' + n);
+      const booked = items.filter(i => !i.todo).length, todo = items.length - booked;
+      tile.querySelector('.dt-booked').textContent = booked ? '✓ ' + booked + ' booked' : '';
+      tile.querySelector('.dt-todo').textContent = todo ? todo + ' to book' : '';
+    }
+    const count = (sel, word) => { const k = document.querySelectorAll(sel).length; return k + ' ' + word + (k === 1 ? '' : 's'); };
+    document.getElementById('ql-extras').textContent = count('#page-extras .act-card', 'idea');
+    document.getElementById('ql-confirmations').textContent = count('#page-confirmations .cf-card', 'booking');
+    document.getElementById('ql-accommodation').textContent = count('#page-accommodation .hotel-box', 'hotel');
+  }
+
+  function renderNow() {
+    const card = document.getElementById('now-card');
+    const n = tripDayNumber();
+    for (let d = 1; d <= DAY_COUNT; d++) {
+      const tile = document.getElementById('nav-d' + d), dt = tile.querySelector('.dt-date');
+      tile.classList.toggle('is-today', d === n);
+      tile.classList.toggle('is-past', d < n);
+      dt.textContent = d === n ? 'Today' : dt.dataset.date;
+    }
+    if (n > DAY_COUNT) { card.hidden = true; return; }
+    const day = dayInfo(Math.max(1, n));
+    const kicker = n >= 1 ? 'Today · Day ' + n : (n === 0 ? 'Trip starts tomorrow' : 'Trip starts in ' + (1 - n) + ' days');
+    const now = new Date(), mins = now.getHours() * 60 + now.getMinutes();
+    let nextMarked = false;
+    const rows = day.items.map(it => {
+      const at = slotMinutes(it.time);
+      const done = n >= 1 && at !== null && mins > at + 90;
+      const next = !done && !nextMarked && n >= 1;
+      if (next) nextMarked = true;
+      const cls = ['now-row', done && 'done', next && 'next', it.todo && 'todo'].filter(Boolean).join(' ');
+      return '<div class="' + cls + '"><span class="t">' + esc(it.time.replace(/^~/, '')) + '</span><span class="n">' + esc(it.name) + (it.todo ? ' · to book' : '') + '</span></div>';
+    }).join('');
+    let html = '<button class="now-main" onclick="goToday()">' +
+      '<div class="now-kicker"><span>' + esc(kicker) + '</span><span class="now-date">' + esc(day.date) + '</span></div>' +
+      '<div class="now-title">' + (n < 1 ? 'Day 1 · ' : '') + esc(day.title) + '</div>' +
+      (rows ? '<div class="now-rows">' + rows + '</div>' : '') +
+      (day.sleep ? '<div class="now-sleep">' + esc(day.sleep) + '</div>' : '') + '</button>';
+    if (n >= 1 && n < DAY_COUNT) {
+      const t = dayInfo(n + 1);
+      html += '<button class="now-next" onclick="show(\'d' + (n + 1) + '\')"><span>Tomorrow · <b>' + esc(t.title) + '</b></span><span>→</span></button>';
+    }
+    card.innerHTML = html;
+    card.hidden = false;
+  }
+
+  // Keep "today" right when the app is left open or resumed on a later day.
+  let lastTripDay = null;
+  function refreshToday() {
+    const n = tripDayNumber();
+    if (lastTripDay !== null && n !== lastTripDay && n >= 1 && n <= DAY_COUNT &&
+        document.querySelector('.page.active')?.id === 'page-d' + lastTripDay) show('d' + n);
+    lastTripDay = n;
+    renderNow();
+  }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshToday(); });
+  setInterval(refreshToday, 60000);
   function buildLockedStrips() {
     const keys = ['Meet', 'Pick-up', 'Where', 'Gate', 'Collect'];
     document.querySelectorAll('.page[id^="page-d"]').forEach(pg => {
@@ -2703,7 +2898,8 @@
   }
   document.addEventListener('DOMContentLoaded', () => {
     buildLockedStrips();
-    setupToday();
+    initSidebar();
+    refreshToday();
     const h = location.hash.replace('#', '');
     if (h && document.getElementById('page-' + h)) show(h);
     else { const n = tripDayNumber(); if (n >= 1 && n <= 16) show('d' + n); }
@@ -2716,8 +2912,8 @@
     document.querySelectorAll('details.drv-one[open]').forEach(o => { if (o !== t) o.open = false; });
   }, true);
 
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
+  function toggleSidebar(force) {
+    document.getElementById('sidebar').classList.toggle('open', force);
   }
 
   /* ── Search ── */
@@ -2738,10 +2934,9 @@
   function pageTitle(id) {
     const nav = document.getElementById('nav-' + id);
     if (!nav) return id;
-    const parts = [];
-    const w = document.createTreeWalker(nav, NodeFilter.SHOW_TEXT);
-    for (let n; (n = w.nextNode());) if (n.data.trim() && !n.parentElement.closest('.nav-badge')) parts.push(n.data.trim());
-    return parts.join(' · ');
+    const num = nav.querySelector('.nav-day-num'), ico = nav.querySelector('.ql-ico');
+    const title = nav.querySelector('.nav-title, .ql-name').textContent.trim();
+    return num ? num.textContent.trim() + ' · ' + title : (ico ? ico.textContent + ' ' : '') + title;
   }
 
   function buildSearchIndex() {
@@ -2860,6 +3055,7 @@
   document.addEventListener('keydown', e => {
     const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || '');
     if ((e.key === '/' && !typing) || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) { e.preventDefault(); openSearch(); }
+    else if (e.key === 'Escape' && !typing) toggleSidebar(false);
   });
 
   /* ── Appearance: auto (follow system) / light / dark ── */
@@ -2870,6 +3066,15 @@
     document.querySelectorAll('[data-theme-opt]').forEach(b => b.classList.toggle('on', b.dataset.themeOpt === t));
   }
   document.addEventListener('DOMContentLoaded', () => setTheme(document.documentElement.dataset.theme || 'auto'));
+
+  /* ── Menu button side (mobile): right by default, left for left-handed use ── */
+  function setHand(h) {
+    if (h === 'left') document.documentElement.dataset.hand = 'left';
+    else delete document.documentElement.dataset.hand;
+    try { h === 'left' ? localStorage.setItem('china2026_hand', 'left') : localStorage.removeItem('china2026_hand'); } catch (e) {}
+    document.querySelectorAll('[data-hand-opt]').forEach(b => b.classList.toggle('on', b.dataset.handOpt === h));
+  }
+  document.addEventListener('DOMContentLoaded', () => setHand(document.documentElement.dataset.hand || 'right'));
 
   /* ── Offline copy (see sw.js) ── */
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
